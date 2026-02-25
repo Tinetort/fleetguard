@@ -6,6 +6,7 @@ export async function POST(request: Request) {
   try {
     const session = await getSession()
     if (!session?.userId) {
+      console.log('Unsubscribe POST: Unauthorized, no session found')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

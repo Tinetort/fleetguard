@@ -72,7 +72,10 @@ export async function sendPushNotificationToManagers(payload: any) {
       .select('id')
       .eq('role', 'manager')
 
-    if (!managers || managers.length === 0) return
+    if (!managers || managers.length === 0) {
+      console.log('Push: No managers found or error:', managers)
+      return
+    }
 
     const managerIds = managers.map(m => m.id)
 
@@ -82,7 +85,10 @@ export async function sendPushNotificationToManagers(payload: any) {
       .select('*')
       .in('user_id', managerIds)
 
-    if (!subscriptions || subscriptions.length === 0) return
+    if (!subscriptions || subscriptions.length === 0) {
+      console.log(`Push: No subscriptions found for ${managerIds.length} managers`)
+      return
+    }
 
     // Send push to each subscription
     const pushPromises = subscriptions.map(async sub => {
@@ -183,11 +189,11 @@ export async function submitRigCheck(formData: FormData) {
     throw new Error(error.message)
   }
 
-  // Trigger Push Notification to managers if Red status or missing items
-  if (aiSeverity === 'red' || missing_items.length > 0) {
+  // Trigger Push Notification to managers if Red/Yellow status or missing items
+  if (aiSeverity === 'red' || aiSeverity === 'yellow' || missing_items.length > 0) {
     // Avoid blocking the main flow
     sendPushNotificationToManagers({
-      title: '⚠️ FleetGuard Alert',
+      title: aiSeverity === 'red' ? '🚨 CRITICAL: FleetGuard Alert' : '⚠️ FleetGuard Alert (Needs TLC)',
       body: `Rig Check issue reported by ${session?.username || 'Crew'}: ${aiNotes || 'Missing items flagged.'}`,
       url: '/dashboard'
     })
