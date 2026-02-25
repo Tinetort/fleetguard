@@ -1,65 +1,67 @@
-import Image from "next/image";
+import Link from 'next/link'
+import { ArrowRight, ShieldPlus, Activity, MenuSquare } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-slate-900 pb-16 flex flex-col justify-center items-center text-slate-100 overflow-hidden relative">
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+          <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-600/20 blur-[120px]" />
+          <div className="absolute top-[60%] -right-[10%] w-[60%] h-[60%] rounded-full bg-emerald-600/10 blur-[120px]" />
+      </div>
+
+      <div className="z-10 w-full max-w-4xl px-6 md:px-12 mx-auto text-center space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        
+        <div className="space-y-6">
+          <div className="mx-auto w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl p-1 shadow-2xl flex items-center justify-center mb-8 rotate-3 hover:rotate-6 transition-transform duration-300">
+            <div className="w-full h-full bg-slate-900 rounded-2xl flex items-center justify-center">
+              <ShieldPlus className="w-12 h-12 text-blue-400" />
+            </div>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
+            Smart <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Rig Check</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto font-medium">
+            The next-generation fleet management and pre-shift inspection system for elite EMS teams.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto mt-12">
+            <Link href="/rig-check" className="group">
+              <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 p-8 rounded-3xl hover:bg-slate-800 hover:border-blue-500/50 transition-all duration-300 h-full flex flex-col items-center justify-center text-center space-y-4 hover:-translate-y-2 shadow-xl">
+                <div className="p-4 bg-blue-500/10 rounded-2xl text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors duration-300">
+                  <MenuSquare className="w-10 h-10" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">EMT Portal</h3>
+                  <p className="text-slate-400 mb-6">Submit pre-shift inspections from your mobile device.</p>
+                </div>
+                <div className="flex items-center text-blue-400 font-semibold group-hover:text-white mt-auto">
+                  Launch App <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </Link>
+
+            <Link href="/dashboard" className="group">
+              <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 p-8 rounded-3xl hover:bg-slate-800 hover:border-emerald-500/50 transition-all duration-300 h-full flex flex-col items-center justify-center text-center space-y-4 hover:-translate-y-2 shadow-xl">
+                <div className="p-4 bg-emerald-500/10 rounded-2xl text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
+                  <Activity className="w-10 h-10" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">Manager Dashboard</h3>
+                  <p className="text-slate-400 mb-6">Real-time overview of fleet operational status.</p>
+                </div>
+                <div className="flex items-center text-emerald-400 font-semibold group-hover:text-white mt-auto">
+                  View Fleet <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </Link>
         </div>
-      </main>
+
+        <div className="pt-16 text-slate-500 text-sm font-medium">
+          Built for Care Ambulance Systems. Requires authorized access.
+        </div>
+      </div>
     </div>
-  );
+  )
 }
