@@ -1,12 +1,24 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/../utils/supabase/server'
-import { getSession } from '@/lib/auth'
+import { decrypt } from '@/lib/auth'
+
+function getSessionCookie(request: Request): string | null {
+  const cookieHeader = request.headers.get('cookie') || ''
+  const match = cookieHeader.match(/session=([^;]+)/)
+  return match ? match[1] : null
+}
 
 export async function POST(request: Request) {
   try {
-    const session = await getSession()
+    const token = getSessionCookie(request)
+    if (!token) {
+      console.log('Unsubscribe: No session cookie found')
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const session = await decrypt(token)
     if (!session?.userId) {
-      console.log('Unsubscribe POST: Unauthorized, no session found')
+      console.log('Unsubscribe: Session decryption failed')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -31,6 +43,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to delete subscription' }, { status: 500 })
     }
 
+    console.log('Unsubscribe: Removed subscription for user', session.userId)
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Unsubscribe POST error:', error)

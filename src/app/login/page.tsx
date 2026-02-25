@@ -25,7 +25,9 @@ export default function LoginPage() {
         setError(result.error)
       }
       // If success, the server action will redirect users automatically
-    } catch (err) {
+    } catch (err: any) {
+      // Next.js redirect() throws a NEXT_REDIRECT error internally — re-throw it
+      if (err?.digest?.startsWith('NEXT_REDIRECT')) throw err
       console.error(err)
       setError('An unexpected error occurred')
     } finally {

@@ -189,12 +189,18 @@ export async function submitRigCheck(formData: FormData) {
     throw new Error(error.message)
   }
 
-  // Trigger Push Notification to managers if Red/Yellow status or missing items
-  if (aiSeverity === 'red' || aiSeverity === 'yellow' || missing_items.length > 0) {
-    // Avoid blocking the main flow
+  // Trigger Push Notification to managers if Red/Yellow status, missing items, or damage notes written
+  const hasDamageNotes = damage_notes && damage_notes.trim().length > 0
+  if (aiSeverity === 'red' || aiSeverity === 'yellow' || missing_items.length > 0 || hasDamageNotes) {
+    const isRed = aiSeverity === 'red'
+    const alertBody = aiNotes
+      ? `${session?.username || 'Crew'}: ${aiNotes}`
+      : hasDamageNotes
+      ? `${session?.username || 'Crew'}: ${damage_notes}`
+      : `${session?.username || 'Crew'}: Missing items flagged.`
     sendPushNotificationToManagers({
-      title: aiSeverity === 'red' ? '🚨 CRITICAL: FleetGuard Alert' : '⚠️ FleetGuard Alert (Needs TLC)',
-      body: `Rig Check issue reported by ${session?.username || 'Crew'}: ${aiNotes || 'Missing items flagged.'}`,
+      title: isRed ? '🚨 CRITICAL: FleetGuard Alert' : '⚠️ FleetGuard Alert',
+      body: alertBody,
       url: '/dashboard'
     })
   }
