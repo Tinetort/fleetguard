@@ -53,6 +53,65 @@ export async function getVehicles() {
 }
 
 import { analyzeDamage } from '@/lib/ai'
+import webpush from 'web-push'
+
+// Configure web-push
+webpush.setVapidDetails(
+  'mailto:support@smartrigcheck.com',
+  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '',
+  process.env.VAPID_PRIVATE_KEY || ''
+)
+
+export async function sendPushNotificationToManagers(payload: any) {
+  try {
+    const supabase = await createClient()
+    
+    // Find all users with role 'manager'
+    const { data: managers } = await supabase
+      .from('users')
+      .select('id')
+      .eq('role', 'manager')
+
+    if (!managers || managers.length === 0) return
+
+    const managerIds = managers.map(m => m.id)
+
+    // Get all subscriptions for those managers
+    const { data: subscriptions } = await supabase
+      .from('push_subscriptions')
+      .select('*')
+      .in('user_id', managerIds)
+
+    if (!subscriptions || subscriptions.length === 0) return
+
+    // Send push to each subscription
+    const pushPromises = subscriptions.map(async sub => {
+      try {
+        await webpush.sendNotification(
+          {
+            endpoint: sub.endpoint,
+            keys: {
+              p256dh: sub.p256dh,
+              auth: sub.auth
+            }
+          },
+          JSON.stringify(payload)
+        )
+      } catch (err: any) {
+        if (err.statusCode === 410 || err.statusCode === 404) {
+          // Subscription expired or unsubscribed, delete from DB
+          await supabase.from('push_subscriptions').delete().eq('id', sub.id)
+        } else {
+          console.error('Push error:', err)
+        }
+      }
+    })
+
+    await Promise.allSettled(pushPromises)
+  } catch (error) {
+    console.error('sendPushNotificationToManagers failed:', error)
+  }
+}
 
 export async function submitRigCheck(formData: FormData) {
   const vehicle_id = formData.get('vehicle_id') as string
@@ -122,6 +181,16 @@ export async function submitRigCheck(formData: FormData) {
   if (error) {
     console.error('Supabase Insert failed:', error.message)
     throw new Error(error.message)
+  }
+
+  // Trigger Push Notification to managers if Red status or missing items
+  if (aiSeverity === 'red' || missing_items.length > 0) {
+    // Avoid blocking the main flow
+    sendPushNotificationToManagers({
+      title: '⚠️ FleetGuard Alert',
+      body: `Rig Check issue reported by ${session?.username || 'Crew'}: ${aiNotes || 'Missing items flagged.'}`,
+      url: '/dashboard'
+    })
   }
 
   revalidatePath('/dashboard')

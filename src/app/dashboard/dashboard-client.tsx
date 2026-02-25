@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
 import { ListChecks, RefreshCw, Download } from 'lucide-react'
 import type { OrgLabels } from '@/lib/labels'
+import PushToggle from '@/components/push-toggle'
 
 interface Vehicle {
   id: string
@@ -166,6 +167,7 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
             >
               <Download className="w-4 h-4" /> Export PDF
             </a>
+            <PushToggle />
             <div className="hidden sm:flex gap-3">
               {['green', 'yellow', 'red'].map(s => (
                 <div key={s} className="flex items-center gap-2 text-sm font-medium">
