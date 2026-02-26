@@ -159,22 +159,25 @@ export async function submitRigCheck(formData: FormData) {
     aiNotes = `Missing equipment flagged by ${session?.username || 'crew'}: ${missing_items.join(', ')}`
   }
 
-  // Process AI Analysis if there's damage reported
-  if (damage_notes || (damage_file && damage_file.size > 0)) {
-    let base64Image = undefined
-    let mimeType = undefined
-    
-    if (damage_file && damage_file.size > 0) {
-      const arrayBuffer = await damage_file.arrayBuffer()
-      base64Image = Buffer.from(arrayBuffer).toString('base64')
-      mimeType = damage_file.type
-      uploadedPhotoUrl = 'uploaded-via-mvp.jpg'
-    }
+  // PHOTO: auto-flag yellow immediately — manager will view the photo manually
+  // No AI needed for photos (saves API quota)
+  if (damage_file && damage_file.size > 0) {
+    uploadedPhotoUrl = 'uploaded-via-mvp.jpg' // TODO: replace with actual Supabase Storage upload
+    aiSeverity = 'yellow'
+    aiNotes = `Photo attached by ${session?.username || 'crew'} — pending manager review.`
+  }
 
-    const aiResult = await analyzeDamage(damage_notes, base64Image, mimeType)
-    // Damage AI overrides missing-items severity (damage is higher priority)
-    aiSeverity = aiResult.severity
-    aiNotes = aiResult.notes
+  // TEXT NOTES ONLY: use AI to classify severity from the written description
+  if (damage_notes && damage_notes.trim()) {
+    const aiResult = await analyzeDamage(damage_notes)
+    // Only override if AI gives a higher-severity result
+    if (aiResult.severity === 'red' || (aiResult.severity === 'yellow' && !aiSeverity)) {
+      aiSeverity = aiResult.severity
+      aiNotes = aiResult.notes
+    } else if (!aiSeverity) {
+      aiSeverity = aiResult.severity
+      aiNotes = aiResult.notes
+    }
   }
 
   const { error } = await supabase
