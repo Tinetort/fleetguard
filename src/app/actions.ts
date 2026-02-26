@@ -52,7 +52,7 @@ export async function getVehicles() {
   })
 }
 
-import { analyzeDamage } from '@/lib/ai'
+import { analyzeDamage, generateShiftGreeting } from '@/lib/ai'
 import webpush from 'web-push'
 
 // Configure web-push
@@ -230,8 +230,15 @@ export async function submitRigCheck(formData: FormData) {
 
   revalidatePath('/dashboard')
   revalidatePath('/rig-check')
-  
-  return { success: true }
+
+  // Generate personalized greeting (non-blocking — fallback is used if AI fails or quota hit)
+  const greeting = await generateShiftGreeting(
+    crew_last_name || session?.username || 'Crew',
+    crew_last_name || '',
+    'ems' // TODO: read from org_type when multi-tenancy is added
+  ).catch(() => `${(crew_last_name || session?.username || 'Crew').toUpperCase()} — great job, stay safe out there!`)
+
+  return { success: true, greeting }
 }
 
 export async function authenticate(formData: FormData) {

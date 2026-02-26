@@ -26,6 +26,7 @@ export default function RigCheckPage() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [labels, setLabels] = useState<OrgLabels>(DEFAULT_LABELS)
   const [crewLastName, setCrewLastName] = useState('')
+  const [greeting, setGreeting] = useState<string | null>(null)
   const signatureRef = useRef<SignaturePadRef>(null)
 
   // Present/Missing state per item: Record<itemName, 'present'|'missing'|null>
@@ -116,7 +117,8 @@ export default function RigCheckPage() {
 
     try {
       setSubmitError(null)
-      await submitRigCheck(formData)
+      const result = await submitRigCheck(formData)
+      setGreeting((result as any)?.greeting || null)
       setSuccess(true)
       setSelectedFile(null)
       setItemStatuses({})
@@ -154,6 +156,11 @@ export default function RigCheckPage() {
         <CardContent className="bg-slate-50 pt-6">
           {success && (
             <div className="mb-4 space-y-3">
+              {greeting && (
+                <div className="p-4 bg-slate-900 border border-slate-700 rounded-xl animate-in fade-in slide-in-from-top-2 duration-500">
+                  <p className="font-bold text-white text-base leading-snug tracking-wide">{greeting}</p>
+                </div>
+              )}
               <div className="p-4 bg-emerald-100 border border-emerald-200 rounded-xl flex items-center gap-3 text-emerald-800 animate-in fade-in slide-in-from-top-4 duration-500">
                 <CheckCircle2 className="w-6 h-6 flex-shrink-0" />
                 <div>

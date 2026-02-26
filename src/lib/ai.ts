@@ -10,6 +10,60 @@ export interface AnalysisResult {
 }
 
 /**
+ * Generates a short, funny, personalized shift greeting for the crew member.
+ * Example: "MARK — no 5150s today and keep the coffee hot."
+ */
+export async function generateShiftGreeting(
+  firstName: string,
+  lastName: string,
+  orgType: string = 'ems'
+): Promise<string> {
+  const styleGuides: Record<string, string> = {
+    ems: 'You work for an EMS ambulance company. Use EMS/paramedic slang (5150, code 3, BLS, ALS, "clear", "load and go", etc.). Reference saving lives, coffee, long shifts.',
+    fire: 'You work for a fire department. Use firefighter slang (fully involved, SCBA, RIT, "all hands", "charge the line", etc.). Reference fires, hose lines, brotherhood.',
+    police: 'You work for a law enforcement agency. Use police slang (10-4, code 4, APB, "clear", backup, etc.). Reference staying safe and watching your six.',
+  }
+  const style = styleGuides[orgType] || styleGuides.ems
+
+  const prompt = `
+  Write a short, funny, personalized motivational message for a crew member starting their shift.
+  Their name is ${firstName} ${lastName}. ${style}
+  
+  Rules:
+  - Start by addressing them: FIRSTNAME IN ALL CAPS — (em dash, then message)
+  - Keep it under 15 words total
+  - Be funny, warm, and in the style of the job culture
+  - No emojis — plain text only
+  - End with a period or exclamation mark
+  
+  EMS examples:
+  "MARK — no 5150s before lunch. After that, no promises."
+  "SARAH — code 3 to greatness, but check your mirrors."
+  "ALEX — keep the defibrillator charged and the coffee hotter."
+  
+  Respond with the message ONLY, no quotes, no explanation.
+  `
+
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.0-flash-lite',
+      contents: [prompt],
+    })
+    const text = response.text?.trim()
+    if (!text) throw new Error('Empty greeting')
+    return text
+  } catch (error: any) {
+    console.error('[AI] Greeting failed:', error?.status)
+    const fallbacks: Record<string, string> = {
+      ems: `${firstName.toUpperCase()} — stay sharp, drive safe, save lives.`,
+      fire: `${firstName.toUpperCase()} — stay low, move fast, watch your six.`,
+      police: `${firstName.toUpperCase()} — stay safe out there. We've got your back.`,
+    }
+    return fallbacks[orgType] || fallbacks.ems
+  }
+}
+
+/**
  * Analyzes vehicle damage from TEXT NOTES ONLY using Google Gemini AI.
  * Photos are handled separately (auto-flagged yellow) without calling AI,
  * to conserve API quota and avoid slow analysis.
@@ -51,7 +105,6 @@ export async function analyzeDamage(notes: string): Promise<AnalysisResult> {
     return result
   } catch (error: any) {
     console.error('[AI] Analysis failed:', error?.status || error?.message)
-    // Fallback: treat any reported text damage as yellow for dispatcher to review
     return {
       severity: 'yellow',
       notes: 'AI analysis unavailable — manually flagged for dispatcher review.'
