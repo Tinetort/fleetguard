@@ -13,6 +13,7 @@ import Link from 'next/link'
 import type { OrgLabels } from '@/lib/labels'
 import { DEFAULT_LABELS } from '@/lib/labels'
 import SignaturePad, { type SignaturePadRef } from '@/components/signature-pad'
+import ShiftGreetingModal from '@/components/shift-greeting-modal'
 
 type ItemStatus = 'present' | 'missing' | null
 
@@ -156,11 +157,9 @@ export default function RigCheckPage() {
         <CardContent className="bg-slate-50 pt-6">
           {success && (
             <div className="mb-4 space-y-3">
-              {greeting && (
-                <div className="p-4 bg-slate-900 border border-slate-700 rounded-xl animate-in fade-in slide-in-from-top-2 duration-500">
-                  <p className="font-bold text-white text-base leading-snug tracking-wide">{greeting}</p>
-                </div>
-              )}
+          {greeting && (
+            <ShiftGreetingModal greeting={greeting} onClose={() => setGreeting(null)} />
+          )}
               <div className="p-4 bg-emerald-100 border border-emerald-200 rounded-xl flex items-center gap-3 text-emerald-800 animate-in fade-in slide-in-from-top-4 duration-500">
                 <CheckCircle2 className="w-6 h-6 flex-shrink-0" />
                 <div>
