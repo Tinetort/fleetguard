@@ -64,26 +64,31 @@ webpush.setVapidDetails(
 
 export async function sendPushNotificationToManagers(payload: any) {
   try {
+    console.log('Push: sendPushNotificationToManagers called with:', JSON.stringify(payload).substring(0, 200))
     const supabase = await createClient()
     
     // Find all users with role 'manager'
-    const { data: managers } = await supabase
+    const { data: managers, error: mgrError } = await supabase
       .from('users')
       .select('id')
       .eq('role', 'manager')
 
+    console.log('Push: Found managers:', managers?.length, 'error:', mgrError?.message || 'none')
+
     if (!managers || managers.length === 0) {
-      console.log('Push: No managers found or error:', managers)
+      console.log('Push: No managers found')
       return
     }
 
     const managerIds = managers.map(m => m.id)
 
     // Get all subscriptions for those managers
-    const { data: subscriptions } = await supabase
+    const { data: subscriptions, error: subError } = await supabase
       .from('push_subscriptions')
       .select('*')
       .in('user_id', managerIds)
+
+    console.log('Push: Found subscriptions:', subscriptions?.length, 'error:', subError?.message || 'none')
 
     if (!subscriptions || subscriptions.length === 0) {
       console.log(`Push: No subscriptions found for ${managerIds.length} managers`)
@@ -91,8 +96,10 @@ export async function sendPushNotificationToManagers(payload: any) {
     }
 
     // Send push to each subscription
-    const pushPromises = subscriptions.map(async sub => {
+    console.log('Push: Sending to', subscriptions.length, 'endpoints...')
+    const pushPromises = subscriptions.map(async (sub, index) => {
       try {
+        console.log(`Push: Sending to endpoint #${index}:`, sub.endpoint.substring(0, 60))
         await webpush.sendNotification(
           {
             endpoint: sub.endpoint,
@@ -103,19 +110,20 @@ export async function sendPushNotificationToManagers(payload: any) {
           },
           JSON.stringify(payload)
         )
+        console.log(`Push: SUCCESS sent to endpoint #${index}`)
       } catch (err: any) {
+        console.error(`Push: FAILED endpoint #${index}:`, err.statusCode, err.body || err.message)
         if (err.statusCode === 410 || err.statusCode === 404) {
-          // Subscription expired or unsubscribed, delete from DB
           await supabase.from('push_subscriptions').delete().eq('id', sub.id)
-        } else {
-          console.error('Push error:', err)
+          console.log(`Push: Deleted expired subscription #${index}`)
         }
       }
     })
 
     await Promise.allSettled(pushPromises)
+    console.log('Push: All sends completed')
   } catch (error) {
-    console.error('sendPushNotificationToManagers failed:', error)
+    console.error('sendPushNotificationToManagers CRASH:', error)
   }
 }
 
@@ -191,6 +199,7 @@ export async function submitRigCheck(formData: FormData) {
 
   // Trigger Push Notification to managers if Red/Yellow status, missing items, or damage notes written
   const hasDamageNotes = damage_notes && damage_notes.trim().length > 0
+  console.log('Push trigger check: aiSeverity=', aiSeverity, 'missing=', missing_items.length, 'hasDamageNotes=', hasDamageNotes)
   if (aiSeverity === 'red' || aiSeverity === 'yellow' || missing_items.length > 0 || hasDamageNotes) {
     const isRed = aiSeverity === 'red'
     const alertBody = aiNotes
@@ -198,11 +207,16 @@ export async function submitRigCheck(formData: FormData) {
       : hasDamageNotes
       ? `${session?.username || 'Crew'}: ${damage_notes}`
       : `${session?.username || 'Crew'}: Missing items flagged.`
-    sendPushNotificationToManagers({
+    console.log('Push: Calling sendPushNotificationToManagers NOW')
+    // AWAIT so we see all logs before response returns
+    await sendPushNotificationToManagers({
       title: isRed ? '🚨 CRITICAL: FleetGuard Alert' : '⚠️ FleetGuard Alert',
       body: alertBody,
       url: '/dashboard'
     })
+    console.log('Push: sendPushNotificationToManagers returned')
+  } else {
+    console.log('Push: Condition not met, no push sent')
   }
 
   revalidatePath('/dashboard')
