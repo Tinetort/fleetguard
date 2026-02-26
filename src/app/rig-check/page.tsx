@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +12,7 @@ import { categorizeItems } from '@/lib/categorize'
 import Link from 'next/link'
 import type { OrgLabels } from '@/lib/labels'
 import { DEFAULT_LABELS } from '@/lib/labels'
+import SignaturePad, { type SignaturePadRef } from '@/components/signature-pad'
 
 type ItemStatus = 'present' | 'missing' | null
 
@@ -24,6 +25,8 @@ export default function RigCheckPage() {
   const [vehicleId, setVehicleId] = useState<string>('')
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [labels, setLabels] = useState<OrgLabels>(DEFAULT_LABELS)
+  const [crewLastName, setCrewLastName] = useState('')
+  const signatureRef = useRef<SignaturePadRef>(null)
 
   // Present/Missing state per item: Record<itemName, 'present'|'missing'|null>
   const [itemStatuses, setItemStatuses] = useState<Record<string, ItemStatus>>({})
@@ -79,6 +82,16 @@ export default function RigCheckPage() {
       return
     }
 
+    if (!crewLastName.trim()) {
+      setSubmitError('Please enter your last name.')
+      return
+    }
+
+    if (signatureRef.current?.isEmpty()) {
+      setSubmitError('Please sign the form before submitting.')
+      return
+    }
+
     setIsSubmitting(true)
     const form = e.currentTarget
     const formData = new FormData(form)
@@ -97,12 +110,18 @@ export default function RigCheckPage() {
       formData.append('missing_items', JSON.stringify(missingItems))
     }
 
+    // Append crew identity + signature
+    formData.append('crew_last_name', crewLastName.trim())
+    formData.append('signature_data_url', signatureRef.current?.toDataURL() || '')
+
     try {
       setSubmitError(null)
       await submitRigCheck(formData)
       setSuccess(true)
       setSelectedFile(null)
       setItemStatuses({})
+      setCrewLastName('')
+      signatureRef.current?.clear()
       setTimeout(() => setSuccess(false), 8000)
       form.reset()
     } catch (error: any) {
@@ -345,6 +364,22 @@ export default function RigCheckPage() {
                 </div>
               </div>
             )}
+
+            {/* Crew Identity */}
+            <div className="space-y-3">
+              <Label htmlFor="crew_last_name" className="text-slate-700 font-bold text-sm uppercase tracking-wide">Your Last Name <span className="text-rose-500">*</span></Label>
+              <Input 
+                id="crew_last_name"
+                value={crewLastName}
+                onChange={e => setCrewLastName(e.target.value)}
+                placeholder="e.g. Smith"
+                className="h-14 text-lg font-medium bg-white border-slate-300 shadow-sm"
+                required
+              />
+            </div>
+
+            {/* E-Signature */}
+            <SignaturePad ref={signatureRef} label="Signature" required />
 
             <Button
               type="submit"

@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/../utils/supabase/client'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
-import { ListChecks, RefreshCw, Download } from 'lucide-react'
+import { ListChecks, RefreshCw, Download, Shield } from 'lucide-react'
 import type { OrgLabels } from '@/lib/labels'
 import PushToggle from '@/components/push-toggle'
 
@@ -167,6 +167,9 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
             >
               <Download className="w-4 h-4" /> Export PDF
             </a>
+            <Link href="/dashboard/audit-log" className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm hover:shadow transition-all">
+              <Shield className="w-4 h-4" /> Audit Log
+            </Link>
             <PushToggle />
             <div className="hidden sm:flex gap-3">
               {['green', 'yellow', 'red'].map(s => (

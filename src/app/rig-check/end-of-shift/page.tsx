@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { CheckCircle2, Fuel, Star, ShieldAlert, Package, ArrowRight } from 'lucide-react'
 import { getVehicles, getActiveChecklist, submitEndOfShiftReport } from '../../actions'
 import Link from 'next/link'
+import SignaturePad, { type SignaturePadRef } from '@/components/signature-pad'
 
 const FUEL_LEVELS = [
   { value: 'empty',          label: 'Empty',           icon: '⬜⬜⬜⬜', color: 'text-rose-600' },
@@ -30,6 +31,7 @@ export default function EndOfShiftPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const signatureRef = useRef<SignaturePadRef>(null)
 
   useEffect(() => {
     async function load() {
@@ -53,6 +55,7 @@ export default function EndOfShiftPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!vehicleId) { setSubmitError('Please select a vehicle.'); return }
+    if (signatureRef.current?.isEmpty()) { setSubmitError('Please sign the form before submitting.'); return }
     setIsSubmitting(true)
     setSubmitError(null)
     const formData = new FormData()
@@ -62,6 +65,7 @@ export default function EndOfShiftPage() {
     formData.append('restock_needed', JSON.stringify(restockNeeded))
     formData.append('vehicle_condition', vehicleCondition)
     formData.append('notes', notes)
+    formData.append('signature_data_url', signatureRef.current?.toDataURL() || '')
     if (checklist?.id) formData.append('checklist_id', checklist.id)
     try {
       await submitEndOfShiftReport(formData)
@@ -225,6 +229,9 @@ export default function EndOfShiftPage() {
                 placeholder="Notes for the next crew (upcoming maintenance, issues to watch, etc.)"
               />
             </div>
+
+            {/* E-Signature */}
+            <SignaturePad ref={signatureRef} label="Crew Signature" required />
 
             <Button
               type="submit"

@@ -142,6 +142,10 @@ export async function submitRigCheck(formData: FormData) {
   const item_statuses = item_statuses_raw ? JSON.parse(item_statuses_raw) : {}
   const missing_items: string[] = missing_items_raw ? JSON.parse(missing_items_raw) : []
 
+  // New: crew identity + signature
+  const crew_last_name = formData.get('crew_last_name') as string | null
+  const signature_data_url = formData.get('signature_data_url') as string | null
+
   const supabase = await createClient()
   const session = await getSession()
   
@@ -189,7 +193,9 @@ export async function submitRigCheck(formData: FormData) {
       damage_notes,
       damage_photo_url: uploadedPhotoUrl,
       ai_damage_severity: aiSeverity,
-      ai_analysis_notes: aiNotes
+      ai_analysis_notes: aiNotes,
+      crew_last_name: crew_last_name || null,
+      signature_data_url: signature_data_url || null
     })
 
   if (error) {
