@@ -163,7 +163,6 @@ export default function RigCheckPage() {
       setItemStatuses({})
       setCrewLastName('')
       signatureRef.current?.clear()
-      setTimeout(() => setSuccess(false), 8000)
       form.reset()
     } catch (error: any) {
       console.error(error)
