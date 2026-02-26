@@ -52,7 +52,7 @@ export async function getVehicles() {
   })
 }
 
-import { analyzeDamage, generateShiftGreeting } from '@/lib/ai'
+import { analyzeDamage, generateShiftGreeting, generateHandoffWarning } from '@/lib/ai'
 import webpush from 'web-push'
 
 // Configure web-push
@@ -232,6 +232,16 @@ export async function submitRigCheck(formData: FormData) {
   revalidatePath('/rig-check')
 
   // Generate personalized greeting (non-blocking — fallback is used if AI fails or quota hit)
+  // Mark vehicle as on active shift
+  const crewDisplay = crew_last_name?.trim() || session?.username || 'Crew'
+  await supabase
+    .from('vehicles')
+    .update({
+      on_shift_since: new Date().toISOString(),
+      on_shift_by: crewDisplay,
+    })
+    .eq('id', vehicle_id)
+
   const greeting = await generateShiftGreeting(
     crew_last_name || session?.username || 'Crew',
     crew_last_name || '',
@@ -400,5 +410,85 @@ export async function submitEndOfShiftReport(formData: FormData): Promise<void> 
     throw new Error(error.message)
   }
 
+  // Clear active shift from vehicle
+  await supabase
+    .from('vehicles')
+    .update({ on_shift_since: null, on_shift_by: null, on_shift_rig_check_id: null })
+    .eq('id', vehicle_id)
+
   revalidatePath('/dashboard')
+  revalidatePath('/rig-check')
+}
+
+/**
+ * Returns the most recent EOS report + SoS damage notes for a vehicle,
+ * used to build the Handoff Card for the incoming crew.
+ */
+export async function getVehicleHandoff(vehicleId: string): Promise<{
+  lastCrew: string | null
+  fuelLevel: string | null
+  cleanlinessRating: number | null
+  restockNeeded: string[]
+  handoffNotes: string | null
+  damageSummary: string | null
+  endedAt: string | null
+} | null> {
+  const supabase = await createClient()
+
+  // Get latest EOS for this vehicle
+  const { data: eos } = await supabase
+    .from('end_of_shift_reports')
+    .select('fuel_level, cleanliness_rating, restock_needed, vehicle_condition, notes, created_at, users(username)')
+    .eq('vehicle_id', vehicleId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single()
+
+  // Get latest rig_check damage notes for this vehicle
+  const { data: latestCheck } = await supabase
+    .from('rig_checks')
+    .select('damage_notes, crew_last_name, created_at, users(username)')
+    .eq('vehicle_id', vehicleId)
+    .not('damage_notes', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single()
+
+  if (!eos && !latestCheck) return null
+
+  const eosUsers = eos ? (Array.isArray((eos as any).users) ? (eos as any).users[0]?.username : (eos as any).users?.username) : null
+  const checkUsers = latestCheck ? (Array.isArray((latestCheck as any).users) ? (latestCheck as any).users[0]?.username : (latestCheck as any).users?.username) : null
+
+  return {
+    lastCrew: (eos as any)?.crew_last_name || eosUsers || checkUsers || null,
+    fuelLevel: eos?.fuel_level || null,
+    cleanlinessRating: eos?.cleanliness_rating || null,
+    restockNeeded: eos?.restock_needed || [],
+    handoffNotes: eos?.notes || null,
+    damageSummary: latestCheck?.damage_notes || null,
+    endedAt: eos?.created_at || null,
+  }
+}
+
+/**
+ * Validates whether a vehicle has an active shift.
+ * Used to gate the End of Shift form.
+ */
+export async function checkActiveShift(vehicleId: string): Promise<{
+  active: boolean
+  since: string | null
+  by: string | null
+}> {
+  const supabase = await createClient()
+  const { data: vehicle } = await supabase
+    .from('vehicles')
+    .select('on_shift_since, on_shift_by')
+    .eq('id', vehicleId)
+    .single()
+
+  return {
+    active: !!(vehicle?.on_shift_since),
+    since: vehicle?.on_shift_since || null,
+    by: vehicle?.on_shift_by || null,
+  }
 }

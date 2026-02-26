@@ -7,13 +7,15 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CheckCircle2, ShieldAlert, Camera, X, FileText, ArrowRight, CheckCheck } from 'lucide-react'
-import { submitRigCheck, getVehicles, getActiveChecklist, getOrgLabels } from '../actions'
+import { submitRigCheck, getVehicles, getActiveChecklist, getOrgLabels, getVehicleHandoff } from '../actions'
 import { categorizeItems } from '@/lib/categorize'
 import Link from 'next/link'
 import type { OrgLabels } from '@/lib/labels'
 import { DEFAULT_LABELS } from '@/lib/labels'
 import SignaturePad, { type SignaturePadRef } from '@/components/signature-pad'
 import ShiftGreetingModal from '@/components/shift-greeting-modal'
+import HandoffCard from '@/components/handoff-card'
+import { Clock, ArrowRightCircle } from 'lucide-react'
 
 type ItemStatus = 'present' | 'missing' | null
 
@@ -28,6 +30,14 @@ export default function RigCheckPage() {
   const [labels, setLabels] = useState<OrgLabels>(DEFAULT_LABELS)
   const [crewLastName, setCrewLastName] = useState('')
   const [greeting, setGreeting] = useState<string | null>(null)
+  const [onShiftSince, setOnShiftSince] = useState<Date | null>(null)
+  const [elapsedTime, setElapsedTime] = useState('')
+  // Handoff state
+  const [handoff, setHandoff] = useState<any | null>(null)
+  const [handoffLoading, setHandoffLoading] = useState(false)
+  const [handoffAcknowledged, setHandoffAcknowledged] = useState(false)
+  const [handoffDisputed, setHandoffDisputed] = useState(false)
+  const [handoffDisputeNotes, setHandoffDisputeNotes] = useState('')
   const signatureRef = useRef<SignaturePadRef>(null)
 
   // Present/Missing state per item: Record<itemName, 'present'|'missing'|null>
@@ -46,6 +56,33 @@ export default function RigCheckPage() {
     }
     loadData()
   }, [])
+
+  // Load handoff data when vehicle is selected
+  useEffect(() => {
+    if (!vehicleId) { setHandoff(null); return }
+    setHandoffLoading(true)
+    setHandoffAcknowledged(false)
+    setHandoffDisputed(false)
+    getVehicleHandoff(vehicleId).then(data => {
+      setHandoff(data)
+      setHandoffLoading(false)
+    }).catch(() => setHandoffLoading(false))
+  }, [vehicleId])
+
+  // Elapsed timer for on-shift screen
+  useEffect(() => {
+    if (!onShiftSince) return
+    const tick = () => {
+      const diffMs = Date.now() - onShiftSince.getTime()
+      const h = Math.floor(diffMs / 3600000)
+      const m = Math.floor((diffMs % 3600000) / 60000)
+      const s = Math.floor((diffMs % 60000) / 1000)
+      setElapsedTime(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`)
+    }
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [onShiftSince])
 
   // Categorize questions whenever checklist changes
   const categorized = useMemo(() => {
@@ -121,6 +158,7 @@ export default function RigCheckPage() {
       const result = await submitRigCheck(formData)
       setGreeting((result as any)?.greeting || null)
       setSuccess(true)
+      setOnShiftSince(new Date())
       setSelectedFile(null)
       setItemStatuses({})
       setCrewLastName('')
@@ -155,34 +193,49 @@ export default function RigCheckPage() {
           <CardDescription className="text-center text-slate-500 font-medium text-base">{labels.shiftStart} vehicle inspection form</CardDescription>
         </CardHeader>
         <CardContent className="bg-slate-50 pt-6">
-          {success && (
-            <div className="mb-4 space-y-3">
-          {greeting && (
-            <ShiftGreetingModal greeting={greeting} onClose={() => setGreeting(null)} />
-          )}
-              <div className="p-4 bg-emerald-100 border border-emerald-200 rounded-xl flex items-center gap-3 text-emerald-800 animate-in fade-in slide-in-from-top-4 duration-500">
-                <CheckCircle2 className="w-6 h-6 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold">Check submitted! {labels.vehicle} status updated.</p>
+          {/* On-shift screen shown INSTEAD of form after successful submit */}
+          {success ? (
+            <div className="space-y-4 py-4">
+              {greeting && (
+                <ShiftGreetingModal greeting={greeting} onClose={() => setGreeting(null)} />
+              )}
+              {/* On-shift status card */}
+              <div className="rounded-2xl overflow-hidden border-0 shadow-lg">
+                <div style={{ background: 'linear-gradient(135deg, #1e3a5f, #1d4ed8)', padding: '24px 20px 20px' }}>
+                  <p className="text-xs font-bold text-blue-200 uppercase tracking-widest mb-1">YOU ARE ON SHIFT</p>
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-6 h-6 text-blue-300" />
+                    <span className="text-4xl font-extrabold text-white font-mono tracking-widest">{elapsedTime}</span>
+                  </div>
+                  <p className="text-blue-300 text-sm mt-2">
+                    {vehicles.find((v: any) => v.id === vehicleId)?.rig_number || 'Vehicle'} · {crewLastName || 'Crew'}
+                  </p>
+                </div>
+                <div className="bg-white p-4 space-y-3">
+                  <div className="p-3 bg-emerald-50 rounded-xl flex items-center gap-2 text-emerald-700">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span className="text-sm font-semibold">Start of Shift report submitted</span>
+                  </div>
                   {missingItems.length > 0 && (
-                    <p className="text-xs text-rose-700 mt-1 font-medium">
+                    <div className="p-3 bg-rose-50 rounded-xl text-xs text-rose-700 font-medium">
                       ⚠️ {missingItems.length} missing item{missingItems.length > 1 ? 's' : ''} flagged to dispatcher
-                    </p>
+                    </div>
                   )}
+                  <Link href="/rig-check/end-of-shift">
+                    <div className="flex items-center justify-between p-4 rounded-xl cursor-pointer active:scale-98 transition-all"
+                      style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', boxShadow: '0 4px 16px rgba(245,158,11,0.35)' }}>
+                      <div>
+                        <p className="font-extrabold text-white text-base">End of Shift</p>
+                        <p className="text-amber-100 text-xs mt-0.5">Submit handoff report when done</p>
+                      </div>
+                      <ArrowRightCircle className="w-7 h-7 text-white shrink-0" />
+                    </div>
+                  </Link>
                 </div>
               </div>
-              <Link href="/rig-check/end-of-shift">
-                <div className="p-4 bg-amber-50 border-2 border-amber-400 rounded-xl flex items-center justify-between cursor-pointer hover:bg-amber-100 transition-colors animate-in fade-in slide-in-from-top-4 duration-700">
-                  <div>
-                    <p className="font-bold text-amber-800">End of Shift?</p>
-                    <p className="text-xs text-amber-700 mt-0.5">Submit your handoff report — fuel, restock</p>
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-amber-600 shrink-0" />
-                </div>
-              </Link>
             </div>
-          )}
-
+          ) : (
+            <>
           {submitError && (
             <div className="mb-4 p-4 bg-rose-100 border border-rose-200 rounded-xl text-rose-800">
               <p className="font-semibold text-sm">⚠️ {submitError}</p>
@@ -203,6 +256,21 @@ export default function RigCheckPage() {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Handoff card — shown when a vehicle is selected and there's previous shift data */}
+            {vehicleId && !handoffLoading && handoff && !handoffAcknowledged && (
+              <HandoffCard
+                data={{ ...handoff, aiDamageWarning: null }}
+                onAcknowledge={(disputed, disputeNotes) => {
+                  setHandoffAcknowledged(true)
+                  setHandoffDisputed(disputed)
+                  setHandoffDisputeNotes(disputeNotes)
+                }}
+              />
+            )}
+            {vehicleId && handoffLoading && (
+              <p className="text-sm text-slate-400 text-center py-2 animate-pulse">Loading previous shift info...</p>
+            )}
 
             <div className="space-y-3">
               <Label htmlFor="oxygen_psi" className="text-slate-700 font-bold text-sm uppercase tracking-wide">Main Oxygen (PSI)</Label>
@@ -405,6 +473,8 @@ export default function RigCheckPage() {
               FleetGuard — Powered by Smart Rig Check
             </p>
           </form>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

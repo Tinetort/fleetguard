@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CheckCircle2, Fuel, Star, ShieldAlert, Package, ArrowRight } from 'lucide-react'
-import { getVehicles, getActiveChecklist, submitEndOfShiftReport } from '../../actions'
+import { getVehicles, getActiveChecklist, submitEndOfShiftReport, checkActiveShift } from '../../actions'
 import Link from 'next/link'
 import SignaturePad, { type SignaturePadRef } from '@/components/signature-pad'
 
@@ -31,6 +31,8 @@ export default function EndOfShiftPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [activeShift, setActiveShift] = useState<{active: boolean, since: string | null, by: string | null} | null>(null)
+  const [shiftChecking, setShiftChecking] = useState(false)
   const signatureRef = useRef<SignaturePadRef>(null)
 
   useEffect(() => {
@@ -41,6 +43,16 @@ export default function EndOfShiftPage() {
     }
     load()
   }, [])
+
+  // EOS gate: check if selected vehicle has an active shift
+  useEffect(() => {
+    if (!vehicleId) { setActiveShift(null); return }
+    setShiftChecking(true)
+    checkActiveShift(vehicleId).then(result => {
+      setActiveShift(result)
+      setShiftChecking(false)
+    }).catch(() => setShiftChecking(false))
+  }, [vehicleId])
 
   const restockItems = checklist?.type === 'ems' || !checklist
     ? ['IV Supplies', 'Gauze / Bandages', 'Gloves', 'Oxygen (main)', 'Oxygen (portable)', 'Medications', 'Saline', 'Tape / Wraps']
@@ -136,6 +148,27 @@ export default function EndOfShiftPage() {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* EOS Gate — shift status */}
+            {vehicleId && shiftChecking && (
+              <p className="text-sm text-slate-400 animate-pulse">Checking shift status...</p>
+            )}
+            {vehicleId && !shiftChecking && activeShift && !activeShift.active && (
+              <div className="p-4 bg-rose-50 border-2 border-rose-300 rounded-xl space-y-2">
+                <p className="font-bold text-rose-700 text-sm">⛔ No active shift for this vehicle</p>
+                <p className="text-rose-600 text-xs">You must complete a Start of Shift before submitting an End of Shift report.</p>
+                <Link href="/rig-check" className="block text-xs font-bold text-blue-600 underline mt-1">→ Go to Start of Shift</Link>
+              </div>
+            )}
+            {vehicleId && !shiftChecking && activeShift?.active && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-emerald-700">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <p className="text-sm font-semibold">
+                  Active shift by {activeShift.by}
+                  {activeShift.since && ` · since ${new Date(activeShift.since).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`}
+                </p>
+              </div>
+            )}
 
             {/* Fuel Level */}
             <div className="space-y-3">

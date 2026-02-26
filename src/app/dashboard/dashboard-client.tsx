@@ -14,6 +14,8 @@ interface Vehicle {
   status: string
   last_checked_at: string | null
   ai_note?: string | null
+  on_shift_since?: string | null
+  on_shift_by?: string | null
 }
 
 interface ActivityEvent {
@@ -48,6 +50,7 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
   const [activity, setActivity] = useState<ActivityEvent[]>(initialActivity)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [lastUpdated, setLastUpdated] = useState(new Date())
+  const [elapsedTimes, setElapsedTimes] = useState<Record<string, string>>({})
 
   const fetchLatestData = useCallback(async () => {
     const supabase = createClient()
@@ -181,6 +184,38 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
             </div>
           </div>
         </div>
+
+        {/* In the Field — active shifts */}
+        {vehicles.filter(v => v.on_shift_since).length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-lg font-bold text-slate-700 uppercase tracking-widest mb-3 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              In the Field
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {vehicles.filter(v => v.on_shift_since).map(v => {
+                const since = v.on_shift_since ? new Date(v.on_shift_since) : null
+                const diffMs = since ? Date.now() - since.getTime() : 0
+                const h = Math.floor(diffMs / 3600000)
+                const m = Math.floor((diffMs % 3600000) / 60000)
+                const elapsed = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`
+                return (
+                  <div key={v.id} className="rounded-2xl overflow-hidden shadow-md border-2 border-amber-300 bg-white">
+                    <div style={{ background: 'linear-gradient(135deg, #92400e, #b45309)', padding: '14px 16px 12px' }}>
+                      <div className="flex items-center justify-between">
+                        <p className="text-white font-extrabold text-lg">{v.rig_number}</p>
+                        <span className="text-amber-200 font-mono font-bold text-base tracking-widest">{elapsed}</span>
+                      </div>
+                      <p className="text-amber-200 text-xs font-medium mt-0.5">
+                        {v.on_shift_by} · since {since?.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Vehicle Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

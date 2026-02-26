@@ -10,6 +10,60 @@ export interface AnalysisResult {
 }
 
 /**
+ * Rewrites raw damage notes from previous shift into a casual, humorous
+ * heads-up message in the style of the workplace (EMS, fire, police).
+ * Example: "Hey — last crew flagged a busted headlight on this rig. Check it before you Code 3 anyone."
+ */
+export async function generateHandoffWarning(
+  damageNotes: string,
+  orgType: string = 'ems'
+): Promise<string> {
+  const styleGuides: Record<string, string> = {
+    ems: 'EMS/ambulance style. Use paramedic slang (Code 3, BLS, ALS, load and go, etc.). Casual, warm, a bit funny.',
+    fire: 'Fire department style. Use firefighter slang (fully involved, charge the line, SCBA, etc.). Friendly and professional.',
+    police: 'Law enforcement style. Use police slang (code 4, signal, 10-4, backup, etc.). Straight-talking with dry humor.',
+  }
+  const style = styleGuides[orgType] || styleGuides.ems
+
+  const prompt = `
+  You are writing a short heads-up message to the incoming crew about a vehicle issue reported by the previous shift.
+  Style: ${style}
+
+  Previous shift reported this damage/issue:
+  "${damageNotes}"
+
+  Rules:
+  - Start with "Hey —"
+  - Mention what the previous crew noted, but rewrite it in casual spoken language
+  - Keep it under 20 words
+  - Sound like a colleague talking to a colleague, not a formal report
+  - No emojis, plain text only
+  - End with a period or exclamation mark
+
+  Examples:
+  "Hey — last crew said the back door latch is acting up. Give it a look before you load anyone."
+  "Hey — previous shift flagged a busted headlight. Might wanna sort that before you Code 3 someone."
+  "Hey — left side oxygen tank was low last shift. Confirm it's been swapped out."
+
+  Respond with just the message, nothing else.
+  `
+
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.0-flash-lite',
+      contents: [prompt],
+    })
+    const text = response.text?.trim()
+    if (!text) throw new Error('Empty warning')
+    return text
+  } catch (error: any) {
+    console.error('[AI] Handoff warning failed:', error?.status)
+    // Fallback: plain text version
+    return `Hey — previous crew reported: "${damageNotes.trim()}". Please check before your shift.`
+  }
+}
+
+/**
  * Generates a short, funny, personalized shift greeting for the crew member.
  * Example: "MARK — no 5150s today and keep the coffee hot."
  */
