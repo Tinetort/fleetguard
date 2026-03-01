@@ -50,88 +50,60 @@ export async function generateHandoffWarning(
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-lite',
+      model: 'gemini-2.5-flash',
       contents: [prompt],
     })
     const text = response.text?.trim()
     if (!text) throw new Error('Empty warning')
     return text
   } catch (error: any) {
-    console.error('[AI] Handoff warning failed:', error?.status)
+    console.error('[AI] Handoff warning failed:', error?.status || error?.message)
     // Fallback: plain text version
     return `Hey — previous crew reported: "${damageNotes.trim()}". Please check before your shift.`
   }
 }
 
+import { shiftGreetings } from './greetings'
+
 /**
- * Generates a short, funny, personalized shift greeting for the crew member.
- * Example: "MARK — no 5150s today and keep the coffee hot."
+ * Generates a short, funny, personalized shift greeting for the crew member
+ * by randomly selecting from a large list of pre-written phrases.
  */
 export async function generateShiftGreeting(
   firstName: string,
   lastName: string,
   orgType: string = 'ems'
 ): Promise<string> {
-  const styleGuides: Record<string, string> = {
-    ems: 'You work for an EMS ambulance company. Use EMS/paramedic slang (5150, code 3, BLS, ALS, "clear", "load and go", etc.). Reference saving lives, coffee, long shifts.',
-    fire: 'You work for a fire department. Use firefighter slang (fully involved, SCBA, RIT, "all hands", "charge the line", etc.). Reference fires, hose lines, brotherhood.',
-    police: 'You work for a law enforcement agency. Use police slang (10-4, code 4, APB, "clear", backup, etc.). Reference staying safe and watching your six.',
-  }
-  const style = styleGuides[orgType] || styleGuides.ems
-
-  const prompt = `
-  Write a short, funny, personalized motivational message for a crew member starting their shift.
-  Their name is ${firstName} ${lastName}. ${style}
-  
-  Rules:
-  - Start by addressing them: FIRSTNAME IN ALL CAPS — (em dash, then message)
-  - Keep it under 15 words total
-  - Be funny, warm, and in the style of the job culture
-  - No emojis — plain text only
-  - End with a period or exclamation mark
-  
-  EMS examples:
-  "MARK — no 5150s before lunch. After that, no promises."
-  "SARAH — code 3 to greatness, but check your mirrors."
-  "ALEX — keep the defibrillator charged and the coffee hotter."
-  
-  Respond with the message ONLY, no quotes, no explanation.
-  `
-
   try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-lite',
-      contents: [prompt],
-    })
-    const text = response.text?.trim()
-    if (!text) throw new Error('Empty greeting')
-    return text
-  } catch (error: any) {
-    console.error('[AI] Greeting failed:', error?.status)
-    const fallbacks: Record<string, string> = {
-      ems: `${firstName.toUpperCase()} — stay sharp, drive safe, save lives.`,
-      fire: `${firstName.toUpperCase()} — stay low, move fast, watch your six.`,
-      police: `${firstName.toUpperCase()} — stay safe out there. We've got your back.`,
-    }
-    return fallbacks[orgType] || fallbacks.ems
+    // 1. Get the array for the specific org type, or fallback to EMS
+    const greetingsArray = shiftGreetings[orgType as keyof typeof shiftGreetings] || shiftGreetings.ems
+
+    // 2. Pick a random greeting
+    const randomIndex = Math.floor(Math.random() * greetingsArray.length)
+    const selectedTemplate = greetingsArray[randomIndex]
+
+    // 3. Inject the name
+    return selectedTemplate.replace(/\{name\}/g, firstName)
+  } catch (error) {
+    console.error('Failed to generate static greeting:', error)
+    // Absolute fallback just in case
+    return `${firstName} — stay safe out there.`
   }
 }
 
 /**
- * Analyzes vehicle damage from TEXT NOTES ONLY using Google Gemini AI.
- * Photos are handled separately (auto-flagged yellow) without calling AI,
- * to conserve API quota and avoid slow analysis.
+ * Analyzes vehicle damage from TEXT NOTES and an optional PHOTO using Google Gemini AI.
  */
-export async function analyzeDamage(notes: string): Promise<AnalysisResult> {
-  if (!notes || !notes.trim()) {
+export async function analyzeDamage(notes: string | null, photoUrl?: string | null): Promise<AnalysisResult> {
+  if ((!notes || !notes.trim()) && !photoUrl) {
     return { severity: 'green', notes: 'No damage reported.' }
   }
 
   const prompt = `
   You are an expert fleet mechanic for an Emergency Medical Services (EMS) company.
   Assess the severity of this vehicle damage report written by a crew member.
-
-  Crew report: "${notes}"
+  
+  Crew report: "${notes || 'No text provided. Rely on the image.'}"
 
   Severity levels:
   - "red": Critical — major mechanical failure, broken windshield, engine issue, collision damage, or any condition requiring the vehicle to be pulled from service immediately.
@@ -143,10 +115,32 @@ export async function analyzeDamage(notes: string): Promise<AnalysisResult> {
   `
 
   try {
-    console.log('[AI] Analyzing text notes:', notes.substring(0, 80))
+    const contents: any[] = [{ role: 'user', parts: [{ text: prompt }] }]
+
+    if (photoUrl) {
+      // Fetch the image to send as base64 to Gemini
+      console.log('[AI] Fetching image for analysis:', photoUrl)
+      const res = await fetch(photoUrl)
+      if (res.ok) {
+        const arrayBuffer = await res.arrayBuffer()
+        const base64 = Buffer.from(arrayBuffer).toString('base64')
+        const mimeType = res.headers.get('content-type') || 'image/jpeg'
+        
+        contents[0].parts.push({
+          inlineData: {
+            data: base64,
+            mimeType
+          }
+        })
+      } else {
+        console.warn('[AI] Failed to fetch image for analysis')
+      }
+    }
+
+    console.log('[AI] Sending request to Gemini...')
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-lite',
-      contents: [prompt],
+      model: 'gemini-2.5-flash',
+      contents: contents,
       config: { responseMimeType: 'application/json' }
     })
 
@@ -163,5 +157,39 @@ export async function analyzeDamage(notes: string): Promise<AnalysisResult> {
       severity: 'yellow',
       notes: 'AI analysis unavailable — manually flagged for dispatcher review.'
     }
+  }
+}
+
+/**
+ * Analyzes an EMT's manual handoff dispute and summarizes it into a professional,
+ * concise 1-sentence note for the dispatcher dashboard.
+ */
+export async function analyzeDispute(rawDispute: string): Promise<string> {
+  const prompt = `
+  You are an expert emergency medical services fleet manager.
+  An EMT just disputed the condition of their vehicle left by the previous shift with the following note:
+  
+  "${rawDispute}"
+
+  Summarize their complaint in one clear, professional, short sentence (under 15 words) for the dispatcher dashboard.
+  Start the sentence directly with the issue (e.g. "Cab left filthy and main oxygen empty.").
+  Respond with just the summary sentence. No quotes, no intro.
+  `
+
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: [prompt],
+    })
+    const text = response.text?.trim()
+    if (!text) throw new Error('Empty dispute analysis')
+    
+    // Add a custom prefix to make it clear this is a dispute summary
+    return `Dispute Summary: ${text}`
+  } catch (error: any) {
+    console.error('[AI] Dispute analysis failed:', error?.status || error?.message)
+    // Fallback if AI fails: just use the raw text truncated
+    const truncated = rawDispute.length > 50 ? rawDispute.substring(0, 50) + '...' : rawDispute
+    return `Dispute: ${truncated}`
   }
 }

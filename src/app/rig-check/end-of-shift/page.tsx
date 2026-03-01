@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CheckCircle2, Fuel, Star, ShieldAlert, Package, ArrowRight } from 'lucide-react'
-import { getVehicles, getActiveChecklist, submitEndOfShiftReport, checkActiveShift } from '../../actions'
+import { getVehicles, getActiveChecklist, submitEndOfShiftReport, checkActiveShift, getInitialEndOfShiftData, getShiftMissingItems } from '../../actions'
 import Link from 'next/link'
 import SignaturePad, { type SignaturePadRef } from '@/components/signature-pad'
 
@@ -23,8 +23,7 @@ export default function EndOfShiftPage() {
   const [checklist, setChecklist] = useState<any>(null)
   const [vehicleId, setVehicleId] = useState('')
   const [fuelLevel, setFuelLevel] = useState('half')
-  const [cleanlinessRating, setCleanlinessRating] = useState(3)
-  const [hoveredStar, setHoveredStar] = useState<number | null>(null)
+  const [cleanlinessDetails, setCleanlinessDetails] = useState({ cab: true, patient: true, trash: true })
   const [restockNeeded, setRestockNeeded] = useState<string[]>([])
   const [vehicleCondition, setVehicleCondition] = useState('')
   const [notes, setNotes] = useState('')
@@ -37,9 +36,12 @@ export default function EndOfShiftPage() {
 
   useEffect(() => {
     async function load() {
-      const [v, cl] = await Promise.all([getVehicles(), getActiveChecklist()])
+      const [v, cl, initData] = await Promise.all([getVehicles(), getActiveChecklist(), getInitialEndOfShiftData()])
       setVehicles(v)
       setChecklist(cl)
+      if (initData.vehicleId) {
+        setVehicleId(initData.vehicleId)
+      }
     }
     load()
   }, [])
@@ -48,8 +50,17 @@ export default function EndOfShiftPage() {
   useEffect(() => {
     if (!vehicleId) { setActiveShift(null); return }
     setShiftChecking(true)
-    checkActiveShift(vehicleId).then(result => {
-      setActiveShift(result)
+    
+    Promise.all([
+      checkActiveShift(vehicleId),
+      getShiftMissingItems(vehicleId)
+    ]).then(([shiftResult, missingResult]) => {
+      setActiveShift(shiftResult)
+      if (missingResult.missingItems && missingResult.missingItems.length > 0) {
+        setRestockNeeded(missingResult.missingItems)
+      } else {
+        setRestockNeeded([]) 
+      }
       setShiftChecking(false)
     }).catch(() => setShiftChecking(false))
   }, [vehicleId])
@@ -73,7 +84,7 @@ export default function EndOfShiftPage() {
     const formData = new FormData()
     formData.append('vehicle_id', vehicleId)
     formData.append('fuel_level', fuelLevel)
-    formData.append('cleanliness_rating', String(cleanlinessRating))
+    formData.append('cleanliness_details', JSON.stringify(cleanlinessDetails))
     formData.append('restock_needed', JSON.stringify(restockNeeded))
     formData.append('vehicle_condition', vehicleCondition)
     formData.append('notes', notes)
@@ -137,7 +148,7 @@ export default function EndOfShiftPage() {
             {/* Vehicle */}
             <div className="space-y-3">
               <Label className="text-slate-700 font-bold text-sm uppercase tracking-wide">Select Vehicle</Label>
-              <Select name="vehicle_id" onValueChange={setVehicleId} required>
+              <Select name="vehicle_id" onValueChange={setVehicleId} value={vehicleId} required>
                 <SelectTrigger className="w-full h-14 text-lg bg-white border-slate-300 shadow-sm">
                   <SelectValue placeholder="Tap to select rig" />
                 </SelectTrigger>
@@ -199,23 +210,20 @@ export default function EndOfShiftPage() {
               <Label className="text-slate-700 font-bold text-sm uppercase tracking-wide flex items-center gap-2">
                 <Star className="w-4 h-4" /> Vehicle Cleanliness
               </Label>
-              <div className="flex gap-2 justify-center bg-white p-4 rounded-xl border border-slate-200">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setCleanlinessRating(star)}
-                    onMouseEnter={() => setHoveredStar(star)}
-                    onMouseLeave={() => setHoveredStar(null)}
-                    className="text-4xl transition-transform active:scale-90 hover:scale-110"
-                  >
-                    {star <= (hoveredStar ?? cleanlinessRating) ? '⭐' : '☆'}
-                  </button>
-                ))}
+              <div className="grid grid-cols-1 gap-2 bg-white p-4 rounded-xl border border-slate-200">
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <input type="checkbox" checked={cleanlinessDetails.cab} onChange={(e) => setCleanlinessDetails({...cleanlinessDetails, cab: e.target.checked})} className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500 cursor-pointer" />
+                  <span className="font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">Front Cab Clean</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer group mt-2">
+                  <input type="checkbox" checked={cleanlinessDetails.patient} onChange={(e) => setCleanlinessDetails({...cleanlinessDetails, patient: e.target.checked})} className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500 cursor-pointer" />
+                  <span className="font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">Rear Patient Area Clean</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer group mt-2">
+                  <input type="checkbox" checked={cleanlinessDetails.trash} onChange={(e) => setCleanlinessDetails({...cleanlinessDetails, trash: e.target.checked})} className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500 cursor-pointer" />
+                  <span className="font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">Trash Emptied</span>
+                </label>
               </div>
-              <p className="text-center text-sm text-slate-500 font-medium">
-                {['', 'Very Dirty', 'Needs Cleaning', 'Acceptable', 'Clean', 'Spotless'][cleanlinessRating]}
-              </p>
             </div>
 
             {/* Restock Needed */}

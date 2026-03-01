@@ -4,18 +4,22 @@ import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/../utils/supabase/client'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
-import { ListChecks, RefreshCw, Download, Shield } from 'lucide-react'
+import { ListChecks, RefreshCw, Download, Shield, X, Users, Truck, Wrench } from 'lucide-react'
 import type { OrgLabels } from '@/lib/labels'
 import PushToggle from '@/components/push-toggle'
+import { adminForceEndShift } from '../actions'
 
 interface Vehicle {
   id: string
   rig_number: string
   status: string
   last_checked_at: string | null
+  in_service: boolean
   ai_note?: string | null
   on_shift_since?: string | null
   on_shift_by?: string | null
+  damage_photo_url?: string | null
+  original_dispute_text?: string | null
 }
 
 interface ActivityEvent {
@@ -23,17 +27,20 @@ interface ActivityEvent {
   created_at: string
   _type: 'start' | 'eos'
   vehicles?: { rig_number: string } | null
-  users?: { username: string } | null
+  users?: { username: string; first_name?: string | null; last_name?: string | null } | null
+  crew_last_name?: string | null
   damage_notes?: string | null
   ai_damage_severity?: string | null
   fuel_level?: string | null
   cleanliness_rating?: number | null
+  answers?: any
 }
 
 interface Props {
   initialVehicles: Vehicle[]
   initialActivity: ActivityEvent[]
   labels: OrgLabels
+  userRole: string
 }
 
 function getStatusColor(status: string) {
@@ -45,14 +52,73 @@ function getStatusColor(status: string) {
   }
 }
 
-export default function DashboardClient({ initialVehicles, initialActivity, labels }: Props) {
+export default function DashboardClient({ initialVehicles, initialActivity, labels, userRole }: Props) {
   const [vehicles, setVehicles] = useState<Vehicle[]>(initialVehicles)
   const [activity, setActivity] = useState<ActivityEvent[]>(initialActivity)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [lastUpdated, setLastUpdated] = useState(new Date())
   const [elapsedTimes, setElapsedTimes] = useState<Record<string, string>>({})
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [endingShifts, setEndingShifts] = useState<Record<string, boolean>>({})
+  const [confirmingShiftId, setConfirmingShiftId] = useState<string | null>(null)
 
-  const fetchLatestData = useCallback(async () => {
+function ExpandableAiNote({ note, originalText }: { note: string, originalText?: string | null }) {
+  const [expanded, setExpanded] = useState(false)
+  
+  // The note could be just a dispute, just missing items/damage, or both concatenated with " | "
+  const parts = note.split(' | ')
+  const disputeSummaryPart = parts.find(p => p.includes('Dispute Summary:'))
+  const otherNotesPart = parts.find(p => !p.includes('Dispute Summary:'))
+
+  return (
+    <div className="mt-3 flex flex-col gap-2">
+      {/* 1. Render Missing Equipment or Standard AI Notes (if any) */}
+      {otherNotesPart && (
+        <div className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-start gap-3 text-left">
+          <div className="bg-amber-100 text-amber-700 p-1.5 rounded-md mt-0.5 shrink-0">
+            <span className="text-[10px] font-black tracking-widest uppercase">System</span>
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-slate-700 mb-1">Checklist Flag</p>
+            <p className="text-xs text-slate-500 font-medium">{otherNotesPart}</p>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Render Expandable Dispute Summary (if any) */}
+      {disputeSummaryPart && (
+        <div 
+          className="w-full p-3 bg-rose-50 border border-rose-200 rounded-lg flex items-start gap-3 text-left cursor-pointer hover:bg-rose-100/50 transition-colors"
+          onClick={() => setExpanded(!expanded)}
+        >
+          <div className="bg-rose-100 text-rose-700 p-1.5 rounded-md mt-0.5 shrink-0">
+            <span className="text-[10px] font-black tracking-widest uppercase">AI</span>
+          </div>
+          <div className="flex-1 w-full min-w-0">
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-sm font-semibold text-rose-900">Handoff Dispute (AI Summary)</p>
+              <span className="text-[10px] font-bold text-rose-500 uppercase tracking-widest bg-white/50 px-2 py-0.5 rounded-full border border-rose-200">
+                {expanded ? 'Hide Original' : 'View Original'}
+              </span>
+            </div>
+            <p className="text-xs text-rose-700 font-medium">
+              {disputeSummaryPart.replace('Dispute Summary:', '').trim()}
+            </p>
+            
+            {expanded && originalText && (
+              <div className="mt-2 pt-2 border-t border-rose-200/60 animate-in fade-in slide-in-from-top-1 duration-200">
+                <p className="text-[10px] uppercase font-bold text-rose-400 mb-1 tracking-widest">Original EMT Text:</p>
+                <p className="text-xs text-rose-800 italic bg-white/40 p-2 rounded-md border border-rose-100/50">"{originalText}"</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+const fetchLatestData = useCallback(async () => {
     const supabase = createClient()
     const todayStart = new Date()
     todayStart.setHours(0, 0, 0, 0)
@@ -60,34 +126,39 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
     // Fetch updated vehicles
     const { data: vehiclesData } = await supabase
       .from('vehicles')
-      .select('id, rig_number, status, last_checked_at')
+      .select('id, rig_number, status, last_checked_at, in_service, on_shift_since, on_shift_by')
       .order('rig_number')
 
     // Fetch latest AI notes per vehicle
     const { data: checks } = await supabase
       .from('rig_checks')
-      .select('vehicle_id, ai_analysis_notes, created_at')
+      .select('vehicle_id, ai_analysis_notes, damage_photo_url, created_at, answers')
       .order('created_at', { ascending: false })
 
     if (vehiclesData) {
-      const withNotes = vehiclesData.map(v => ({
-        ...v,
-        ai_note: checks?.find(c => c.vehicle_id === v.id)?.ai_analysis_notes || null
-      }))
+      const withNotes = vehiclesData.map(v => {
+        const latestCheck = checks?.find(c => c.vehicle_id === v.id)
+        return {
+          ...v,
+          ai_note: latestCheck?.ai_analysis_notes || null,
+          damage_photo_url: latestCheck?.damage_photo_url || null,
+          original_dispute_text: latestCheck?.answers?.handoff_dispute_notes || null
+        }
+      })
       setVehicles(withNotes)
     }
 
     // Fetch today's activity
     const { data: todayChecks } = await supabase
       .from('rig_checks')
-      .select('id, created_at, damage_notes, ai_damage_severity, vehicles(rig_number), users(username)')
+      .select('id, created_at, damage_notes, ai_damage_severity, answers, crew_last_name, vehicles(rig_number), users(username, first_name, last_name)')
       .gte('created_at', todayStart.toISOString())
       .order('created_at', { ascending: false })
       .limit(20)
 
     const { data: todayEos } = await supabase
       .from('end_of_shift_reports')
-      .select('id, created_at, fuel_level, cleanliness_rating, vehicles(rig_number), users(username)')
+      .select('id, created_at, fuel_level, cleanliness_rating, crew_last_name, vehicles(rig_number), users(username, first_name, last_name)')
       .gte('created_at', todayStart.toISOString())
       .order('created_at', { ascending: false })
       .limit(10)
@@ -133,8 +204,21 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
     setIsRefreshing(false)
   }
 
+  const handleForceEndShift = async (vehicleId: string) => {
+    try {
+      setEndingShifts(prev => ({ ...prev, [vehicleId]: true }))
+      await adminForceEndShift(vehicleId)
+      setConfirmingShiftId(null)
+      await fetchLatestData()
+    } catch (err: any) {
+      alert(`Failed to end shift: ${err.message}`)
+    } finally {
+      setEndingShifts(prev => ({ ...prev, [vehicleId]: false }))
+    }
+  }
+
   const checkedTodayIds = new Set(
-    activity.filter(a => a._type === 'start').map((a: any) => a.vehicles?.rig_number)
+    activity.map((a: any) => a.vehicles?.rig_number).filter(Boolean)
   )
 
   return (
@@ -170,6 +254,16 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
             >
               <Download className="w-4 h-4" /> Export PDF
             </a>
+            {userRole === 'director' && (
+              <>
+                <Link href="/dashboard/users" className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm hover:shadow transition-all">
+                  <Users className="w-4 h-4" /> Manage Users
+                </Link>
+                <Link href="/dashboard/vehicles" className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm hover:shadow transition-all">
+                  <Truck className="w-4 h-4" /> Manage Vehicles
+                </Link>
+              </>
+            )}
             <Link href="/dashboard/audit-log" className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm hover:shadow transition-all">
               <Shield className="w-4 h-4" /> Audit Log
             </Link>
@@ -206,9 +300,41 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
                         <p className="text-white font-extrabold text-lg">{v.rig_number}</p>
                         <span className="text-amber-200 font-mono font-bold text-base tracking-widest">{elapsed}</span>
                       </div>
-                      <p className="text-amber-200 text-xs font-medium mt-0.5">
-                        {v.on_shift_by} · since {since?.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
-                      </p>
+                      <div className="flex items-center justify-between mt-0.5">
+                        <p className="text-amber-200 text-xs font-medium">
+                          {v.on_shift_by} · since {since?.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
+                        </p>
+                        {(userRole === 'manager' || userRole === 'director') && (
+                          <div className="flex items-center gap-2">
+                            {confirmingShiftId === v.id ? (
+                              <>
+                                <button
+                                  onClick={() => handleForceEndShift(v.id)}
+                                  disabled={endingShifts[v.id]}
+                                  className="bg-rose-600 hover:bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded shadow-sm transition-all disabled:opacity-50"
+                                >
+                                  {endingShifts[v.id] ? 'Ending...' : 'Confirm'}
+                                </button>
+                                <button
+                                  onClick={() => setConfirmingShiftId(null)}
+                                  disabled={endingShifts[v.id]}
+                                  className="bg-slate-500 hover:bg-slate-400 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded shadow-sm transition-all"
+                                >
+                                  Cancel
+                                </button>
+                              </>
+                            ) : (
+                              <button
+                                onClick={() => setConfirmingShiftId(v.id)}
+                                disabled={endingShifts[v.id]}
+                                className="bg-rose-600 hover:bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded shadow-sm transition-all disabled:opacity-50"
+                              >
+                                {endingShifts[v.id] ? 'Ending...' : 'Force End'}
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )
@@ -222,35 +348,53 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
           {vehicles.map((rig) => {
             const checkedToday = checkedTodayIds.has(rig.rig_number)
             return (
-              <Card key={rig.id} className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className={`h-3 ${getStatusColor(rig.status)} w-full transition-colors duration-700`} />
+              <Card key={rig.id} className={`overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 ${rig.in_service ? 'opacity-80' : ''}`}>
+                <div className={`h-3 ${rig.in_service ? 'bg-amber-400' : getStatusColor(rig.status)} w-full transition-colors duration-700`} />
                 <CardHeader className="pb-2">
                   <CardTitle className="flex justify-between items-center text-2xl font-bold">
                     {rig.rig_number}
-                    <span className={`text-xs px-2.5 py-1 rounded-full font-bold uppercase tracking-wider ${getStatusColor(rig.status)}`}>
-                      {rig.status}
-                    </span>
+                    {rig.in_service ? (
+                      <span className="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-bold uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-300">
+                        <Wrench className="w-3.5 h-3.5" /> In Service
+                      </span>
+                    ) : (
+                      <span className={`text-xs px-2.5 py-1 rounded-full font-bold uppercase tracking-wider ${getStatusColor(rig.status)}`}>
+                        {rig.status}
+                      </span>
+                    )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-sm text-slate-500 font-medium pb-2">
-                    Last Checked: {rig.last_checked_at ? new Date(rig.last_checked_at).toLocaleString() : 'Never'}
-                  </div>
-                  {!checkedToday && (
-                    <div className="mt-2 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5">
-                      ⚠️ {labels.vehicle} not checked this shift
+                  {rig.in_service ? (
+                    <div className="text-sm text-amber-700 font-semibold bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-center gap-2">
+                      <Wrench className="w-4 h-4 shrink-0" />
+                      Vehicle is at the mechanic and unavailable for shifts.
                     </div>
-                  )}
-                  {rig.ai_note && (
-                    <div className="mt-3 w-full p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-start gap-3 text-left">
-                      <div className="bg-purple-100 text-purple-700 p-1.5 rounded-md mt-0.5 shrink-0">
-                        <span className="text-[10px] font-black tracking-widest uppercase">AI</span>
+                  ) : (
+                    <>
+                      <div className="text-sm text-slate-500 font-medium pb-2">
+                        Last Checked: {rig.last_checked_at ? new Date(rig.last_checked_at).toLocaleString() : 'Never'}
                       </div>
-                      <div>
-                        <p className="text-sm font-semibold text-slate-700 mb-1">Gemini Detection</p>
-                        <p className="text-xs text-slate-500 font-medium">{rig.ai_note}</p>
-                      </div>
-                    </div>
+                      {(!rig.last_checked_at || new Date(rig.last_checked_at) < new Date(new Date().setHours(0,0,0,0))) && (
+                        <div className="mt-2 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5">
+                          ⚠️ {labels.vehicle} not checked this shift
+                        </div>
+                      )}
+                      {rig.ai_note && (
+                        <ExpandableAiNote note={rig.ai_note} originalText={rig.original_dispute_text} />
+                      )}
+                      {rig.damage_photo_url && (
+                        <div 
+                          className="mt-3 w-full border border-slate-200 rounded-lg overflow-hidden relative cursor-pointer group"
+                          onClick={() => setSelectedImage(rig.damage_photo_url!)}
+                        >
+                          <img src={rig.damage_photo_url} alt="Damage" className="w-full object-cover max-h-48 group-hover:scale-105 transition-transform duration-500" />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                            <span className="opacity-0 group-hover:opacity-100 bg-black/60 text-white text-xs font-bold px-3 py-1.5 rounded-full transition-opacity backdrop-blur-md">View Full Size</span>
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </CardContent>
               </Card>
@@ -286,7 +430,7 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
                             {isEos ? `🌙 ${labels.shiftEnd}` : `🌅 ${labels.shiftStart}`} —{' '}
                             <span className="text-blue-600">{event.vehicles?.rig_number ?? `Unknown ${labels.vehicle}`}</span>
                           </p>
-                          <p className="text-xs text-slate-500 mt-0.5">by {event.users?.username ?? 'Unknown'}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">by {event.crew_last_name || (event.users?.first_name ? `${event.users.first_name} ${event.users.last_name || ''}`.trim() : event.users?.username ?? 'Unknown')}</p>
                           {isEos && event.fuel_level && (
                             <p className="text-xs text-amber-700 mt-1 font-medium">
                               Fuel: {event.fuel_level.replace('_', ' ')}
@@ -294,6 +438,11 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
                           )}
                           {!isEos && event.ai_damage_severity === 'yellow' && event.damage_notes === null && (
                             <p className="text-xs text-amber-700 mt-1 font-medium">⚠️ Missing equipment flagged</p>
+                          )}
+                          {!isEos && event.answers?.handoff_disputed && (
+                            <p className="text-xs text-rose-700 mt-1.5 font-medium bg-rose-50 px-2 py-1 rounded-md border border-rose-200">
+                              💬 <span className="font-bold">Dispute:</span> {event.answers?.handoff_dispute_notes}
+                            </p>
                           )}
                           {!isEos && event.damage_notes && (
                             <p className="text-xs text-rose-600 mt-1 font-medium">⚠️ {event.damage_notes.substring(0, 80)}{event.damage_notes.length > 80 ? '...' : ''}</p>
@@ -310,6 +459,44 @@ export default function DashboardClient({ initialVehicles, initialActivity, labe
             </div>
           )}
         </div>
+
+        {/* Fullscreen Image Modal */}
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/90 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div 
+              className="relative max-w-5xl w-full max-h-[95vh] flex flex-col items-center justify-center animate-in zoom-in-95 duration-200"
+              onClick={e => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-12 right-0 md:-right-12 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full backdrop-blur-md transition-all"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <img 
+                src={selectedImage} 
+                alt="Enlarged damage view" 
+                className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl border border-white/10"
+              />
+              
+              <div className="mt-6 flex gap-4">
+                <a 
+                  href={selectedImage}
+                  download="damage-photo.jpg"
+                  target="_blank"
+                  className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5"
+                >
+                  <Download className="w-5 h-5" />
+                  Download Original
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

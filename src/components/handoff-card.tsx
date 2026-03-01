@@ -13,7 +13,7 @@ const FUEL_ICONS: Record<string, string> = {
 interface HandoffData {
   lastCrew: string | null
   fuelLevel: string | null
-  cleanlinessRating: number | null
+  cleanlinessDetails: any | null
   restockNeeded: string[]
   handoffNotes: string | null
   damageSummary: string | null
@@ -82,19 +82,22 @@ export default function HandoffCard({ data, onAcknowledge }: HandoffCardProps) {
         )}
 
         {/* Cleanliness */}
-        {data.cleanlinessRating != null && (
-          <div className="flex items-center justify-between">
+        {data.cleanlinessDetails && (
+          <div className="space-y-2">
             <div className="flex items-center gap-2 text-slate-600">
               <Star className="w-4 h-4" />
               <span className="text-sm font-semibold">Cleanliness</span>
             </div>
-            <div className="flex gap-0.5">
-              {[1, 2, 3, 4, 5].map(i => (
-                <Star
-                  key={i}
-                  className={`w-4 h-4 ${i <= (data.cleanlinessRating || 0) ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`}
-                />
-              ))}
+            <div className="flex flex-wrap gap-2 text-sm justify-between bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <span className={`font-semibold flex items-center gap-1.5 ${data.cleanlinessDetails.cab ? "text-emerald-700" : "text-rose-700"}`}>
+                {data.cleanlinessDetails.cab ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />} Cab
+              </span>
+              <span className={`font-semibold flex items-center gap-1.5 ${data.cleanlinessDetails.patient ? "text-emerald-700" : "text-rose-700"}`}>
+                {data.cleanlinessDetails.patient ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />} Patient Area
+              </span>
+              <span className={`font-semibold flex items-center gap-1.5 ${data.cleanlinessDetails.trash ? "text-emerald-700" : "text-rose-700"}`}>
+                {data.cleanlinessDetails.trash ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />} Trash
+              </span>
             </div>
           </div>
         )}

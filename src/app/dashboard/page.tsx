@@ -11,29 +11,31 @@ async function getInitialData() {
 
   const { data: vehicles } = await supabase
     .from('vehicles')
-    .select('id, rig_number, status, last_checked_at')
+    .select('id, rig_number, status, last_checked_at, in_service, on_shift_since, on_shift_by')
     .order('rig_number')
 
   const { data: checks } = await supabase
     .from('rig_checks')
-    .select('vehicle_id, ai_analysis_notes, created_at')
+    .select('vehicle_id, ai_analysis_notes, damage_photo_url, created_at, answers')
     .order('created_at', { ascending: false })
 
   const vehiclesWithNotes = (vehicles || []).map(v => ({
     ...v,
-    ai_note: checks?.find(c => c.vehicle_id === v.id)?.ai_analysis_notes || null
+    ai_note: checks?.find(c => c.vehicle_id === v.id)?.ai_analysis_notes || null,
+    damage_photo_url: checks?.find(c => c.vehicle_id === v.id)?.damage_photo_url || null,
+    original_dispute_text: checks?.find(c => c.vehicle_id === v.id)?.answers?.handoff_dispute_notes || null
   }))
 
   const { data: todayChecks } = await supabase
     .from('rig_checks')
-    .select('id, created_at, damage_notes, ai_damage_severity, vehicles(rig_number), users(username)')
+    .select('id, created_at, damage_notes, ai_damage_severity, answers, crew_last_name, vehicles(rig_number), users(username, first_name, last_name)')
     .gte('created_at', todayStart.toISOString())
     .order('created_at', { ascending: false })
     .limit(20)
 
   const { data: todayEos } = await supabase
     .from('end_of_shift_reports')
-    .select('id, created_at, fuel_level, cleanliness_rating, vehicles(rig_number), users(username)')
+    .select('id, created_at, fuel_level, cleanliness_rating, crew_last_name, vehicles(rig_number), users(username, first_name, last_name)')
     .gte('created_at', todayStart.toISOString())
     .order('created_at', { ascending: false })
     .limit(10)
@@ -53,9 +55,10 @@ async function getInitialData() {
 }
 
 export default async function DashboardPage() {
-  const [{ vehicles, activity }, labels] = await Promise.all([
+  const [{ vehicles, activity }, labels, session] = await Promise.all([
     getInitialData(),
     getOrgLabels(),
+    import('@/lib/auth').then(m => m.getSession())
   ])
-  return <DashboardClient initialVehicles={vehicles} initialActivity={activity} labels={labels} />
+  return <DashboardClient initialVehicles={vehicles} initialActivity={activity} labels={labels} userRole={session?.role || 'manager'} />
 }

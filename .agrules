@@ -1,0 +1,36 @@
+# Project Summary
+FleetGuard is a B2B SaaS platform for multi-industry fleet management, daily inspections, and shift handoffs (initially targeting EMS, Fire, and Police departments). The application ensures operational accountability through mandatory Start of Shift and End of Shift reports, tracks live vehicle status for dispatchers, and leverages AI for damage assessment and personalized crew communications.
+
+# Tech Stack
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript
+- **Database, Auth, & Realtime:** Supabase (PostgreSQL, Row Level Security, Supabase SQL, Realtime Subscriptions)
+- **Styling:** Tailwind CSS, Radix UI primitives, `lucide-react` icons (Shadcn UI approach)
+- **AI API:** `@google/genai` (Gemini API for damage analysis, greeting generation, and log summarization)
+- **Push Notifications:** `web-push` (Service Worker API)
+- **Utilities:** `class-variance-authority`, `tailwind-merge`, `clsx`
+
+# Architecture
+- **`/src/app` (Next.js App Router):** Contains all routing. Pages are split into Server Components (`page.tsx` for initial data fetching) and Client Components (`[name]-client.tsx` for state management and realtime subscriptions).
+- **`/src/app/actions.ts`:** Centralized Server Actions for database mutations and heavy server-side queries. Always validates session state and revalidates Next.js cache (`revalidatePath`) after state changes.
+- **`/src/components`:** Reusable UI components. Domain-specific components (`handoff-card.tsx`, `shift-greeting-modal.tsx`) sit here alongside generic UI elements (`ui/card.tsx`, `ui/button.tsx`).
+- **`/src/lib`:** Core business logic and integrations. Contains `ai.ts` (Gemini prompts and wrappers), `labels.ts` / `presets.ts` (multi-tenancy dictionaries), `auth.ts`, and helper functions.
+- **Root Directory (`/`)**: Contains incremental SQL migration files (`schema.sql`, `phase8-shift-migration.sql`) to track database evolution.
+
+# Coding Standards
+1. **Server Actions First:** Use Server Actions in `actions.ts` for all database Writes. Client components should invoke these actions and handle loading/error states. 
+2. **Hybrid Rendering & Realtime:** Dashboard pages must pre-fetch data server-side in `page.tsx`, pass it as `initialData` to a client component, and immediately subscribe to `Supabase Realtime` channels to keep the UI up to date without manual polling.
+3. **Multi-Tenancy & Dynamic Labels:** **Never hardcode industry-specific terms** in the UI (e.g., "Ambulance", "Rig"). Always use the `getOrgLabels()` helper to dynamically render labels based on the user's `org_type` (EMS, Fire, Police).
+4. **Resilient AI Integrations:** AI features (like `generateHandoffWarning` or greetings) must always have non-blocking `try/catch` fallbacks. If the AI API rate limits or fails, the core app flow must continue using raw data or default templates.
+5. **Strict TypeScript:** Define explicit interfaces for Supabase table mappings and component props (e.g., `interface Vehicle`, `interface HandoffData`). Avoid using `any`.
+6. **Graceful Error Handling:** Server Actions must catch database errors and return clear error messages to the client. The client UI must display these via a dedicated error state (e.g., styled red banner) rather than failing silently.
+7. **Database Security:** Use Supabase Row Level Security (RLS) policies to ensure data separation. Migrations and policy updates must be documented via `.sql` files in the root directory.
+
+# Communication & Mentorship Style
+1. **Language:** Always communicate with the developer in **Russian**, but keep technical terms, variables, and code in English.
+2. **Educational Tone:** Explain complex architectural transitions (e.g., Multi-Tenancy, RLS, Deployments, CI/CD) using simple, accessible language, analogies, and visual flowcharts (Mermaid diagrams). Assume the user is building a production SaaS for the first time and needs strategic guidance, not just code snippets.
+3. **Proactive Roadmaps:** When asked "how will this work in the future", proactively create step-by-step strategy documents (like `.md` roadmaps or SOPs) that outline the path from development to production.
+4. **Safe Deployment Habits:** Always enforce professional development workflows in your suggestions:
+   * **Never** suggest editing production databases directly.
+   * **Always** recommend testing locally with a development `.env.local`.
+   * **Always** remind the developer to write and run `.sql` migration files before touching live data.

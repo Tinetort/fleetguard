@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect, useMemo, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CheckCircle2, ShieldAlert, Camera, X, FileText, ArrowRight, CheckCheck } from 'lucide-react'
-import { submitRigCheck, getVehicles, getActiveChecklist, getOrgLabels, getVehicleHandoff } from '../actions'
+import { submitRigCheck, getVehicles, getActiveChecklist, getInitialRigCheckData, getVehicleHandoff, fetchWelcomeGreeting } from '../actions'
 import { categorizeItems } from '@/lib/categorize'
 import Link from 'next/link'
 import type { OrgLabels } from '@/lib/labels'
@@ -20,6 +21,7 @@ import { Clock, ArrowRightCircle } from 'lucide-react'
 type ItemStatus = 'present' | 'missing' | null
 
 export default function RigCheckPage() {
+  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -28,6 +30,8 @@ export default function RigCheckPage() {
   const [vehicleId, setVehicleId] = useState<string>('')
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [labels, setLabels] = useState<OrgLabels>(DEFAULT_LABELS)
+  const [employees, setEmployees] = useState<{id: string, name: string}[]>([])
+  const [partnerName, setPartnerName] = useState<string>('none')
   const [crewLastName, setCrewLastName] = useState('')
   const [greeting, setGreeting] = useState<string | null>(null)
   const [onShiftSince, setOnShiftSince] = useState<Date | null>(null)
@@ -38,6 +42,7 @@ export default function RigCheckPage() {
   const [handoffAcknowledged, setHandoffAcknowledged] = useState(false)
   const [handoffDisputed, setHandoffDisputed] = useState(false)
   const [handoffDisputeNotes, setHandoffDisputeNotes] = useState('')
+  const [welcomeGreeting, setWelcomeGreeting] = useState<string | null>(null)
   const signatureRef = useRef<SignaturePadRef>(null)
 
   // Present/Missing state per item: Record<itemName, 'present'|'missing'|null>
@@ -45,14 +50,29 @@ export default function RigCheckPage() {
 
   useEffect(() => {
     async function loadData() {
-      const [dbVehicles, activeChecklist, orgLabels] = await Promise.all([
+      const [dbVehicles, activeChecklist, initialData] = await Promise.all([
         getVehicles(),
         getActiveChecklist(),
-        getOrgLabels(),
+        getInitialRigCheckData(),
       ])
       setVehicles(dbVehicles)
       setChecklist(activeChecklist)
-      setLabels(orgLabels)
+      setLabels(initialData.orgLabels)
+      setEmployees(initialData.employees || [])
+      if (initialData.currentUser) {
+        setCrewLastName(initialData.currentUser)
+      }
+
+      // If the user is already on shift → send them to the persistent shift screen
+      if (initialData.activeShift) {
+        router.push('/rig-check/on-shift')
+        return
+      }
+
+      setSuccess(false)
+      fetchWelcomeGreeting().then(res => {
+        if (res) setWelcomeGreeting(res)
+      }).catch(err => console.error(err))
     }
     loadData()
   }, [])
@@ -149,21 +169,27 @@ export default function RigCheckPage() {
       formData.append('missing_items', JSON.stringify(missingItems))
     }
 
-    // Append crew identity + signature
+    // Append crew identity + signature + partner
     formData.append('crew_last_name', crewLastName.trim())
+    formData.append('partner_name', partnerName)
     formData.append('signature_data_url', signatureRef.current?.toDataURL() || '')
+
+    // Append handoff dispute details
+    if (handoffAcknowledged) {
+      formData.append('handoff_disputed', String(handoffDisputed))
+      if (handoffDisputed) formData.append('handoff_dispute_notes', handoffDisputeNotes)
+    }
 
     try {
       setSubmitError(null)
       const result = await submitRigCheck(formData)
-      setGreeting((result as any)?.greeting || null)
-      setSuccess(true)
-      setOnShiftSince(new Date())
-      setSelectedFile(null)
-      setItemStatuses({})
-      setCrewLastName('')
-      signatureRef.current?.clear()
-      form.reset()
+      const greetingText = (result as any)?.greeting
+      // Store greeting in sessionStorage so it can be shown on the on-shift page
+      if (greetingText) {
+        sessionStorage.setItem('shiftGreeting', greetingText)
+      }
+      // Redirect to the dedicated persistent on-shift page
+      router.push('/rig-check/on-shift')
     } catch (error: any) {
       console.error(error)
       setSubmitError(error?.message || 'Submission failed. Please try again.')
@@ -188,7 +214,11 @@ export default function RigCheckPage() {
               <ShieldAlert className="w-10 h-10 text-blue-600" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-extrabold text-center text-slate-900">{labels.inspection}</CardTitle>
+          {welcomeGreeting ? (
+            <CardTitle className="text-2xl font-extrabold text-center text-slate-800 animate-in fade-in slide-in-from-bottom-2 duration-700">{welcomeGreeting}</CardTitle>
+          ) : (
+            <CardTitle className="text-3xl font-extrabold text-center text-slate-900">{labels.inspection}</CardTitle>
+          )}
           <CardDescription className="text-center text-slate-500 font-medium text-base">{labels.shiftStart} vehicle inspection form</CardDescription>
         </CardHeader>
         <CardContent className="bg-slate-50 pt-6">
@@ -200,14 +230,22 @@ export default function RigCheckPage() {
               )}
               {/* On-shift status card */}
               <div className="rounded-2xl overflow-hidden border-0 shadow-lg">
-                <div style={{ background: 'linear-gradient(135deg, #1e3a5f, #1d4ed8)', padding: '24px 20px 20px' }}>
+                <div style={{ background: 'linear-gradient(135deg, #1e3a5f, #1d4ed8)', padding: '24px 20px 20px', position: 'relative' }}>
+                  
+                  {/* Vehicle Number Badge - Top Right */}
+                  <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs font-bold px-3 py-1.5 rounded-full tracking-widest shadow-sm">
+                    {vehicles.find((v: any) => v.id === vehicleId)?.rig_number || 'Vehicle'}
+                  </div>
+
                   <p className="text-xs font-bold text-blue-200 uppercase tracking-widest mb-1">YOU ARE ON SHIFT</p>
                   <div className="flex items-center gap-3">
                     <Clock className="w-6 h-6 text-blue-300" />
                     <span className="text-4xl font-extrabold text-white font-mono tracking-widest">{elapsedTime}</span>
                   </div>
-                  <p className="text-blue-300 text-sm mt-2">
-                    {vehicles.find((v: any) => v.id === vehicleId)?.rig_number || 'Vehicle'} · {crewLastName || 'Crew'}
+                  
+                  {/* Crew Names prominently under the timer */}
+                  <p className="text-blue-100 text-sm mt-3 font-semibold uppercase tracking-wide opacity-90">
+                    <span className="opacity-75">CREW:</span> {partnerName && partnerName !== 'none' ? `${crewLastName} & ${partnerName}` : crewLastName || 'Crew'}
                   </p>
                 </div>
                 <div className="bg-white p-4 space-y-3">
@@ -439,16 +477,37 @@ export default function RigCheckPage() {
             )}
 
             {/* Crew Identity */}
-            <div className="space-y-3">
-              <Label htmlFor="crew_last_name" className="text-slate-700 font-bold text-sm uppercase tracking-wide">Your Last Name <span className="text-rose-500">*</span></Label>
-              <Input 
-                id="crew_last_name"
-                value={crewLastName}
-                onChange={e => setCrewLastName(e.target.value)}
-                placeholder="e.g. Smith"
-                className="h-14 text-lg font-medium bg-white border-slate-300 shadow-sm"
-                required
-              />
+            <div className="space-y-4">
+              <div className="space-y-3">
+                <Label htmlFor="crew_last_name" className="text-slate-700 font-bold text-sm uppercase tracking-wide">Your Name <span className="text-rose-500">*</span></Label>
+                <Input 
+                  id="crew_last_name"
+                  value={crewLastName}
+                  onChange={e => setCrewLastName(e.target.value)}
+                  placeholder="e.g. John Smith"
+                  className="h-14 text-lg font-medium bg-slate-50 border-slate-300 shadow-sm text-slate-500"
+                  required
+                  readOnly
+                />
+                <p className="text-xs text-slate-500">Auto-filled from your logged in account.</p>
+              </div>
+
+              {employees.length > 0 && (
+                <div className="space-y-3">
+                  <Label htmlFor="partner" className="text-slate-700 font-bold text-sm uppercase tracking-wide">Partner (Optional)</Label>
+                  <Select onValueChange={setPartnerName} value={partnerName}>
+                    <SelectTrigger id="partner" className="w-full h-14 text-lg bg-white border-slate-300 shadow-sm focus:ring-2 focus:ring-blue-500">
+                      <SelectValue placeholder="Select partner..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none" className="text-slate-500 italic">No partner (Working solo)</SelectItem>
+                      {employees.map(emp => (
+                        <SelectItem key={emp.id} value={emp.name} className="py-2 cursor-pointer">{emp.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
 
             {/* E-Signature */}

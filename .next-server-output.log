@@ -1,0 +1,1638 @@
+
+> smart-rig-check@0.1.0 dev
+> next dev
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/alexandr/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/alexandr/Desktop/SOS/smart-rig-check/package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.129:3000
+- Environments: .env.local
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 795ms
+ GET /login 200 in 3.0s (compile: 2.8s, proxy.ts: 51ms, render: 167ms)
+ GET /login 200 in 47ms (compile: 8ms, proxy.ts: 4ms, render: 35ms)
+✓ Compiled in 142ms
+ GET /login 200 in 106ms (compile: 10ms, proxy.ts: 56ms, render: 40ms)
+ GET /login 200 in 49ms (compile: 7ms, proxy.ts: 5ms, render: 37ms)
+ GET /rig-check 200 in 884ms (compile: 782ms, proxy.ts: 4ms, render: 98ms)
+ POST /rig-check 200 in 1472ms (compile: 5ms, proxy.ts: 11ms, render: 1456ms)
+ POST /rig-check 200 in 200ms (compile: 4ms, proxy.ts: 5ms, render: 191ms)
+ POST /rig-check 200 in 175ms (compile: 5ms, proxy.ts: 5ms, render: 165ms)
+ GET /rig-check 200 in 50ms (compile: 7ms, proxy.ts: 4ms, render: 39ms)
+ POST /rig-check 200 in 738ms (compile: 4ms, proxy.ts: 6ms, render: 727ms)
+ POST /rig-check 200 in 136ms (compile: 3ms, proxy.ts: 3ms, render: 130ms)
+ POST /rig-check 200 in 139ms (compile: 4ms, proxy.ts: 5ms, render: 130ms)
+ GET /login 200 in 61ms (compile: 11ms, proxy.ts: 10ms, render: 40ms)
+ GET /login 200 in 54ms (compile: 8ms, proxy.ts: 3ms, render: 43ms)
+ GET /login 200 in 44ms (compile: 6ms, proxy.ts: 3ms, render: 36ms)
+ GET /login 200 in 86ms (compile: 21ms, proxy.ts: 15ms, render: 50ms)
+ GET /login 200 in 47ms (compile: 5ms, proxy.ts: 3ms, render: 39ms)
+ GET /login 200 in 50ms (compile: 7ms, proxy.ts: 4ms, render: 39ms)
+ GET /rig-check 200 in 28ms (compile: 7ms, proxy.ts: 3ms, render: 18ms)
+ POST /login 303 in 629ms (compile: 12ms, proxy.ts: 16ms, render: 601ms)
+ GET /rig-check 200 in 43ms (compile: 12ms, proxy.ts: 5ms, render: 26ms)
+ POST /rig-check 200 in 287ms (compile: 5ms, proxy.ts: 6ms, render: 275ms)
+ POST /rig-check 200 in 142ms (compile: 5ms, proxy.ts: 5ms, render: 132ms)
+ POST /rig-check 200 in 141ms (compile: 4ms, proxy.ts: 5ms, render: 132ms)
+ POST /rig-check 200 in 267ms (compile: 6ms, proxy.ts: 9ms, render: 253ms)
+ POST /rig-check 200 in 181ms (compile: 5ms, proxy.ts: 6ms, render: 171ms)
+ POST /rig-check 200 in 178ms (compile: 6ms, proxy.ts: 7ms, render: 166ms)
+ POST /rig-check 200 in 744ms (compile: 12ms, proxy.ts: 4ms, render: 727ms)
+Push trigger check: aiSeverity= yellow missing= 0 hasDamageNotes= 
+Push: Calling sendPushNotificationToManagers NOW
+Push: sendPushNotificationToManagers called with: {"title":"⚠️ FleetGuard Alert","body":"ivan.emt: Photo attached by ivan.emt — pending manager review.","url":"/dashboard"}
+Push: Found managers: 2 error: none
+Push: Found subscriptions: 2 error: none
+Push: Sending to 2 endpoints...
+Push: Sending to endpoint #0: https://fcm.googleapis.com/fcm/send/dQIkEs7qm2U:APA91bGn_GKL
+Push: Sending to endpoint #1: https://fcm.googleapis.com/fcm/send/eKUOAZUd-1g:APA91bHghVKB
+(node:46917) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Push: SUCCESS sent to endpoint #1
+Push: SUCCESS sent to endpoint #0
+Push: All sends completed
+Push: sendPushNotificationToManagers returned
+[AI] Greeting failed: 429
+ GET /images/icons/icon-72x72.png 404 in 450ms (compile: 368ms, proxy.ts: 4ms, render: 77ms)
+ GET /images/icons/icon-192x192.png 404 in 452ms (compile: 341ms, proxy.ts: 4ms, render: 106ms)
+ POST /rig-check 200 in 2.9s (compile: 6ms, proxy.ts: 5ms, render: 2.9s)
+ GET /rig-check/end-of-shift 200 in 400ms (compile: 371ms, proxy.ts: 6ms, render: 23ms)
+ POST /rig-check/end-of-shift 200 in 352ms (compile: 8ms, proxy.ts: 5ms, render: 340ms)
+ POST /rig-check/end-of-shift 200 in 146ms (compile: 3ms, proxy.ts: 5ms, render: 138ms)
+ POST /rig-check/end-of-shift 200 in 277ms (compile: 3ms, proxy.ts: 3ms, render: 271ms)
+ POST /rig-check/end-of-shift 200 in 153ms (compile: 3ms, proxy.ts: 3ms, render: 147ms)
+ GET /rig-check 200 in 72ms (compile: 11ms, proxy.ts: 1838µs, render: 59ms)
+ POST /rig-check 200 in 359ms (compile: 3ms, proxy.ts: 6ms, render: 350ms)
+ POST /rig-check 200 in 149ms (compile: 5ms, proxy.ts: 6ms, render: 138ms)
+ POST /rig-check 200 in 145ms (compile: 4ms, proxy.ts: 5ms, render: 136ms)
+ GET /login 200 in 57ms (compile: 13ms, proxy.ts: 3ms, render: 41ms)
+ GET /dashboard 200 in 1411ms (compile: 593ms, proxy.ts: 3ms, render: 815ms)
+ POST /login 303 in 1716ms (compile: 15ms, proxy.ts: 11ms, render: 1690ms)
+ GET /dashboard 200 in 763ms (compile: 4ms, proxy.ts: 3ms, render: 756ms)
+✓ Compiled in 281ms
+✓ Compiled in 99ms
+✓ Compiled in 43ms
+✓ Compiled in 624ms
+✓ Compiled in 0ms
+ GET /dashboard 200 in 508ms (compile: 115ms, proxy.ts: 22ms, render: 370ms)
+ GET /dashboard 200 in 1360ms (compile: 623ms, proxy.ts: 43ms, render: 694ms)
+ GET /dashboard 200 in 667ms (compile: 18ms, proxy.ts: 46ms, render: 602ms)
+ GET /dashboard 200 in 1600ms (compile: 430ms, proxy.ts: 219ms, render: 952ms)
+ GET /dashboard 200 in 693ms (compile: 32ms, proxy.ts: 60ms, render: 601ms)
+ GET /dashboard 200 in 463ms (compile: 7ms, proxy.ts: 12ms, render: 444ms)
+ GET /dashboard 200 in 288ms (compile: 47ms, proxy.ts: 3ms, render: 237ms)
+ GET /dashboard 200 in 293ms (compile: 7ms, proxy.ts: 3ms, render: 283ms)
+ GET /dashboard 200 in 1393ms (compile: 5ms, proxy.ts: 3ms, render: 1385ms)
+ GET /dashboard 200 in 1354ms (compile: 11ms, proxy.ts: 3ms, render: 1339ms)
+ GET /dashboard 200 in 668ms (compile: 186ms, proxy.ts: 12ms, render: 469ms)
+ GET /dashboard 200 in 336ms (compile: 3ms, proxy.ts: 3ms, render: 330ms)
+ GET /dashboard 200 in 376ms (compile: 6ms, proxy.ts: 4ms, render: 366ms)
+ GET /dashboard 200 in 244ms (compile: 5ms, proxy.ts: 20ms, render: 220ms)
+ GET /dashboard 200 in 438ms (compile: 5ms, proxy.ts: 2ms, render: 431ms)
+ GET /dashboard 200 in 325ms (compile: 8ms, proxy.ts: 3ms, render: 314ms)
+ GET /dashboard 200 in 194ms (compile: 6ms, proxy.ts: 5ms, render: 183ms)
+ GET /dashboard 200 in 195ms (compile: 11ms, proxy.ts: 8ms, render: 177ms)
+✓ Compiled in 225ms
+✓ Compiled in 0ms
+ GET /dashboard 200 in 578ms (compile: 5ms, proxy.ts: 4ms, render: 568ms)
+ GET /dashboard 200 in 449ms (compile: 4ms, proxy.ts: 3ms, render: 442ms)
+ GET /dashboard 200 in 1273ms (compile: 360ms, proxy.ts: 17ms, render: 896ms)
+ GET /dashboard 200 in 667ms (compile: 8ms, proxy.ts: 17ms, render: 642ms)
+ GET /dashboard 200 in 514ms (compile: 4ms, proxy.ts: 3ms, render: 506ms)
+ GET /dashboard 200 in 405ms (compile: 4ms, proxy.ts: 2ms, render: 398ms)
+ GET /dashboard 200 in 156ms (compile: 4ms, proxy.ts: 2ms, render: 150ms)
+ GET /dashboard 200 in 237ms (compile: 3ms, proxy.ts: 2ms, render: 232ms)
+ GET /login 200 in 332ms (compile: 197ms, proxy.ts: 4ms, render: 131ms)
+ GET /rig-check 200 in 331ms (compile: 271ms, proxy.ts: 3ms, render: 56ms)
+ POST /login 303 in 1124ms (compile: 21ms, proxy.ts: 37ms, render: 1066ms)
+ GET /rig-check 200 in 23ms (compile: 4ms, proxy.ts: 4ms, render: 15ms)
+ POST /rig-check 200 in 327ms (compile: 6ms, proxy.ts: 11ms, render: 310ms)
+ POST /rig-check 200 in 157ms (compile: 13ms, proxy.ts: 7ms, render: 137ms)
+ POST /rig-check 200 in 153ms (compile: 3ms, proxy.ts: 3ms, render: 146ms)
+ POST /rig-check 200 in 259ms (compile: 4ms, proxy.ts: 3ms, render: 252ms)
+ POST /rig-check 200 in 142ms (compile: 3ms, proxy.ts: 3ms, render: 136ms)
+ POST /rig-check 200 in 135ms (compile: 3ms, proxy.ts: 3ms, render: 129ms)
+ POST /rig-check 200 in 314ms (compile: 11ms, proxy.ts: 19ms, render: 284ms)
+Push: uploadedPhotoUrl: https://livsjfliyroivhevmylw.supabase.co/storage/v1/object/public/damage_photos/1772258457499_irdq3j.jpg
+[AI] Fetching image for analysis: https://livsjfliyroivhevmylw.supabase.co/storage/v1/object/public/damage_photos/1772258457499_irdq3j.jpg
+[AI] Sending request to Gemini...
+[AI] Result: red - This ambulance has sustained critical collision damage, including a shattered wi
+Push trigger check: aiSeverity= red missing= 0 hasDamageNotes= 
+Push: Calling sendPushNotificationToManagers NOW
+Push: sendPushNotificationToManagers called with: {"title":"🚨 CRITICAL: FleetGuard Alert","body":"ivan.emt: This ambulance has sustained critical collision damage, including a shattered windshield, crumpled roof, and significant deformation of the A
+Push: Found managers: 2 error: none
+Push: Found subscriptions: 2 error: none
+Push: Sending to 2 endpoints...
+Push: Sending to endpoint #0: https://fcm.googleapis.com/fcm/send/dQIkEs7qm2U:APA91bGn_GKL
+Push: Sending to endpoint #1: https://fcm.googleapis.com/fcm/send/eKUOAZUd-1g:APA91bHghVKB
+ GET /uploaded-via-mvp.jpg 404 in 66ms (compile: 23ms, proxy.ts: 9ms, render: 34ms)
+Push: SUCCESS sent to endpoint #1
+Push: SUCCESS sent to endpoint #0
+Push: All sends completed
+Push: sendPushNotificationToManagers returned
+ GET /images/icons/icon-192x192.png 404 in 78ms (compile: 14ms, proxy.ts: 9ms, render: 55ms)
+ GET /images/icons/icon-72x72.png 404 in 69ms (compile: 37ms, proxy.ts: 4ms, render: 29ms)
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 7.1s (compile: 8ms, proxy.ts: 8ms, render: 7.1s)
+ GET /rig-check/end-of-shift 200 in 326ms (compile: 268ms, proxy.ts: 5ms, render: 53ms)
+ POST /rig-check/end-of-shift 200 in 484ms (compile: 9ms, proxy.ts: 19ms, render: 457ms)
+ POST /rig-check/end-of-shift 200 in 154ms (compile: 5ms, proxy.ts: 4ms, render: 144ms)
+ POST /rig-check/end-of-shift 200 in 307ms (compile: 5ms, proxy.ts: 4ms, render: 298ms)
+ POST /rig-check/end-of-shift 200 in 154ms (compile: 5ms, proxy.ts: 5ms, render: 145ms)
+ POST /rig-check/end-of-shift 200 in 153ms (compile: 8ms, proxy.ts: 4ms, render: 140ms)
+ POST /rig-check/end-of-shift 200 in 434ms (compile: 6ms, proxy.ts: 5ms, render: 423ms)
+ GET /rig-check 200 in 41ms (compile: 9ms, proxy.ts: 14ms, render: 17ms)
+ POST /rig-check 200 in 349ms (compile: 6ms, proxy.ts: 4ms, render: 339ms)
+ POST /rig-check 200 in 162ms (compile: 6ms, proxy.ts: 10ms, render: 147ms)
+ POST /rig-check 200 in 156ms (compile: 6ms, proxy.ts: 5ms, render: 144ms)
+ POST /rig-check 200 in 327ms (compile: 5ms, proxy.ts: 4ms, render: 318ms)
+ POST /rig-check 200 in 158ms (compile: 8ms, proxy.ts: 14ms, render: 136ms)
+ POST /rig-check 200 in 145ms (compile: 5ms, proxy.ts: 6ms, render: 135ms)
+ GET /rig-check 200 in 47ms (compile: 13ms, proxy.ts: 2ms, render: 31ms)
+ POST /rig-check 200 in 962ms (compile: 4ms, proxy.ts: 4ms, render: 955ms)
+ POST /rig-check 200 in 147ms (compile: 7ms, proxy.ts: 5ms, render: 135ms)
+ POST /rig-check 200 in 166ms (compile: 4ms, proxy.ts: 4ms, render: 158ms)
+ POST /rig-check 200 in 292ms (compile: 5ms, proxy.ts: 6ms, render: 282ms)
+ POST /rig-check 200 in 146ms (compile: 4ms, proxy.ts: 6ms, render: 137ms)
+ POST /rig-check 200 in 159ms (compile: 7ms, proxy.ts: 4ms, render: 148ms)
+ GET /rig-check 200 in 27ms (compile: 6ms, proxy.ts: 5ms, render: 16ms)
+ POST /rig-check 200 in 327ms (compile: 3ms, proxy.ts: 3ms, render: 320ms)
+ POST /rig-check 200 in 141ms (compile: 4ms, proxy.ts: 5ms, render: 132ms)
+ POST /rig-check 200 in 152ms (compile: 5ms, proxy.ts: 3ms, render: 144ms)
+ POST /rig-check 200 in 276ms (compile: 4ms, proxy.ts: 7ms, render: 265ms)
+ POST /rig-check 200 in 143ms (compile: 5ms, proxy.ts: 6ms, render: 132ms)
+ POST /rig-check 200 in 130ms (compile: 3ms, proxy.ts: 3ms, render: 124ms)
+ GET /rig-check 200 in 25ms (compile: 4ms, proxy.ts: 8ms, render: 13ms)
+ POST /rig-check 200 in 278ms (compile: 4ms, proxy.ts: 4ms, render: 270ms)
+ POST /rig-check 200 in 157ms (compile: 4ms, proxy.ts: 4ms, render: 149ms)
+ POST /rig-check 200 in 134ms (compile: 6ms, proxy.ts: 7ms, render: 122ms)
+ POST /rig-check 200 in 268ms (compile: 3ms, proxy.ts: 3ms, render: 262ms)
+ POST /rig-check 200 in 144ms (compile: 5ms, proxy.ts: 5ms, render: 135ms)
+ POST /rig-check 200 in 142ms (compile: 5ms, proxy.ts: 5ms, render: 132ms)
+ GET /images/icons/icon-192x192.png 404 in 68ms (compile: 7ms, proxy.ts: 3ms, render: 58ms)
+ GET /images/icons/icon-72x72.png 404 in 67ms (compile: 22ms, proxy.ts: 2ms, render: 43ms)
+ GET /images/icons/icon-192x192.png 404 in 57ms (compile: 5ms, proxy.ts: 2ms, render: 49ms)
+ GET /images/icons/icon-72x72.png 404 in 57ms (compile: 27ms, proxy.ts: 3ms, render: 27ms)
+ GET /login 200 in 117ms (compile: 12ms, proxy.ts: 3ms, render: 102ms)
+ GET /dashboard 200 in 983ms (compile: 6ms, proxy.ts: 4ms, render: 973ms)
+ POST /login 303 in 1428ms (compile: 10ms, proxy.ts: 6ms, render: 1412ms)
+ GET /dashboard 200 in 929ms (compile: 3ms, proxy.ts: 2ms, render: 923ms)
+ GET /dashboard/audit-log 200 in 826ms (compile: 560ms, proxy.ts: 6ms, render: 260ms)
+ GET /dashboard 200 in 756ms (compile: 5ms, proxy.ts: 8ms, render: 743ms)
+ GET /dashboard/checklists 200 in 422ms (compile: 385ms, proxy.ts: 9ms, render: 28ms)
+ GET /dashboard 200 in 901ms (compile: 13ms, proxy.ts: 9ms, render: 879ms)
+ GET /dashboard 200 in 765ms (compile: 6ms, proxy.ts: 5ms, render: 754ms)
+ GET /rig-check 200 in 128ms (compile: 8ms, proxy.ts: 3ms, render: 117ms)
+ POST /rig-check 200 in 432ms (compile: 5ms, proxy.ts: 5ms, render: 422ms)
+ POST /rig-check 200 in 158ms (compile: 4ms, proxy.ts: 4ms, render: 150ms)
+ POST /rig-check 200 in 147ms (compile: 5ms, proxy.ts: 4ms, render: 139ms)
+ GET /login 200 in 49ms (compile: 8ms, proxy.ts: 6ms, render: 35ms)
+ GET /dashboard 200 in 630ms (compile: 14ms, proxy.ts: 4ms, render: 611ms)
+ POST /login 303 in 968ms (compile: 11ms, proxy.ts: 14ms, render: 942ms)
+ GET /dashboard 200 in 631ms (compile: 3ms, proxy.ts: 2ms, render: 626ms)
+✓ Compiled in 133ms
+ GET /dashboard 200 in 967ms (compile: 214ms, proxy.ts: 19ms, render: 734ms)
+ GET /dashboard 200 in 942ms (compile: 36ms, proxy.ts: 354ms, render: 552ms)
+ GET /uploaded-via-mvp.jpg 404 in 42ms (compile: 9ms, proxy.ts: 3ms, render: 30ms)
+ GET /dashboard 200 in 1125ms (compile: 23ms, proxy.ts: 21ms, render: 1082ms)
+ GET /uploaded-via-mvp.jpg 404 in 65ms (compile: 8ms, proxy.ts: 4ms, render: 53ms)
+✓ Compiled in 181ms
+ GET /uploaded-via-mvp.jpg 404 in 165ms (compile: 52ms, proxy.ts: 26ms, render: 87ms)
+ GET /uploaded-via-mvp.jpg 404 in 79ms (compile: 9ms, proxy.ts: 6ms, render: 64ms)
+✓ Compiled in 197ms
+✓ Compiled in 113ms
+ GET /uploaded-via-mvp.jpg 404 in 149ms (compile: 52ms, proxy.ts: 35ms, render: 61ms)
+ GET /dashboard/audit-log 200 in 409ms (compile: 16ms, proxy.ts: 5ms, render: 388ms)
+ GET /dashboard/audit-log 200 in 830ms (compile: 21ms, proxy.ts: 31ms, render: 778ms)
+ GET /dashboard 200 in 1157ms (compile: 238ms, proxy.ts: 5ms, render: 914ms)
+ GET /uploaded-via-mvp.jpg 404 in 37ms (compile: 5ms, proxy.ts: 2ms, render: 30ms)
+ GET /login 200 in 20ms (compile: 6ms, proxy.ts: 1986µs, render: 12ms)
+ GET /uploaded-via-mvp.jpg 404 in 39ms (compile: 6ms, proxy.ts: 4ms, render: 29ms)
+ GET /dashboard/audit-log 200 in 184ms (compile: 3ms, proxy.ts: 4ms, render: 176ms)
+ GET /dashboard 200 in 920ms (compile: 13ms, proxy.ts: 9ms, render: 898ms)
+ GET /uploaded-via-mvp.jpg 404 in 41ms (compile: 7ms, proxy.ts: 4ms, render: 30ms)
+ GET /login 200 in 124ms (compile: 28ms, proxy.ts: 3ms, render: 93ms)
+ GET /rig-check 200 in 42ms (compile: 10ms, proxy.ts: 4ms, render: 28ms)
+ POST /login 303 in 302ms (compile: 12ms, proxy.ts: 6ms, render: 284ms)
+ GET /rig-check 200 in 19ms (compile: 3ms, proxy.ts: 4ms, render: 12ms)
+ POST /rig-check 200 in 321ms (compile: 14ms, proxy.ts: 5ms, render: 302ms)
+ POST /rig-check 200 in 165ms (compile: 7ms, proxy.ts: 5ms, render: 153ms)
+ POST /rig-check 200 in 134ms (compile: 4ms, proxy.ts: 6ms, render: 125ms)
+ POST /rig-check 200 in 283ms (compile: 6ms, proxy.ts: 4ms, render: 273ms)
+ POST /rig-check 200 in 159ms (compile: 5ms, proxy.ts: 4ms, render: 150ms)
+ POST /rig-check 200 in 138ms (compile: 4ms, proxy.ts: 6ms, render: 129ms)
+ POST /rig-check 200 in 287ms (compile: 8ms, proxy.ts: 4ms, render: 274ms)
+Push trigger check: aiSeverity= null missing= 0 hasDamageNotes= 
+Push: Condition not met, no push sent
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 839ms (compile: 14ms, proxy.ts: 14ms, render: 811ms)
+ GET /rig-check/end-of-shift 200 in 50ms (compile: 17ms, proxy.ts: 7ms, render: 27ms)
+ POST /rig-check/end-of-shift 200 in 354ms (compile: 11ms, proxy.ts: 6ms, render: 337ms)
+ POST /rig-check/end-of-shift 200 in 131ms (compile: 5ms, proxy.ts: 6ms, render: 119ms)
+ POST /rig-check/end-of-shift 200 in 258ms (compile: 4ms, proxy.ts: 3ms, render: 251ms)
+ POST /rig-check/end-of-shift 200 in 124ms (compile: 5ms, proxy.ts: 5ms, render: 114ms)
+ GET /dashboard/audit-log 200 in 251ms (compile: 7ms, proxy.ts: 5ms, render: 239ms)
+ GET /uploaded-via-mvp.jpg 404 in 45ms (compile: 7ms, proxy.ts: 5ms, render: 33ms)
+ POST /rig-check/end-of-shift 200 in 278ms (compile: 16ms, proxy.ts: 17ms, render: 245ms)
+ POST /rig-check/end-of-shift 200 in 488ms (compile: 13ms, proxy.ts: 16ms, render: 459ms)
+ GET /dashboard/audit-log 200 in 278ms (compile: 6ms, proxy.ts: 6ms, render: 266ms)
+✓ Compiled in 130ms
+ GET /rig-check/end-of-shift 200 in 1224ms (compile: 12ms, proxy.ts: 9ms, render: 1202ms)
+ GET /dashboard 200 in 1499ms (compile: 764ms, proxy.ts: 5ms, render: 730ms)
+ GET /dashboard/audit-log 200 in 1717ms (compile: 155ms, proxy.ts: 11ms, render: 1551ms)
+ GET /dashboard 200 in 994ms (compile: 13ms, proxy.ts: 22ms, render: 959ms)
+ GET /uploaded-via-mvp.jpg 404 in 43ms (compile: 9ms, proxy.ts: 3ms, render: 31ms)
+ GET /dashboard 200 in 687ms (compile: 6ms, proxy.ts: 14ms, render: 667ms)
+ GET /rig-check 200 in 42ms (compile: 11ms, proxy.ts: 11ms, render: 21ms)
+ POST /rig-check 200 in 521ms (compile: 13ms, proxy.ts: 7ms, render: 501ms)
+ POST /rig-check 200 in 185ms (compile: 6ms, proxy.ts: 5ms, render: 174ms)
+ POST /rig-check 200 in 165ms (compile: 4ms, proxy.ts: 4ms, render: 157ms)
+ POST /rig-check 200 in 302ms (compile: 4ms, proxy.ts: 5ms, render: 293ms)
+ POST /rig-check 200 in 139ms (compile: 4ms, proxy.ts: 4ms, render: 130ms)
+ POST /rig-check 200 in 157ms (compile: 3ms, proxy.ts: 5ms, render: 149ms)
+ GET /login 200 in 66ms (compile: 19ms, proxy.ts: 4ms, render: 43ms)
+✓ Compiled in 201ms
+ GET /login 200 in 1033ms (compile: 487ms, proxy.ts: 15ms, render: 532ms)
+ GET /login 200 in 246ms (compile: 11ms, proxy.ts: 4ms, render: 231ms)
+ GET /login 200 in 216ms (compile: 11ms, proxy.ts: 5ms, render: 200ms)
+ GET /login 200 in 156ms (compile: 13ms, proxy.ts: 19ms, render: 124ms)
+ GET /login 200 in 145ms (compile: 46ms, proxy.ts: 1716µs, render: 97ms)
+ GET /dashboard 200 in 879ms (compile: 5ms, proxy.ts: 18ms, render: 856ms)
+ GET /dashboard 200 in 2.0s (compile: 690ms, proxy.ts: 25ms, render: 1298ms)
+ GET /dashboard 200 in 799ms (compile: 4ms, proxy.ts: 2ms, render: 792ms)
+ GET /dashboard 200 in 1104ms (compile: 33ms, proxy.ts: 5ms, render: 1066ms)
+ GET /dashboard 200 in 753ms (compile: 3ms, proxy.ts: 3ms, render: 748ms)
+ GET /dashboard 200 in 1010ms (compile: 41ms, proxy.ts: 6ms, render: 963ms)
+ GET /dashboard 200 in 190ms (compile: 4ms, proxy.ts: 3ms, render: 183ms)
+ GET /dashboard 200 in 169ms (compile: 3ms, proxy.ts: 2ms, render: 164ms)
+ GET /dashboard 200 in 156ms (compile: 3ms, proxy.ts: 1945µs, render: 151ms)
+ GET /dashboard 200 in 154ms (compile: 12ms, proxy.ts: 1634µs, render: 141ms)
+✓ Compiled in 134ms
+✓ Compiled in 568ms
+ GET /login 200 in 803ms (compile: 502ms, proxy.ts: 76ms, render: 225ms)
+ GET /login 200 in 215ms (compile: 9ms, proxy.ts: 4ms, render: 202ms)
+ GET /login 200 in 203ms (compile: 11ms, proxy.ts: 4ms, render: 187ms)
+ GET /login 200 in 203ms (compile: 30ms, proxy.ts: 45ms, render: 129ms)
+ GET /login 200 in 117ms (compile: 46ms, proxy.ts: 3ms, render: 67ms)
+ GET /dashboard 200 in 1325ms (compile: 300ms, proxy.ts: 234ms, render: 792ms)
+ GET /dashboard 200 in 508ms (compile: 30ms, proxy.ts: 7ms, render: 472ms)
+ GET /dashboard 200 in 325ms (compile: 4ms, proxy.ts: 3ms, render: 318ms)
+ GET /dashboard 200 in 280ms (compile: 4ms, proxy.ts: 3ms, render: 273ms)
+ GET /dashboard 200 in 525ms (compile: 40ms, proxy.ts: 7ms, render: 478ms)
+ GET /dashboard 200 in 188ms (compile: 4ms, proxy.ts: 2ms, render: 181ms)
+ GET /dashboard 200 in 534ms (compile: 9ms, proxy.ts: 20ms, render: 505ms)
+ GET /dashboard 200 in 306ms (compile: 3ms, proxy.ts: 2ms, render: 300ms)
+ GET /dashboard 200 in 171ms (compile: 3ms, proxy.ts: 2ms, render: 166ms)
+ GET /dashboard 200 in 156ms (compile: 3ms, proxy.ts: 2ms, render: 150ms)
+✓ Compiled in 13ms
+ GET /login 200 in 1290ms (compile: 521ms, proxy.ts: 346ms, render: 424ms)
+ GET /login 200 in 1078ms (compile: 103ms, proxy.ts: 9ms, render: 967ms)
+ GET /login 200 in 994ms (compile: 8ms, proxy.ts: 4ms, render: 982ms)
+ GET /dashboard 200 in 2.3s (compile: 410ms, proxy.ts: 355ms, render: 1547ms)
+ GET /login 200 in 832ms (compile: 438ms, proxy.ts: 19ms, render: 376ms)
+ GET /dashboard 200 in 1286ms (compile: 41ms, proxy.ts: 19ms, render: 1226ms)
+ GET /login 200 in 360ms (compile: 23ms, proxy.ts: 35ms, render: 302ms)
+ GET /dashboard 200 in 1333ms (compile: 39ms, proxy.ts: 9ms, render: 1285ms)
+ GET /login 200 in 398ms (compile: 11ms, proxy.ts: 53ms, render: 333ms)
+ GET /login 200 in 377ms (compile: 64ms, proxy.ts: 3ms, render: 310ms)
+ GET /dashboard 200 in 1151ms (compile: 347ms, proxy.ts: 199ms, render: 605ms)
+ GET /login 200 in 291ms (compile: 91ms, proxy.ts: 13ms, render: 187ms)
+ GET /dashboard 200 in 576ms (compile: 30ms, proxy.ts: 14ms, render: 531ms)
+ GET /login 200 in 214ms (compile: 47ms, proxy.ts: 3ms, render: 165ms)
+ GET /dashboard 200 in 560ms (compile: 10ms, proxy.ts: 27ms, render: 522ms)
+ GET /login 200 in 204ms (compile: 32ms, proxy.ts: 3ms, render: 169ms)
+ GET /dashboard 200 in 539ms (compile: 69ms, proxy.ts: 87ms, render: 383ms)
+ GET /login 200 in 181ms (compile: 5ms, proxy.ts: 3ms, render: 174ms)
+ GET /dashboard 200 in 345ms (compile: 10ms, proxy.ts: 5ms, render: 330ms)
+ GET /login 200 in 182ms (compile: 13ms, proxy.ts: 17ms, render: 153ms)
+ GET /dashboard 200 in 338ms (compile: 17ms, proxy.ts: 5ms, render: 317ms)
+ GET /login 200 in 205ms (compile: 23ms, proxy.ts: 27ms, render: 155ms)
+ GET /dashboard 200 in 327ms (compile: 22ms, proxy.ts: 4ms, render: 301ms)
+ GET /login 200 in 213ms (compile: 14ms, proxy.ts: 28ms, render: 171ms)
+ GET /dashboard 200 in 331ms (compile: 17ms, proxy.ts: 7ms, render: 307ms)
+ GET /login 200 in 220ms (compile: 15ms, proxy.ts: 28ms, render: 177ms)
+ GET /login 200 in 220ms (compile: 15ms, proxy.ts: 34ms, render: 171ms)
+ GET /dashboard 200 in 364ms (compile: 22ms, proxy.ts: 7ms, render: 335ms)
+ GET /dashboard 200 in 327ms (compile: 16ms, proxy.ts: 7ms, render: 304ms)
+ GET /login 200 in 184ms (compile: 22ms, proxy.ts: 38ms, render: 124ms)
+ GET /dashboard 200 in 329ms (compile: 27ms, proxy.ts: 5ms, render: 297ms)
+ GET /login 200 in 172ms (compile: 16ms, proxy.ts: 27ms, render: 128ms)
+ GET /login 200 in 180ms (compile: 41ms, proxy.ts: 1874µs, render: 137ms)
+ GET /dashboard 200 in 340ms (compile: 35ms, proxy.ts: 4ms, render: 301ms)
+ GET /login 200 in 177ms (compile: 4ms, proxy.ts: 2ms, render: 170ms)
+ GET /dashboard 200 in 329ms (compile: 20ms, proxy.ts: 6ms, render: 303ms)
+ GET /login 200 in 177ms (compile: 12ms, proxy.ts: 5ms, render: 161ms)
+ GET /dashboard 200 in 328ms (compile: 18ms, proxy.ts: 8ms, render: 302ms)
+ GET /login 200 in 149ms (compile: 15ms, proxy.ts: 14ms, render: 120ms)
+ GET /login 200 in 175ms (compile: 14ms, proxy.ts: 27ms, render: 134ms)
+ GET /dashboard 200 in 319ms (compile: 17ms, proxy.ts: 4ms, render: 298ms)
+ GET /login 200 in 167ms (compile: 10ms, proxy.ts: 28ms, render: 130ms)
+ GET /dashboard 200 in 352ms (compile: 31ms, proxy.ts: 9ms, render: 312ms)
+ GET /login 200 in 159ms (compile: 38ms, proxy.ts: 4ms, render: 117ms)
+ GET /dashboard 200 in 287ms (compile: 16ms, proxy.ts: 7ms, render: 263ms)
+ GET /login 200 in 140ms (compile: 31ms, proxy.ts: 2ms, render: 107ms)
+ GET /login 200 in 99ms (compile: 4ms, proxy.ts: 2ms, render: 93ms)
+ GET /login 200 in 84ms (compile: 7ms, proxy.ts: 2ms, render: 76ms)
+ GET /dashboard 200 in 471ms (compile: 25ms, proxy.ts: 4ms, render: 441ms)
+ GET /dashboard 200 in 524ms (compile: 21ms, proxy.ts: 5ms, render: 498ms)
+ GET /dashboard 200 in 412ms (compile: 11ms, proxy.ts: 25ms, render: 376ms)
+ GET /dashboard 200 in 244ms (compile: 4ms, proxy.ts: 3ms, render: 237ms)
+ GET /dashboard 200 in 477ms (compile: 15ms, proxy.ts: 4ms, render: 458ms)
+ GET /dashboard 200 in 429ms (compile: 18ms, proxy.ts: 3ms, render: 408ms)
+ GET /dashboard 200 in 216ms (compile: 3ms, proxy.ts: 2ms, render: 211ms)
+ GET /dashboard 200 in 185ms (compile: 3ms, proxy.ts: 4ms, render: 179ms)
+ GET /dashboard 200 in 229ms (compile: 4ms, proxy.ts: 9ms, render: 217ms)
+ GET /dashboard 200 in 192ms (compile: 3ms, proxy.ts: 1731µs, render: 187ms)
+ GET /dashboard 200 in 162ms (compile: 2ms, proxy.ts: 1687µs, render: 158ms)
+ GET /dashboard 200 in 249ms (compile: 7ms, proxy.ts: 4ms, render: 238ms)
+ GET /dashboard 200 in 196ms (compile: 3ms, proxy.ts: 1938µs, render: 192ms)
+ GET /dashboard 200 in 166ms (compile: 7ms, proxy.ts: 7ms, render: 151ms)
+ GET /dashboard 200 in 229ms (compile: 2ms, proxy.ts: 1638µs, render: 225ms)
+ GET /dashboard 200 in 201ms (compile: 7ms, proxy.ts: 4ms, render: 190ms)
+ GET /dashboard 200 in 166ms (compile: 7ms, proxy.ts: 4ms, render: 155ms)
+ GET /dashboard 200 in 229ms (compile: 3ms, proxy.ts: 1858µs, render: 224ms)
+ GET /dashboard 200 in 201ms (compile: 7ms, proxy.ts: 4ms, render: 190ms)
+ GET /dashboard 200 in 195ms (compile: 7ms, proxy.ts: 4ms, render: 184ms)
+ GET /dashboard 200 in 227ms (compile: 3ms, proxy.ts: 1582µs, render: 223ms)
+ GET /dashboard 200 in 197ms (compile: 7ms, proxy.ts: 4ms, render: 186ms)
+ GET /dashboard 200 in 161ms (compile: 7ms, proxy.ts: 4ms, render: 151ms)
+ GET /dashboard 200 in 228ms (compile: 3ms, proxy.ts: 1882µs, render: 223ms)
+ GET /dashboard 200 in 199ms (compile: 3ms, proxy.ts: 1599µs, render: 194ms)
+ GET /dashboard 200 in 201ms (compile: 8ms, proxy.ts: 8ms, render: 185ms)
+ GET /dashboard 200 in 222ms (compile: 2ms, proxy.ts: 1658µs, render: 218ms)
+ GET /dashboard 200 in 194ms (compile: 7ms, proxy.ts: 4ms, render: 183ms)
+ GET /dashboard 200 in 240ms (compile: 4ms, proxy.ts: 14ms, render: 222ms)
+ GET /dashboard 200 in 189ms (compile: 2ms, proxy.ts: 1801µs, render: 185ms)
+ GET /dashboard 200 in 240ms (compile: 3ms, proxy.ts: 7ms, render: 231ms)
+ GET /dashboard 200 in 206ms (compile: 7ms, proxy.ts: 4ms, render: 194ms)
+ GET /dashboard 200 in 166ms (compile: 5ms, proxy.ts: 6ms, render: 155ms)
+ GET /dashboard 200 in 172ms (compile: 7ms, proxy.ts: 4ms, render: 161ms)
+ GET /dashboard 200 in 137ms (compile: 3ms, proxy.ts: 1815µs, render: 133ms)
+ GET /dashboard 200 in 172ms (compile: 7ms, proxy.ts: 8ms, render: 157ms)
+✓ Compiled in 338ms
+ GET /login 200 in 2.2s (compile: 15ms, proxy.ts: 9ms, render: 2.2s)
+ GET /dashboard 200 in 2.3s (compile: 531ms, proxy.ts: 29ms, render: 1748ms)
+✓ Compiled in 643ms
+ GET /dashboard 200 in 1054ms (compile: 55ms, proxy.ts: 37ms, render: 962ms)
+ GET /login 200 in 1860ms (compile: 263ms, proxy.ts: 61ms, render: 1536ms)
+ GET /login 200 in 1273ms (compile: 170ms, proxy.ts: 56ms, render: 1047ms)
+ GET /login 200 in 558ms (compile: 88ms, proxy.ts: 51ms, render: 419ms)
+ GET /dashboard 200 in 2.3s (compile: 480ms, proxy.ts: 70ms, render: 1735ms)
+ GET /login 200 in 494ms (compile: 29ms, proxy.ts: 169ms, render: 296ms)
+ GET /login 200 in 359ms (compile: 69ms, proxy.ts: 5ms, render: 285ms)
+ GET /dashboard 200 in 1631ms (compile: 596ms, proxy.ts: 53ms, render: 982ms)
+ GET /login 200 in 363ms (compile: 34ms, proxy.ts: 5ms, render: 324ms)
+ GET /dashboard 200 in 1019ms (compile: 108ms, proxy.ts: 61ms, render: 849ms)
+ GET /login 200 in 1335ms (compile: 13ms, proxy.ts: 35ms, render: 1287ms)
+ GET /dashboard 200 in 1624ms (compile: 16ms, proxy.ts: 41ms, render: 1567ms)
+ GET /login 200 in 1303ms (compile: 22ms, proxy.ts: 65ms, render: 1216ms)
+ GET /dashboard 200 in 1490ms (compile: 44ms, proxy.ts: 27ms, render: 1420ms)
+ GET /login 200 in 1226ms (compile: 828ms, proxy.ts: 6ms, render: 392ms)
+ GET /dashboard 200 in 1374ms (compile: 26ms, proxy.ts: 4ms, render: 1344ms)
+ GET /dashboard 200 in 1316ms (compile: 36ms, proxy.ts: 12ms, render: 1268ms)
+✓ Compiled in 968ms
+✓ Compiled in 3ms
+ GET /login 404 in 1639ms (compile: 1023ms, proxy.ts: 14ms, render: 602ms)
+ GET /login 200 in 482ms (compile: 88ms, proxy.ts: 32ms, render: 362ms)
+ GET /dashboard 404 in 2.5s (compile: 1736ms, proxy.ts: 108ms, render: 677ms)
+ GET /login 200 in 737ms (compile: 22ms, proxy.ts: 28ms, render: 687ms)
+ GET /dashboard 200 in 827ms (compile: 48ms, proxy.ts: 37ms, render: 742ms)
+ GET /dashboard 200 in 526ms (compile: 60ms, proxy.ts: 108ms, render: 358ms)
+ GET /dashboard 200 in 397ms (compile: 20ms, proxy.ts: 20ms, render: 356ms)
+ GET /dashboard 200 in 462ms (compile: 11ms, proxy.ts: 6ms, render: 446ms)
+ GET /dashboard 200 in 303ms (compile: 10ms, proxy.ts: 4ms, render: 289ms)
+ GET /dashboard 200 in 555ms (compile: 12ms, proxy.ts: 17ms, render: 525ms)
+ GET /dashboard 200 in 1310ms (compile: 23ms, proxy.ts: 11ms, render: 1276ms)
+ GET /dashboard 200 in 1047ms (compile: 53ms, proxy.ts: 22ms, render: 973ms)
+ GET /dashboard 200 in 1194ms (compile: 7ms, proxy.ts: 6ms, render: 1180ms)
+ GET /dashboard 200 in 1162ms (compile: 7ms, proxy.ts: 8ms, render: 1148ms)
+ GET /dashboard 200 in 1096ms (compile: 12ms, proxy.ts: 7ms, render: 1077ms)
+ GET /uploaded-via-mvp.jpg 404 in 147ms (compile: 9ms, proxy.ts: 33ms, render: 105ms)
+ GET /dashboard 200 in 236ms (compile: 6ms, proxy.ts: 20ms, render: 210ms)
+ GET /dashboard 200 in 2.6s (compile: 317ms, proxy.ts: 15ms, render: 2.2s)
+ GET /dashboard 200 in 259ms (compile: 7ms, proxy.ts: 38ms, render: 213ms)
+ GET /dashboard 200 in 257ms (compile: 13ms, proxy.ts: 18ms, render: 226ms)
+ GET /dashboard 200 in 246ms (compile: 7ms, proxy.ts: 5ms, render: 234ms)
+ GET /dashboard 200 in 253ms (compile: 7ms, proxy.ts: 7ms, render: 239ms)
+ GET /dashboard 200 in 266ms (compile: 12ms, proxy.ts: 3ms, render: 251ms)
+ GET /dashboard 200 in 302ms (compile: 3ms, proxy.ts: 3ms, render: 297ms)
+ GET /dashboard 200 in 262ms (compile: 6ms, proxy.ts: 4ms, render: 253ms)
+ GET /dashboard 200 in 410ms (compile: 4ms, proxy.ts: 4ms, render: 403ms)
+ GET /dashboard 200 in 474ms (compile: 3ms, proxy.ts: 3ms, render: 468ms)
+ GET /dashboard 200 in 433ms (compile: 7ms, proxy.ts: 3ms, render: 423ms)
+ GET /dashboard 200 in 400ms (compile: 51ms, proxy.ts: 5ms, render: 343ms)
+ GET /dashboard 200 in 369ms (compile: 8ms, proxy.ts: 8ms, render: 353ms)
+ GET /dashboard 200 in 327ms (compile: 18ms, proxy.ts: 10ms, render: 299ms)
+ GET /dashboard 200 in 267ms (compile: 5ms, proxy.ts: 5ms, render: 257ms)
+ GET /dashboard 200 in 301ms (compile: 11ms, proxy.ts: 7ms, render: 283ms)
+ GET /dashboard 200 in 328ms (compile: 11ms, proxy.ts: 7ms, render: 309ms)
+ GET /dashboard 200 in 260ms (compile: 7ms, proxy.ts: 3ms, render: 250ms)
+ GET /dashboard 200 in 271ms (compile: 6ms, proxy.ts: 4ms, render: 262ms)
+ GET /dashboard 200 in 262ms (compile: 8ms, proxy.ts: 16ms, render: 239ms)
+✓ Compiled in 708ms
+ GET /login 200 in 4.4s (compile: 1122ms, proxy.ts: 45ms, render: 3.2s)
+ GET /login 200 in 646ms (compile: 101ms, proxy.ts: 37ms, render: 507ms)
+ GET /dashboard 200 in 4.7s (compile: 568ms, proxy.ts: 88ms, render: 4.1s)
+ GET /login 200 in 351ms (compile: 25ms, proxy.ts: 34ms, render: 292ms)
+ GET /login 200 in 334ms (compile: 75ms, proxy.ts: 5ms, render: 254ms)
+ GET /login 200 in 250ms (compile: 42ms, proxy.ts: 4ms, render: 204ms)
+ GET /dashboard 200 in 1104ms (compile: 189ms, proxy.ts: 50ms, render: 866ms)
+ GET /dashboard 200 in 648ms (compile: 57ms, proxy.ts: 11ms, render: 581ms)
+ GET /dashboard 200 in 654ms (compile: 13ms, proxy.ts: 42ms, render: 599ms)
+ GET /dashboard 200 in 557ms (compile: 20ms, proxy.ts: 25ms, render: 512ms)
+ GET /dashboard 200 in 458ms (compile: 10ms, proxy.ts: 11ms, render: 436ms)
+ GET /dashboard 200 in 286ms (compile: 7ms, proxy.ts: 6ms, render: 273ms)
+ GET /dashboard 200 in 372ms (compile: 8ms, proxy.ts: 26ms, render: 338ms)
+ GET /dashboard 200 in 229ms (compile: 18ms, proxy.ts: 7ms, render: 205ms)
+ GET /dashboard 200 in 325ms (compile: 8ms, proxy.ts: 5ms, render: 311ms)
+ GET /login 200 in 256ms (compile: 74ms, proxy.ts: 6ms, render: 175ms)
+ GET /login 200 in 63ms (compile: 11ms, proxy.ts: 4ms, render: 49ms)
+ GET /login 200 in 69ms (compile: 23ms, proxy.ts: 5ms, render: 41ms)
+ GET /login 200 in 89ms (compile: 17ms, proxy.ts: 3ms, render: 69ms)
+ POST /login 200 in 722ms (compile: 28ms, proxy.ts: 16ms, render: 679ms)
+ POST /login 200 in 239ms (compile: 12ms, proxy.ts: 6ms, render: 220ms)
+ GET /change-password 200 in 1097ms (compile: 1064ms, proxy.ts: 4ms, render: 30ms)
+ POST /login 303 in 1397ms (compile: 33ms, proxy.ts: 27ms, render: 1336ms)
+ GET /change-password 200 in 30ms (compile: 11ms, proxy.ts: 4ms, render: 16ms)
+ GET /dashboard 200 in 704ms (compile: 9ms, proxy.ts: 4ms, render: 691ms)
+ POST /change-password 303 in 1173ms (compile: 15ms, proxy.ts: 41ms, render: 1117ms)
+ GET /dashboard 200 in 680ms (compile: 3ms, proxy.ts: 2ms, render: 675ms)
+ GET /uploaded-via-mvp.jpg 404 in 77ms (compile: 11ms, proxy.ts: 4ms, render: 62ms)
+Unsubscribe: Removed subscription for user f5f714ab-b597-4b46-a063-ab4c8a32f64d
+ POST /api/push/unsubscribe 200 in 1198ms (compile: 833ms, proxy.ts: 14ms, render: 351ms)
+Subscribe: Raw cookie header: __next_hmr_refresh_hash__=917; session=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJmNWY3MTRhYi1iNTk3LTRiNDYt
+Subscribe: Saved subscription for user f5f714ab-b597-4b46-a063-ab4c8a32f64d
+ POST /api/push/subscribe 200 in 283ms (compile: 120ms, proxy.ts: 6ms, render: 157ms)
+ GET /dashboard/audit-log 200 in 451ms (compile: 72ms, proxy.ts: 17ms, render: 363ms)
+ GET /uploaded-via-mvp.jpg 404 in 87ms (compile: 4ms, proxy.ts: 25ms, render: 57ms)
+ GET /api/export-pdf 200 in 750ms (compile: 224ms, proxy.ts: 3ms, render: 523ms)
+ GET /login 200 in 83ms (compile: 16ms, proxy.ts: 2ms, render: 65ms)
+ GET /dashboard 200 in 707ms (compile: 11ms, proxy.ts: 2ms, render: 693ms)
+ POST /login 303 in 1220ms (compile: 8ms, proxy.ts: 11ms, render: 1201ms)
+ GET /dashboard 200 in 758ms (compile: 3ms, proxy.ts: 2ms, render: 752ms)
+ GET /uploaded-via-mvp.jpg 404 in 59ms (compile: 23ms, proxy.ts: 6ms, render: 30ms)
+ GET /login 200 in 28ms (compile: 5ms, proxy.ts: 4ms, render: 20ms)
+ POST /login 200 in 403ms (compile: 33ms, proxy.ts: 16ms, render: 354ms)
+ POST /login 200 in 339ms (compile: 20ms, proxy.ts: 6ms, render: 313ms)
+ GET /dashboard 200 in 595ms (compile: 5ms, proxy.ts: 3ms, render: 587ms)
+ POST /login 303 in 1037ms (compile: 27ms, proxy.ts: 40ms, render: 970ms)
+ GET /dashboard 200 in 919ms (compile: 4ms, proxy.ts: 3ms, render: 912ms)
+ GET /uploaded-via-mvp.jpg 404 in 363ms (compile: 55ms, proxy.ts: 33ms, render: 275ms)
+ GET /dashboard/users 200 in 899ms (compile: 663ms, proxy.ts: 6ms, render: 231ms)
+ POST /dashboard/users 200 in 778ms (compile: 16ms, proxy.ts: 23ms, render: 739ms)
+ GET /login 200 in 69ms (compile: 13ms, proxy.ts: 8ms, render: 48ms)
+ GET /change-password 200 in 25ms (compile: 6ms, proxy.ts: 3ms, render: 17ms)
+ POST /login 303 in 1082ms (compile: 61ms, proxy.ts: 19ms, render: 1002ms)
+ GET /change-password 200 in 19ms (compile: 4ms, proxy.ts: 3ms, render: 12ms)
+ GET /rig-check 200 in 1015ms (compile: 932ms, proxy.ts: 4ms, render: 79ms)
+ POST /change-password 303 in 1384ms (compile: 7ms, proxy.ts: 6ms, render: 1371ms)
+ GET /rig-check 200 in 36ms (compile: 16ms, proxy.ts: 6ms, render: 15ms)
+ POST /rig-check 200 in 330ms (compile: 7ms, proxy.ts: 3ms, render: 320ms)
+ POST /rig-check 200 in 178ms (compile: 14ms, proxy.ts: 3ms, render: 161ms)
+ POST /rig-check 200 in 141ms (compile: 3ms, proxy.ts: 2ms, render: 136ms)
+ POST /rig-check 200 in 260ms (compile: 7ms, proxy.ts: 6ms, render: 248ms)
+ POST /rig-check 200 in 127ms (compile: 5ms, proxy.ts: 4ms, render: 118ms)
+ POST /rig-check 200 in 136ms (compile: 4ms, proxy.ts: 3ms, render: 129ms)
+ POST /rig-check 200 in 440ms (compile: 15ms, proxy.ts: 22ms, render: 402ms)
+Push trigger check: aiSeverity= null missing= 0 hasDamageNotes= 
+Push: Condition not met, no push sent
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 989ms (compile: 7ms, proxy.ts: 14ms, render: 967ms)
+ GET /rig-check/end-of-shift 200 in 367ms (compile: 291ms, proxy.ts: 10ms, render: 65ms)
+ POST /rig-check/end-of-shift 200 in 425ms (compile: 10ms, proxy.ts: 8ms, render: 407ms)
+ POST /rig-check/end-of-shift 200 in 154ms (compile: 6ms, proxy.ts: 5ms, render: 143ms)
+ POST /rig-check/end-of-shift 200 in 258ms (compile: 5ms, proxy.ts: 6ms, render: 247ms)
+ POST /rig-check/end-of-shift 200 in 137ms (compile: 3ms, proxy.ts: 2ms, render: 131ms)
+ POST /rig-check/end-of-shift 200 in 272ms (compile: 11ms, proxy.ts: 27ms, render: 234ms)
+ POST /rig-check/end-of-shift 200 in 244ms (compile: 9ms, proxy.ts: 4ms, render: 231ms)
+ POST /rig-check/end-of-shift 200 in 235ms (compile: 9ms, proxy.ts: 6ms, render: 220ms)
+ POST /rig-check/end-of-shift 200 in 179ms (compile: 6ms, proxy.ts: 6ms, render: 166ms)
+ POST /rig-check/end-of-shift 200 in 420ms (compile: 6ms, proxy.ts: 6ms, render: 408ms)
+✓ Compiled in 0ms
+ GET /login 200 in 2.6s (compile: 433ms, proxy.ts: 368ms, render: 1789ms)
+ GET /rig-check/end-of-shift 200 in 2.6s (compile: 623ms, proxy.ts: 388ms, render: 1594ms)
+ GET /rig-check 200 in 2.6s (compile: 1749ms, proxy.ts: 384ms, render: 467ms)
+ GET /login 200 in 275ms (compile: 26ms, proxy.ts: 9ms, render: 240ms)
+ GET /rig-check/end-of-shift 200 in 271ms (compile: 75ms, proxy.ts: 19ms, render: 178ms)
+ GET /rig-check 200 in 337ms (compile: 38ms, proxy.ts: 74ms, render: 225ms)
+ GET /login 200 in 286ms (compile: 38ms, proxy.ts: 28ms, render: 220ms)
+ GET /rig-check/end-of-shift 200 in 276ms (compile: 26ms, proxy.ts: 27ms, render: 223ms)
+ GET /rig-check 200 in 254ms (compile: 39ms, proxy.ts: 8ms, render: 207ms)
+ GET /login 200 in 248ms (compile: 45ms, proxy.ts: 11ms, render: 192ms)
+ GET /login 200 in 226ms (compile: 33ms, proxy.ts: 5ms, render: 188ms)
+ GET /rig-check/end-of-shift 200 in 232ms (compile: 8ms, proxy.ts: 9ms, render: 215ms)
+ GET /rig-check 200 in 254ms (compile: 84ms, proxy.ts: 9ms, render: 162ms)
+ GET /rig-check/end-of-shift 200 in 183ms (compile: 30ms, proxy.ts: 7ms, render: 145ms)
+ GET /login 200 in 182ms (compile: 11ms, proxy.ts: 4ms, render: 167ms)
+ GET /login 200 in 170ms (compile: 10ms, proxy.ts: 4ms, render: 156ms)
+ GET /rig-check 200 in 254ms (compile: 35ms, proxy.ts: 7ms, render: 212ms)
+ GET /rig-check/end-of-shift 200 in 249ms (compile: 60ms, proxy.ts: 4ms, render: 185ms)
+ GET /rig-check 200 in 172ms (compile: 6ms, proxy.ts: 6ms, render: 160ms)
+ GET /rig-check/end-of-shift 200 in 186ms (compile: 35ms, proxy.ts: 5ms, render: 147ms)
+ GET /rig-check 200 in 127ms (compile: 11ms, proxy.ts: 9ms, render: 107ms)
+ GET /rig-check 200 in 798ms (compile: 5ms, proxy.ts: 3ms, render: 790ms)
+ GET /rig-check 200 in 791ms (compile: 4ms, proxy.ts: 3ms, render: 784ms)
+ POST /rig-check 200 in 697ms (compile: 4ms, proxy.ts: 14ms, render: 679ms)
+ POST /rig-check 200 in 160ms (compile: 5ms, proxy.ts: 6ms, render: 149ms)
+ POST /rig-check 200 in 158ms (compile: 5ms, proxy.ts: 4ms, render: 150ms)
+✓ Compiled in 185ms
+ GET /login 200 in 237ms (compile: 54ms, proxy.ts: 23ms, render: 160ms)
+ GET /rig-check 200 in 224ms (compile: 12ms, proxy.ts: 83ms, render: 129ms)
+ GET /rig-check/end-of-shift 200 in 220ms (compile: 40ms, proxy.ts: 78ms, render: 101ms)
+ GET /login 200 in 169ms (compile: 34ms, proxy.ts: 22ms, render: 113ms)
+ GET /dashboard 200 in 653ms (compile: 5ms, proxy.ts: 3ms, render: 645ms)
+ GET /uploaded-via-mvp.jpg 404 in 93ms (compile: 33ms, proxy.ts: 4ms, render: 57ms)
+ GET /dashboard 200 in 1259ms (compile: 314ms, proxy.ts: 7ms, render: 938ms)
+ POST /login 303 in 1749ms (compile: 18ms, proxy.ts: 6ms, render: 1724ms)
+ GET /dashboard/users 200 in 615ms (compile: 276ms, proxy.ts: 24ms, render: 315ms)
+ POST /dashboard/users 200 in 1667ms (compile: 19ms, proxy.ts: 17ms, render: 1631ms)
+ GET /login 200 in 84ms (compile: 24ms, proxy.ts: 9ms, render: 52ms)
+ POST /login 200 in 377ms (compile: 9ms, proxy.ts: 6ms, render: 362ms)
+ GET /login 200 in 91ms (compile: 22ms, proxy.ts: 4ms, render: 64ms)
+ GET /dashboard 200 in 771ms (compile: 15ms, proxy.ts: 3ms, render: 752ms)
+ POST /login 303 in 1072ms (compile: 12ms, proxy.ts: 7ms, render: 1053ms)
+ GET /dashboard 200 in 731ms (compile: 3ms, proxy.ts: 1852µs, render: 726ms)
+ GET /uploaded-via-mvp.jpg 404 in 58ms (compile: 18ms, proxy.ts: 8ms, render: 31ms)
+ GET /dashboard/users 200 in 178ms (compile: 10ms, proxy.ts: 6ms, render: 162ms)
+ POST /dashboard/users 200 in 529ms (compile: 7ms, proxy.ts: 8ms, render: 513ms)
+ GET /change-password 200 in 248ms (compile: 172ms, proxy.ts: 4ms, render: 72ms)
+ POST /login 303 in 599ms (compile: 10ms, proxy.ts: 7ms, render: 581ms)
+ GET /change-password 200 in 24ms (compile: 7ms, proxy.ts: 4ms, render: 14ms)
+ GET /rig-check 200 in 36ms (compile: 8ms, proxy.ts: 4ms, render: 24ms)
+ POST /change-password 303 in 371ms (compile: 6ms, proxy.ts: 6ms, render: 359ms)
+ GET /rig-check 200 in 18ms (compile: 3ms, proxy.ts: 3ms, render: 11ms)
+ POST /rig-check 200 in 281ms (compile: 17ms, proxy.ts: 4ms, render: 261ms)
+ POST /rig-check 200 in 137ms (compile: 6ms, proxy.ts: 6ms, render: 125ms)
+ POST /rig-check 200 in 157ms (compile: 4ms, proxy.ts: 4ms, render: 149ms)
+ POST /rig-check 200 in 277ms (compile: 5ms, proxy.ts: 5ms, render: 267ms)
+ POST /rig-check 200 in 146ms (compile: 3ms, proxy.ts: 3ms, render: 140ms)
+ POST /rig-check 200 in 134ms (compile: 6ms, proxy.ts: 6ms, render: 122ms)
+ POST /rig-check 200 in 268ms (compile: 6ms, proxy.ts: 8ms, render: 255ms)
+Push trigger check: aiSeverity= null missing= 0 hasDamageNotes= 
+Push: Condition not met, no push sent
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 816ms (compile: 18ms, proxy.ts: 19ms, render: 779ms)
+ GET /rig-check 200 in 27ms (compile: 8ms, proxy.ts: 3ms, render: 16ms)
+ POST /rig-check 200 in 340ms (compile: 7ms, proxy.ts: 6ms, render: 327ms)
+ POST /rig-check 200 in 140ms (compile: 6ms, proxy.ts: 4ms, render: 130ms)
+ POST /rig-check 200 in 184ms (compile: 6ms, proxy.ts: 4ms, render: 174ms)
+ POST /rig-check 200 in 271ms (compile: 3ms, proxy.ts: 3ms, render: 265ms)
+ POST /rig-check 200 in 125ms (compile: 5ms, proxy.ts: 3ms, render: 117ms)
+ POST /rig-check 200 in 140ms (compile: 4ms, proxy.ts: 3ms, render: 133ms)
+ GET /rig-check 200 in 58ms (compile: 6ms, proxy.ts: 4ms, render: 48ms)
+ POST /rig-check 200 in 397ms (compile: 6ms, proxy.ts: 4ms, render: 387ms)
+ POST /rig-check 200 in 145ms (compile: 4ms, proxy.ts: 4ms, render: 137ms)
+ POST /rig-check 200 in 146ms (compile: 5ms, proxy.ts: 6ms, render: 135ms)
+ GET /rig-check/end-of-shift 200 in 37ms (compile: 12ms, proxy.ts: 6ms, render: 19ms)
+ POST /rig-check/end-of-shift 200 in 313ms (compile: 5ms, proxy.ts: 8ms, render: 300ms)
+ POST /rig-check/end-of-shift 200 in 152ms (compile: 6ms, proxy.ts: 5ms, render: 141ms)
+ POST /rig-check/end-of-shift 200 in 346ms (compile: 6ms, proxy.ts: 4ms, render: 335ms)
+ POST /rig-check/end-of-shift 200 in 161ms (compile: 6ms, proxy.ts: 8ms, render: 147ms)
+ POST /rig-check/end-of-shift 200 in 163ms (compile: 6ms, proxy.ts: 4ms, render: 153ms)
+ POST /rig-check/end-of-shift 200 in 1268ms (compile: 4ms, proxy.ts: 5ms, render: 1259ms)
+ GET /change-password 200 in 44ms (compile: 6ms, proxy.ts: 15ms, render: 23ms)
+ POST /login 303 in 781ms (compile: 13ms, proxy.ts: 21ms, render: 747ms)
+ GET /change-password 200 in 31ms (compile: 11ms, proxy.ts: 5ms, render: 15ms)
+ GET /dashboard 200 in 722ms (compile: 8ms, proxy.ts: 24ms, render: 691ms)
+ POST /change-password 303 in 1120ms (compile: 13ms, proxy.ts: 8ms, render: 1098ms)
+ GET /dashboard 200 in 630ms (compile: 3ms, proxy.ts: 3ms, render: 624ms)
+ GET /uploaded-via-mvp.jpg 404 in 539ms (compile: 58ms, proxy.ts: 41ms, render: 440ms)
+✓ Compiled in 688ms
+ GET /rig-check/end-of-shift 200 in 1404ms (compile: 387ms, proxy.ts: 97ms, render: 920ms)
+ GET /rig-check 200 in 1726ms (compile: 603ms, proxy.ts: 14ms, render: 1109ms)
+ GET /rig-check/end-of-shift 200 in 1231ms (compile: 11ms, proxy.ts: 6ms, render: 1215ms)
+ GET /rig-check 200 in 1266ms (compile: 29ms, proxy.ts: 5ms, render: 1232ms)
+ GET /rig-check/end-of-shift 200 in 1266ms (compile: 357ms, proxy.ts: 54ms, render: 855ms)
+ GET /rig-check 200 in 1224ms (compile: 618ms, proxy.ts: 148ms, render: 458ms)
+ GET /dashboard 200 in 2.5s (compile: 766ms, proxy.ts: 201ms, render: 1573ms)
+ GET /rig-check/end-of-shift 200 in 318ms (compile: 43ms, proxy.ts: 95ms, render: 180ms)
+ GET /rig-check 200 in 278ms (compile: 52ms, proxy.ts: 68ms, render: 158ms)
+ GET /dashboard 200 in 1469ms (compile: 51ms, proxy.ts: 5ms, render: 1413ms)
+ GET /rig-check/end-of-shift 200 in 230ms (compile: 14ms, proxy.ts: 45ms, render: 172ms)
+ GET /dashboard 200 in 1303ms (compile: 788ms, proxy.ts: 98ms, render: 418ms)
+ GET /rig-check 200 in 266ms (compile: 42ms, proxy.ts: 6ms, render: 217ms)
+ GET /dashboard 200 in 414ms (compile: 74ms, proxy.ts: 8ms, render: 332ms)
+ GET /rig-check/end-of-shift 200 in 204ms (compile: 34ms, proxy.ts: 43ms, render: 127ms)
+ GET /rig-check 200 in 204ms (compile: 33ms, proxy.ts: 59ms, render: 112ms)
+ GET /rig-check/end-of-shift 200 in 102ms (compile: 61ms, proxy.ts: 5ms, render: 37ms)
+ GET /rig-check 200 in 100ms (compile: 73ms, proxy.ts: 7ms, render: 21ms)
+ GET /dashboard 200 in 303ms (compile: 30ms, proxy.ts: 8ms, render: 265ms)
+ GET /dashboard 200 in 334ms (compile: 9ms, proxy.ts: 19ms, render: 306ms)
+ GET /dashboard 200 in 250ms (compile: 30ms, proxy.ts: 28ms, render: 193ms)
+ GET /login 200 in 436ms (compile: 196ms, proxy.ts: 2ms, render: 238ms)
+ GET /dashboard 200 in 604ms (compile: 4ms, proxy.ts: 3ms, render: 597ms)
+ GET /uploaded-via-mvp.jpg 404 in 158ms (compile: 23ms, proxy.ts: 5ms, render: 130ms)
+ GET /dashboard 200 in 941ms (compile: 9ms, proxy.ts: 8ms, render: 924ms)
+ POST /login 303 in 1417ms (compile: 12ms, proxy.ts: 11ms, render: 1394ms)
+ GET /login 200 in 36ms (compile: 5ms, proxy.ts: 16ms, render: 15ms)
+✓ Compiled in 196ms
+ GET /login 200 in 780ms (compile: 56ms, proxy.ts: 43ms, render: 680ms)
+ GET /rig-check 200 in 801ms (compile: 527ms, proxy.ts: 19ms, render: 255ms)
+ GET /rig-check/end-of-shift 200 in 802ms (compile: 529ms, proxy.ts: 92ms, render: 180ms)
+ POST /rig-check 200 in 984ms (compile: 63ms, proxy.ts: 513ms, render: 409ms)
+ POST /rig-check 200 in 165ms (compile: 6ms, proxy.ts: 12ms, render: 146ms)
+ POST /rig-check 200 in 516ms (compile: 9ms, proxy.ts: 4ms, render: 503ms)
+ GET /dashboard 200 in 854ms (compile: 32ms, proxy.ts: 6ms, render: 816ms)
+ POST /login 303 in 1203ms (compile: 41ms, proxy.ts: 23ms, render: 1139ms)
+ GET /dashboard 200 in 760ms (compile: 21ms, proxy.ts: 7ms, render: 731ms)
+ GET /uploaded-via-mvp.jpg 404 in 349ms (compile: 35ms, proxy.ts: 12ms, render: 302ms)
+ GET /dashboard/users 200 in 555ms (compile: 274ms, proxy.ts: 19ms, render: 262ms)
+ GET /rig-check 200 in 100ms (compile: 32ms, proxy.ts: 30ms, render: 38ms)
+ POST /rig-check 200 in 846ms (compile: 4ms, proxy.ts: 4ms, render: 838ms)
+ POST /rig-check 200 in 167ms (compile: 5ms, proxy.ts: 4ms, render: 158ms)
+ POST /rig-check 200 in 367ms (compile: 5ms, proxy.ts: 4ms, render: 359ms)
+ POST /rig-check 200 in 273ms (compile: 6ms, proxy.ts: 6ms, render: 262ms)
+ POST /rig-check 200 in 130ms (compile: 5ms, proxy.ts: 4ms, render: 121ms)
+ POST /rig-check 200 in 300ms (compile: 35ms, proxy.ts: 4ms, render: 261ms)
+✓ Compiled in 122ms
+✓ Compiled in 169ms
+✓ Compiled in 524ms
+✓ Compiled in 2ms
+ GET /rig-check 200 in 4.2s (compile: 415ms, proxy.ts: 536ms, render: 3.3s)
+ GET /dashboard/users 200 in 4.2s (compile: 2.9s, proxy.ts: 527ms, render: 775ms)
+ GET /rig-check 200 in 312ms (compile: 55ms, proxy.ts: 14ms, render: 243ms)
+ GET /dashboard/users 200 in 344ms (compile: 140ms, proxy.ts: 10ms, render: 194ms)
+ GET /rig-check 200 in 169ms (compile: 8ms, proxy.ts: 20ms, render: 141ms)
+ GET /dashboard/users 200 in 190ms (compile: 26ms, proxy.ts: 5ms, render: 159ms)
+ GET /rig-check 200 in 152ms (compile: 5ms, proxy.ts: 5ms, render: 142ms)
+ GET /dashboard/users 200 in 223ms (compile: 25ms, proxy.ts: 3ms, render: 194ms)
+ GET /rig-check 200 in 193ms (compile: 11ms, proxy.ts: 12ms, render: 171ms)
+ GET /rig-check 200 in 192ms (compile: 18ms, proxy.ts: 25ms, render: 148ms)
+ GET /dashboard/users 200 in 221ms (compile: 31ms, proxy.ts: 3ms, render: 186ms)
+ GET /rig-check 200 in 157ms (compile: 69ms, proxy.ts: 7ms, render: 82ms)
+ GET /dashboard/users 200 in 218ms (compile: 13ms, proxy.ts: 22ms, render: 183ms)
+ GET /dashboard/users 200 in 134ms (compile: 26ms, proxy.ts: 6ms, render: 101ms)
+ GET /rig-check 200 in 135ms (compile: 17ms, proxy.ts: 28ms, render: 89ms)
+ GET /rig-check 200 in 151ms (compile: 12ms, proxy.ts: 4ms, render: 136ms)
+ GET /rig-check 200 in 134ms (compile: 6ms, proxy.ts: 4ms, render: 124ms)
+ GET /rig-check 200 in 129ms (compile: 32ms, proxy.ts: 3ms, render: 95ms)
+ GET /rig-check 200 in 60ms (compile: 6ms, proxy.ts: 4ms, render: 50ms)
+ GET /rig-check 200 in 48ms (compile: 7ms, proxy.ts: 5ms, render: 36ms)
+ GET /rig-check 200 in 20ms (compile: 4ms, proxy.ts: 2ms, render: 14ms)
+ GET /rig-check 200 in 380ms (compile: 37ms, proxy.ts: 14ms, render: 328ms)
+ POST /rig-check 200 in 689ms (compile: 6ms, proxy.ts: 9ms, render: 674ms)
+ POST /rig-check 200 in 141ms (compile: 3ms, proxy.ts: 3ms, render: 134ms)
+ POST /rig-check 200 in 366ms (compile: 7ms, proxy.ts: 5ms, render: 354ms)
+ POST /rig-check 200 in 361ms (compile: 22ms, proxy.ts: 19ms, render: 320ms)
+ POST /rig-check 200 in 503ms (compile: 22ms, proxy.ts: 56ms, render: 425ms)
+ POST /rig-check 200 in 425ms (compile: 31ms, proxy.ts: 9ms, render: 385ms)
+ POST /rig-check 200 in 283ms (compile: 11ms, proxy.ts: 14ms, render: 258ms)
+Push trigger check: aiSeverity= yellow missing= 1 hasDamageNotes= 
+Push: Calling sendPushNotificationToManagers NOW
+Push: sendPushNotificationToManagers called with: {"title":"⚠️ FleetGuard Alert","body":"CVolkov: Missing equipment flagged by CVolkov: Medications bag sealed and stocked","url":"/dashboard"}
+Push: Found managers: 2 error: none
+Push: Found subscriptions: 2 error: none
+Push: Sending to 2 endpoints...
+Push: Sending to endpoint #0: https://fcm.googleapis.com/fcm/send/eKUOAZUd-1g:APA91bHghVKB
+Push: Sending to endpoint #1: https://fcm.googleapis.com/fcm/send/eNHF9bMe2CU:APA91bEa7Xpo
+Push: SUCCESS sent to endpoint #1
+Push: SUCCESS sent to endpoint #0
+Push: All sends completed
+Push: sendPushNotificationToManagers returned
+ GET /images/icons/icon-192x192.png 404 in 293ms (compile: 163ms, proxy.ts: 5ms, render: 124ms)
+ GET /images/icons/icon-72x72.png 404 in 287ms (compile: 126ms, proxy.ts: 5ms, render: 157ms)
+ GET /images/icons/icon-192x192.png 404 in 192ms (compile: 116ms, proxy.ts: 11ms, render: 65ms)
+ GET /images/icons/icon-72x72.png 404 in 191ms (compile: 139ms, proxy.ts: 10ms, render: 41ms)
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 2.1s (compile: 41ms, proxy.ts: 68ms, render: 1999ms)
+ GET /rig-check/end-of-shift 200 in 353ms (compile: 286ms, proxy.ts: 17ms, render: 49ms)
+ POST /rig-check/end-of-shift 200 in 416ms (compile: 13ms, proxy.ts: 5ms, render: 398ms)
+ POST /rig-check/end-of-shift 200 in 212ms (compile: 6ms, proxy.ts: 5ms, render: 201ms)
+ POST /rig-check/end-of-shift 200 in 305ms (compile: 5ms, proxy.ts: 6ms, render: 294ms)
+ POST /rig-check/end-of-shift 200 in 202ms (compile: 6ms, proxy.ts: 6ms, render: 191ms)
+✓ Compiled in 1045ms
+ GET /rig-check/end-of-shift 200 in 2.4s (compile: 1076ms, proxy.ts: 175ms, render: 1116ms)
+ GET /rig-check 200 in 2.3s (compile: 1353ms, proxy.ts: 272ms, render: 664ms)
+ GET /dashboard/users 200 in 2.5s (compile: 1707ms, proxy.ts: 102ms, render: 656ms)
+ GET /rig-check/end-of-shift 200 in 1452ms (compile: 13ms, proxy.ts: 75ms, render: 1363ms)
+ GET /rig-check 200 in 1396ms (compile: 34ms, proxy.ts: 9ms, render: 1353ms)
+ GET /dashboard/users 200 in 2.2s (compile: 51ms, proxy.ts: 5ms, render: 2.2s)
+ GET /rig-check/end-of-shift 200 in 2.2s (compile: 12ms, proxy.ts: 34ms, render: 2.1s)
+ GET /rig-check 200 in 2.1s (compile: 31ms, proxy.ts: 7ms, render: 2.1s)
+ GET /rig-check/end-of-shift 200 in 2.3s (compile: 312ms, proxy.ts: 180ms, render: 1780ms)
+ GET /rig-check 200 in 2.3s (compile: 749ms, proxy.ts: 185ms, render: 1339ms)
+ GET /dashboard/users 200 in 2.3s (compile: 53ms, proxy.ts: 5ms, render: 2.3s)
+ GET /dashboard/users 200 in 2.2s (compile: 248ms, proxy.ts: 881ms, render: 1023ms)
+ GET /rig-check 200 in 1212ms (compile: 40ms, proxy.ts: 784ms, render: 388ms)
+ GET /rig-check/end-of-shift 200 in 1281ms (compile: 93ms, proxy.ts: 800ms, render: 388ms)
+ GET /dashboard/users 200 in 529ms (compile: 111ms, proxy.ts: 25ms, render: 393ms)
+ GET /rig-check 200 in 315ms (compile: 111ms, proxy.ts: 21ms, render: 183ms)
+ GET /rig-check/end-of-shift 200 in 314ms (compile: 144ms, proxy.ts: 21ms, render: 150ms)
+ GET /dashboard/users 200 in 349ms (compile: 40ms, proxy.ts: 31ms, render: 278ms)
+ GET /dashboard/users 200 in 205ms (compile: 23ms, proxy.ts: 75ms, render: 107ms)
+ GET /rig-check 200 in 120ms (compile: 10ms, proxy.ts: 64ms, render: 46ms)
+ GET /rig-check/end-of-shift 200 in 61ms (compile: 27ms, proxy.ts: 9ms, render: 25ms)
+✓ Compiled in 754ms
+ GET /rig-check/end-of-shift 200 in 1014ms (compile: 531ms, proxy.ts: 43ms, render: 439ms)
+ GET /rig-check 200 in 992ms (compile: 726ms, proxy.ts: 23ms, render: 243ms)
+ GET /dashboard/users 200 in 1069ms (compile: 48ms, proxy.ts: 66ms, render: 956ms)
+✓ Compiled in 264ms
+ POST /rig-check/end-of-shift 200 in 1479ms (compile: 22ms, proxy.ts: 71ms, render: 1386ms)
+ POST /rig-check/end-of-shift 200 in 219ms (compile: 8ms, proxy.ts: 9ms, render: 203ms)
+ POST /rig-check/end-of-shift 200 in 207ms (compile: 3ms, proxy.ts: 2ms, render: 201ms)
+ POST /rig-check/end-of-shift 200 in 161ms (compile: 14ms, proxy.ts: 3ms, render: 143ms)
+ POST /rig-check/end-of-shift 200 in 138ms (compile: 3ms, proxy.ts: 4ms, render: 131ms)
+ GET /rig-check/end-of-shift 200 in 446ms (compile: 54ms, proxy.ts: 45ms, render: 347ms)
+ POST /rig-check/end-of-shift 200 in 742ms (compile: 5ms, proxy.ts: 10ms, render: 728ms)
+ POST /rig-check/end-of-shift 200 in 136ms (compile: 4ms, proxy.ts: 6ms, render: 125ms)
+ POST /rig-check/end-of-shift 200 in 179ms (compile: 4ms, proxy.ts: 4ms, render: 171ms)
+ POST /rig-check/end-of-shift 200 in 140ms (compile: 10ms, proxy.ts: 5ms, render: 125ms)
+ POST /rig-check/end-of-shift 200 in 145ms (compile: 3ms, proxy.ts: 5ms, render: 136ms)
+ GET /rig-check 200 in 792ms (compile: 284ms, proxy.ts: 6ms, render: 502ms)
+ POST /rig-check 200 in 347ms (compile: 3ms, proxy.ts: 6ms, render: 338ms)
+ POST /rig-check 200 in 159ms (compile: 5ms, proxy.ts: 6ms, render: 147ms)
+ POST /rig-check 200 in 346ms (compile: 6ms, proxy.ts: 7ms, render: 333ms)
+ POST /rig-check 200 in 392ms (compile: 14ms, proxy.ts: 5ms, render: 373ms)
+ POST /rig-check 200 in 461ms (compile: 9ms, proxy.ts: 6ms, render: 446ms)
+ POST /rig-check 200 in 253ms (compile: 9ms, proxy.ts: 5ms, render: 240ms)
+ POST /dashboard/users 200 in 1273ms (compile: 17ms, proxy.ts: 21ms, render: 1235ms)
+ GET /r 404 in 190ms (compile: 58ms, proxy.ts: 19ms, render: 113ms)
+ GET /login 200 in 473ms (compile: 281ms, proxy.ts: 4ms, render: 188ms)
+ GET /change-password 200 in 871ms (compile: 329ms, proxy.ts: 4ms, render: 538ms)
+ POST /login 303 in 1575ms (compile: 14ms, proxy.ts: 30ms, render: 1532ms)
+ GET /change-password 200 in 392ms (compile: 155ms, proxy.ts: 33ms, render: 205ms)
+ GET /rig-check 200 in 63ms (compile: 15ms, proxy.ts: 5ms, render: 42ms)
+ POST /change-password 303 in 525ms (compile: 16ms, proxy.ts: 34ms, render: 476ms)
+ GET /rig-check 200 in 31ms (compile: 11ms, proxy.ts: 7ms, render: 13ms)
+ POST /rig-check 200 in 257ms (compile: 12ms, proxy.ts: 4ms, render: 241ms)
+ POST /rig-check 200 in 131ms (compile: 5ms, proxy.ts: 6ms, render: 119ms)
+ POST /rig-check 200 in 299ms (compile: 4ms, proxy.ts: 4ms, render: 290ms)
+ POST /rig-check 200 in 245ms (compile: 4ms, proxy.ts: 4ms, render: 237ms)
+ POST /rig-check 200 in 139ms (compile: 7ms, proxy.ts: 7ms, render: 125ms)
+ POST /rig-check 200 in 245ms (compile: 6ms, proxy.ts: 6ms, render: 232ms)
+ POST /rig-check 200 in 252ms (compile: 4ms, proxy.ts: 5ms, render: 243ms)
+ POST /rig-check 200 in 286ms (compile: 12ms, proxy.ts: 17ms, render: 257ms)
+Push trigger check: aiSeverity= yellow missing= 3 hasDamageNotes= 
+Push: Calling sendPushNotificationToManagers NOW
+Push: sendPushNotificationToManagers called with: {"title":"⚠️ FleetGuard Alert","body":"VVolkova: Missing equipment flagged by VVolkova: Trauma bag — bandages, gauze, tourniquets present, Medications bag sealed and stocked, Backboard and cervical co
+Push: Found managers: 2 error: none
+Push: Found subscriptions: 2 error: none
+Push: Sending to 2 endpoints...
+Push: Sending to endpoint #0: https://fcm.googleapis.com/fcm/send/eKUOAZUd-1g:APA91bHghVKB
+Push: Sending to endpoint #1: https://fcm.googleapis.com/fcm/send/eNHF9bMe2CU:APA91bEa7Xpo
+Push: SUCCESS sent to endpoint #1
+Push: SUCCESS sent to endpoint #0
+Push: All sends completed
+Push: sendPushNotificationToManagers returned
+ GET /images/icons/icon-192x192.png 404 in 252ms (compile: 58ms, proxy.ts: 13ms, render: 180ms)
+ GET /images/icons/icon-72x72.png 404 in 238ms (compile: 77ms, proxy.ts: 24ms, render: 137ms)
+ GET /images/icons/icon-192x192.png 404 in 197ms (compile: 102ms, proxy.ts: 7ms, render: 88ms)
+ GET /images/icons/icon-72x72.png 404 in 193ms (compile: 135ms, proxy.ts: 8ms, render: 50ms)
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 1667ms (compile: 71ms, proxy.ts: 21ms, render: 1575ms)
+ GET /rig-check/end-of-shift 200 in 40ms (compile: 8ms, proxy.ts: 11ms, render: 21ms)
+ POST /rig-check/end-of-shift 200 in 355ms (compile: 8ms, proxy.ts: 5ms, render: 342ms)
+ POST /rig-check/end-of-shift 200 in 142ms (compile: 6ms, proxy.ts: 8ms, render: 128ms)
+ POST /rig-check/end-of-shift 200 in 148ms (compile: 7ms, proxy.ts: 6ms, render: 135ms)
+ POST /rig-check/end-of-shift 200 in 259ms (compile: 6ms, proxy.ts: 6ms, render: 247ms)
+ POST /rig-check/end-of-shift 200 in 141ms (compile: 4ms, proxy.ts: 4ms, render: 134ms)
+ POST /rig-check/end-of-shift 200 in 133ms (compile: 3ms, proxy.ts: 3ms, render: 126ms)
+ POST /rig-check/end-of-shift 200 in 128ms (compile: 5ms, proxy.ts: 6ms, render: 118ms)
+ POST /rig-check/end-of-shift 200 in 125ms (compile: 3ms, proxy.ts: 3ms, render: 119ms)
+ POST /rig-check/end-of-shift 200 in 127ms (compile: 3ms, proxy.ts: 3ms, render: 121ms)
+ POST /rig-check/end-of-shift 200 in 147ms (compile: 8ms, proxy.ts: 5ms, render: 133ms)
+ POST /rig-check/end-of-shift 200 in 764ms (compile: 17ms, proxy.ts: 25ms, render: 722ms)
+ GET /rig-check 200 in 75ms (compile: 16ms, proxy.ts: 5ms, render: 55ms)
+ POST /rig-check 200 in 307ms (compile: 3ms, proxy.ts: 3ms, render: 301ms)
+ POST /rig-check 200 in 126ms (compile: 3ms, proxy.ts: 3ms, render: 119ms)
+ POST /rig-check 200 in 307ms (compile: 3ms, proxy.ts: 4ms, render: 300ms)
+ POST /rig-check 200 in 367ms (compile: 50ms, proxy.ts: 51ms, render: 267ms)
+ GET /dashboard 200 in 2.1s (compile: 346ms, proxy.ts: 20ms, render: 1756ms)
+ GET /uploaded-via-mvp.jpg 404 in 84ms (compile: 8ms, proxy.ts: 3ms, render: 73ms)
+ GET /uploaded-via-mvp.jpg 404 in 55ms (compile: 11ms, proxy.ts: 4ms, render: 40ms)
+ GET /dashboard 200 in 1503ms (compile: 27ms, proxy.ts: 22ms, render: 1454ms)
+✓ Compiled in 374ms
+✓ Compiled in 739ms
+✓ Compiled in 5ms
+ GET /rig-check 200 in 3.6s (compile: 1308ms, proxy.ts: 16ms, render: 2.3s)
+ GET /rig-check/end-of-shift 200 in 3.6s (compile: 1489ms, proxy.ts: 20ms, render: 2.1s)
+ GET /rig-check 200 in 1953ms (compile: 1413ms, proxy.ts: 88ms, render: 452ms)
+ GET /rig-check/end-of-shift 200 in 2.0s (compile: 1453ms, proxy.ts: 84ms, render: 477ms)
+ GET /dashboard 200 in 4.1s (compile: 740ms, proxy.ts: 41ms, render: 3.3s)
+ GET /rig-check 200 in 497ms (compile: 88ms, proxy.ts: 17ms, render: 392ms)
+ GET /rig-check/end-of-shift 200 in 507ms (compile: 192ms, proxy.ts: 11ms, render: 304ms)
+ GET /dashboard 200 in 2.2s (compile: 262ms, proxy.ts: 88ms, render: 1879ms)
+ GET /rig-check 200 in 387ms (compile: 45ms, proxy.ts: 72ms, render: 271ms)
+ GET /rig-check/end-of-shift 200 in 321ms (compile: 94ms, proxy.ts: 29ms, render: 198ms)
+ GET /dashboard 200 in 834ms (compile: 41ms, proxy.ts: 96ms, render: 697ms)
+ GET /rig-check 200 in 332ms (compile: 50ms, proxy.ts: 4ms, render: 277ms)
+ GET /rig-check/end-of-shift 200 in 307ms (compile: 50ms, proxy.ts: 9ms, render: 248ms)
+ GET /dashboard 200 in 572ms (compile: 69ms, proxy.ts: 26ms, render: 477ms)
+ GET /rig-check 200 in 319ms (compile: 61ms, proxy.ts: 12ms, render: 246ms)
+ GET /rig-check/end-of-shift 200 in 232ms (compile: 137ms, proxy.ts: 5ms, render: 91ms)
+ GET /dashboard 200 in 408ms (compile: 12ms, proxy.ts: 6ms, render: 391ms)
+ GET /rig-check 200 in 110ms (compile: 31ms, proxy.ts: 34ms, render: 46ms)
+ GET /dashboard 200 in 342ms (compile: 19ms, proxy.ts: 10ms, render: 313ms)
+ GET /rig-check/end-of-shift 200 in 60ms (compile: 26ms, proxy.ts: 7ms, render: 27ms)
+ GET /dashboard 200 in 428ms (compile: 10ms, proxy.ts: 25ms, render: 393ms)
+ GET /dashboard/audit-log 200 in 503ms (compile: 49ms, proxy.ts: 17ms, render: 437ms)
+✓ Compiled in 97ms
+ GET /rig-check/end-of-shift 200 in 144ms (compile: 84ms, proxy.ts: 10ms, render: 50ms)
+ GET /rig-check 200 in 138ms (compile: 103ms, proxy.ts: 11ms, render: 24ms)
+ GET /dashboard/audit-log 200 in 491ms (compile: 24ms, proxy.ts: 14ms, render: 453ms)
+✓ Compiled in 530ms
+✓ Compiled in 122ms
+ GET /rig-check 200 in 1858ms (compile: 1705ms, proxy.ts: 10ms, render: 143ms)
+ GET /rig-check/end-of-shift 200 in 1856ms (compile: 1795ms, proxy.ts: 10ms, render: 52ms)
+ GET /dashboard/audit-log 200 in 2.1s (compile: 1032ms, proxy.ts: 22ms, render: 1034ms)
+✓ Compiled in 505ms
+ GET /dashboard/audit-log 200 in 2.1s (compile: 197ms, proxy.ts: 30ms, render: 1905ms)
+ GET /dashboard 200 in 8.9s (compile: 863ms, proxy.ts: 36ms, render: 8.0s)
+ GET /dashboard/users 200 in 6.0s (compile: 2.2s, proxy.ts: 39ms, render: 3.7s)
+ GET /dashboard 200 in 1076ms (compile: 21ms, proxy.ts: 16ms, render: 1038ms)
+ GET /uploaded-via-mvp.jpg 404 in 120ms (compile: 60ms, proxy.ts: 6ms, render: 55ms)
+✓ Compiled in 1553ms
+ GET /rig-check 200 in 7.8s (compile: 3.7s, proxy.ts: 198ms, render: 3.9s)
+ GET /rig-check/end-of-shift 200 in 7.7s (compile: 6.1s, proxy.ts: 24ms, render: 1518ms)
+ GET /rig-check 200 in 1531ms (compile: 73ms, proxy.ts: 78ms, render: 1380ms)
+ GET /rig-check/end-of-shift 200 in 1589ms (compile: 400ms, proxy.ts: 18ms, render: 1171ms)
+ GET /dashboard 200 in 8.3s (compile: 1778ms, proxy.ts: 227ms, render: 6.3s)
+ GET /rig-check 200 in 1217ms (compile: 367ms, proxy.ts: 351ms, render: 499ms)
+ GET /rig-check/end-of-shift 200 in 719ms (compile: 157ms, proxy.ts: 63ms, render: 499ms)
+ GET /rig-check 200 in 574ms (compile: 53ms, proxy.ts: 104ms, render: 417ms)
+ GET /rig-check/end-of-shift 200 in 553ms (compile: 65ms, proxy.ts: 40ms, render: 448ms)
+ GET /dashboard 200 in 1928ms (compile: 165ms, proxy.ts: 19ms, render: 1743ms)
+ GET /rig-check 200 in 386ms (compile: 20ms, proxy.ts: 58ms, render: 307ms)
+ GET /dashboard 200 in 1166ms (compile: 118ms, proxy.ts: 268ms, render: 781ms)
+ GET /rig-check/end-of-shift 200 in 394ms (compile: 48ms, proxy.ts: 11ms, render: 334ms)
+ GET /rig-check 200 in 272ms (compile: 21ms, proxy.ts: 17ms, render: 234ms)
+ GET /dashboard 200 in 703ms (compile: 103ms, proxy.ts: 38ms, render: 562ms)
+ GET /rig-check/end-of-shift 200 in 264ms (compile: 71ms, proxy.ts: 19ms, render: 174ms)
+ GET /rig-check 200 in 145ms (compile: 30ms, proxy.ts: 7ms, render: 109ms)
+ GET /dashboard 200 in 462ms (compile: 77ms, proxy.ts: 10ms, render: 376ms)
+ GET /rig-check/end-of-shift 200 in 104ms (compile: 19ms, proxy.ts: 51ms, render: 35ms)
+ GET /dashboard 200 in 290ms (compile: 35ms, proxy.ts: 22ms, render: 233ms)
+ GET /dashboard 200 in 207ms (compile: 8ms, proxy.ts: 12ms, render: 186ms)
+✓ Compiled in 864ms
+✓ Compiled in 0ms
+ GET /rig-check/end-of-shift 200 in 6.8s (compile: 2.5s, proxy.ts: 153ms, render: 4.1s)
+ GET /rig-check 200 in 6.8s (compile: 2.9s, proxy.ts: 154ms, render: 3.7s)
+ GET /rig-check/end-of-shift 200 in 4.4s (compile: 409ms, proxy.ts: 95ms, render: 3.9s)
+ GET /rig-check 200 in 4.4s (compile: 1255ms, proxy.ts: 100ms, render: 3.1s)
+ GET /dashboard 200 in 9.1s (compile: 1378ms, proxy.ts: 64ms, render: 7.7s)
+ GET /rig-check/end-of-shift 200 in 2.8s (compile: 324ms, proxy.ts: 106ms, render: 2.3s)
+ GET /rig-check 200 in 2.9s (compile: 1672ms, proxy.ts: 156ms, render: 1087ms)
+ GET /rig-check/end-of-shift 200 in 1214ms (compile: 81ms, proxy.ts: 193ms, render: 940ms)
+ GET /dashboard 200 in 5.4s (compile: 986ms, proxy.ts: 75ms, render: 4.3s)
+ GET /rig-check 200 in 1095ms (compile: 152ms, proxy.ts: 23ms, render: 920ms)
+ GET /rig-check/end-of-shift 200 in 827ms (compile: 57ms, proxy.ts: 165ms, render: 605ms)
+ GET /rig-check 200 in 701ms (compile: 155ms, proxy.ts: 37ms, render: 510ms)
+ GET /dashboard 200 in 3.3s (compile: 571ms, proxy.ts: 161ms, render: 2.5s)
+ GET /rig-check/end-of-shift 200 in 467ms (compile: 21ms, proxy.ts: 47ms, render: 399ms)
+ GET /dashboard 200 in 1427ms (compile: 239ms, proxy.ts: 30ms, render: 1157ms)
+ GET /rig-check 200 in 430ms (compile: 96ms, proxy.ts: 7ms, render: 327ms)
+ GET /rig-check/end-of-shift 200 in 308ms (compile: 14ms, proxy.ts: 19ms, render: 274ms)
+ GET /dashboard 200 in 937ms (compile: 259ms, proxy.ts: 28ms, render: 650ms)
+ GET /rig-check 200 in 237ms (compile: 14ms, proxy.ts: 39ms, render: 184ms)
+ GET /rig-check/end-of-shift 200 in 205ms (compile: 30ms, proxy.ts: 8ms, render: 167ms)
+ GET /dashboard 200 in 499ms (compile: 43ms, proxy.ts: 10ms, render: 446ms)
+ GET /rig-check 200 in 90ms (compile: 11ms, proxy.ts: 12ms, render: 67ms)
+ GET /dashboard 200 in 368ms (compile: 40ms, proxy.ts: 17ms, render: 311ms)
+ GET /dashboard 200 in 372ms (compile: 81ms, proxy.ts: 7ms, render: 284ms)
+✓ Compiled in 156ms
+ GET /rig-check 200 in 1185ms (compile: 17ms, proxy.ts: 16ms, render: 1151ms)
+ GET /rig-check/end-of-shift 200 in 1170ms (compile: 49ms, proxy.ts: 9ms, render: 1112ms)
+ GET /dashboard 200 in 1575ms (compile: 1008ms, proxy.ts: 10ms, render: 557ms)
+✓ Compiled in 165ms
+ GET /dashboard/audit-log 200 in 712ms (compile: 289ms, proxy.ts: 24ms, render: 399ms)
+ GET /dashboard 200 in 1114ms (compile: 371ms, proxy.ts: 19ms, render: 725ms)
+ GET /uploaded-via-mvp.jpg 404 in 84ms (compile: 23ms, proxy.ts: 7ms, render: 54ms)
+ GET /dashboard 200 in 1163ms (compile: 25ms, proxy.ts: 22ms, render: 1115ms)
+ GET /uploaded-via-mvp.jpg 404 in 61ms (compile: 14ms, proxy.ts: 4ms, render: 43ms)
+✓ Compiled in 1820ms
+✓ Compiled in 12ms
+ GET /rig-check 200 in 6.1s (compile: 3.5s, proxy.ts: 114ms, render: 2.5s)
+ GET /rig-check/end-of-shift 200 in 6.0s (compile: 4.2s, proxy.ts: 31ms, render: 1771ms)
+ GET /uploaded-via-mvp.jpg 404 in 1769ms (compile: 1223ms, proxy.ts: 17ms, render: 529ms)
+ GET /rig-check 200 in 2.0s (compile: 44ms, proxy.ts: 16ms, render: 1951ms)
+ GET /rig-check/end-of-shift 200 in 1992ms (compile: 52ms, proxy.ts: 16ms, render: 1924ms)
+ GET /rig-check 200 in 808ms (compile: 279ms, proxy.ts: 106ms, render: 423ms)
+ GET /rig-check/end-of-shift 200 in 731ms (compile: 77ms, proxy.ts: 266ms, render: 389ms)
+ GET /dashboard 200 in 6.9s (compile: 1463ms, proxy.ts: 401ms, render: 5.0s)
+ GET /rig-check 200 in 454ms (compile: 39ms, proxy.ts: 130ms, render: 285ms)
+ GET /rig-check/end-of-shift 200 in 436ms (compile: 71ms, proxy.ts: 31ms, render: 334ms)
+ GET /dashboard 200 in 2.3s (compile: 763ms, proxy.ts: 17ms, render: 1561ms)
+ GET /rig-check/end-of-shift 200 in 497ms (compile: 34ms, proxy.ts: 55ms, render: 408ms)
+ GET /rig-check 200 in 501ms (compile: 16ms, proxy.ts: 56ms, render: 430ms)
+ GET /rig-check 200 in 605ms (compile: 84ms, proxy.ts: 19ms, render: 501ms)
+ GET /rig-check/end-of-shift 200 in 632ms (compile: 122ms, proxy.ts: 63ms, render: 446ms)
+ GET /dashboard 200 in 1141ms (compile: -128558µs, proxy.ts: 257ms, render: 1013ms)
+ GET /dashboard 200 in 898ms (compile: 48ms, proxy.ts: 61ms, render: 789ms)
+ GET /rig-check 200 in 710ms (compile: 89ms, proxy.ts: 19ms, render: 602ms)
+ GET /dashboard 200 in 1038ms (compile: 29ms, proxy.ts: 56ms, render: 953ms)
+ GET /rig-check/end-of-shift 200 in 600ms (compile: 98ms, proxy.ts: 14ms, render: 487ms)
+ GET /rig-check 200 in 601ms (compile: 150ms, proxy.ts: 17ms, render: 435ms)
+ GET /rig-check/end-of-shift 200 in 361ms (compile: 104ms, proxy.ts: 25ms, render: 232ms)
+ GET /dashboard 200 in 917ms (compile: 82ms, proxy.ts: 103ms, render: 732ms)
+ GET /dashboard 200 in 633ms (compile: 27ms, proxy.ts: 14ms, render: 592ms)
+ GET /dashboard 200 in 512ms (compile: 40ms, proxy.ts: 44ms, render: 428ms)
+ GET /dashboard 200 in 1648ms (compile: 48ms, proxy.ts: 40ms, render: 1560ms)
+ GET /uploaded-via-mvp.jpg 404 in 89ms (compile: 16ms, proxy.ts: 6ms, render: 67ms)
+ GET /dashboard/audit-log 200 in 725ms (compile: 14ms, proxy.ts: 13ms, render: 698ms)
+ POST /rig-check 200 in 3.2s (compile: 20ms, proxy.ts: 37ms, render: 3.1s)
+Push trigger check: aiSeverity= yellow missing= 1 hasDamageNotes=  disputed= true
+Push: Calling sendPushNotificationToManagers NOW
+Push: sendPushNotificationToManagers called with: {"title":"⚠️ FleetGuard Alert","body":"Viktoria Volkova & Charlie Volkov disputed handoff: dirty","url":"/dashboard"}
+Push: Found managers: 2 error: none
+Push: Found subscriptions: 2 error: none
+Push: Sending to 2 endpoints...
+Push: Sending to endpoint #0: https://fcm.googleapis.com/fcm/send/eKUOAZUd-1g:APA91bHghVKB
+Push: Sending to endpoint #1: https://fcm.googleapis.com/fcm/send/eNHF9bMe2CU:APA91bEa7Xpo
+Push: SUCCESS sent to endpoint #0
+Push: SUCCESS sent to endpoint #1
+Push: All sends completed
+Push: sendPushNotificationToManagers returned
+ GET /images/icons/icon-192x192.png 404 in 198ms (compile: 27ms, proxy.ts: 10ms, render: 161ms)
+ GET /images/icons/icon-72x72.png 404 in 188ms (compile: 87ms, proxy.ts: 3ms, render: 98ms)
+ GET /images/icons/icon-192x192.png 404 in 184ms (compile: 110ms, proxy.ts: 3ms, render: 72ms)
+ GET /images/icons/icon-72x72.png 404 in 182ms (compile: 133ms, proxy.ts: 12ms, render: 38ms)
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 3.0s (compile: 20ms, proxy.ts: 24ms, render: 3.0s)
+ GET /dashboard 200 in 1084ms (compile: 20ms, proxy.ts: 25ms, render: 1039ms)
+ GET /uploaded-via-mvp.jpg 404 in 99ms (compile: 24ms, proxy.ts: 7ms, render: 68ms)
+ GET /rig-check/end-of-shift 200 in 186ms (compile: 115ms, proxy.ts: 35ms, render: 35ms)
+ POST /rig-check/end-of-shift 200 in 606ms (compile: 4ms, proxy.ts: 10ms, render: 592ms)
+ POST /rig-check/end-of-shift 200 in 199ms (compile: 5ms, proxy.ts: 4ms, render: 190ms)
+ POST /rig-check/end-of-shift 200 in 141ms (compile: 4ms, proxy.ts: 3ms, render: 134ms)
+ POST /rig-check/end-of-shift 200 in 268ms (compile: 4ms, proxy.ts: 5ms, render: 259ms)
+ POST /rig-check/end-of-shift 200 in 211ms (compile: 9ms, proxy.ts: 4ms, render: 199ms)
+ POST /rig-check/end-of-shift 200 in 140ms (compile: 4ms, proxy.ts: 4ms, render: 132ms)
+ POST /rig-check/end-of-shift 200 in 259ms (compile: 6ms, proxy.ts: 4ms, render: 249ms)
+ POST /rig-check/end-of-shift 200 in 157ms (compile: 8ms, proxy.ts: 5ms, render: 144ms)
+ POST /rig-check/end-of-shift 200 in 161ms (compile: 5ms, proxy.ts: 4ms, render: 153ms)
+ POST /rig-check/end-of-shift 200 in 207ms (compile: 6ms, proxy.ts: 3ms, render: 199ms)
+End of shift report error: Could not find the 'crew_last_name' column of 'end_of_shift_reports' in the schema cache
+⨯ Error: Could not find the 'crew_last_name' column of 'end_of_shift_reports' in the schema cache
+    at submitEndOfShiftReport (src/app/actions.ts:618:11)
+  616 |   if (error) {
+  617 |     console.error('End of shift report error:', error.message)
+> 618 |     throw new Error(error.message)
+      |           ^
+  619 |   }
+  620 |
+  621 |   // Clear active shift from vehicle {
+  digest: '2326951015'
+}
+ POST /rig-check/end-of-shift 500 in 1060ms (compile: 21ms, proxy.ts: 34ms, render: 1005ms)
+End of shift report error: Could not find the 'crew_last_name' column of 'end_of_shift_reports' in the schema cache
+⨯ Error: Could not find the 'crew_last_name' column of 'end_of_shift_reports' in the schema cache
+    at submitEndOfShiftReport (src/app/actions.ts:618:11)
+  616 |   if (error) {
+  617 |     console.error('End of shift report error:', error.message)
+> 618 |     throw new Error(error.message)
+      |           ^
+  619 |   }
+  620 |
+  621 |   // Clear active shift from vehicle {
+  digest: '2326951015'
+}
+ POST /rig-check/end-of-shift 500 in 796ms (compile: 18ms, proxy.ts: 24ms, render: 755ms)
+ POST /rig-check/end-of-shift 200 in 833ms (compile: 26ms, proxy.ts: 30ms, render: 777ms)
+ GET /dashboard/audit-log 200 in 462ms (compile: 14ms, proxy.ts: 12ms, render: 436ms)
+ GET /dashboard 200 in 1077ms (compile: 22ms, proxy.ts: 15ms, render: 1040ms)
+ GET /dashboard/uploaded-via-mvp.jpg 404 in 167ms (compile: 31ms, proxy.ts: 7ms, render: 130ms)
+ GET /uploaded-via-mvp.jpg 404 in 155ms (compile: 68ms, proxy.ts: 14ms, render: 73ms)
+✓ Compiled in 1189ms
+ GET /uploaded-via-mvp.jpg 404 in 323ms (compile: 120ms, proxy.ts: 49ms, render: 153ms)
+Forced EOS insert error: invalid input value for enum fuel_level: "unknown"
+⨯ Error: invalid input value for enum fuel_level: "unknown"
+    at adminForceEndShift (src/app/actions.ts:660:11)
+  658 |   if (eosError) {
+  659 |     console.error('Forced EOS insert error:', eosError.message)
+> 660 |     throw new Error(eosError.message)
+      |           ^
+  661 |   }
+  662 |
+  663 |   // Clear active shift from vehicle {
+  digest: '3443767284'
+}
+ POST /dashboard 500 in 3.5s (compile: 2.0s, proxy.ts: 63ms, render: 1364ms)
+Forced EOS insert error: invalid input value for enum fuel_level: "unknown"
+⨯ Error: invalid input value for enum fuel_level: "unknown"
+    at adminForceEndShift (src/app/actions.ts:660:11)
+  658 |   if (eosError) {
+  659 |     console.error('Forced EOS insert error:', eosError.message)
+> 660 |     throw new Error(eosError.message)
+      |           ^
+  661 |   }
+  662 |
+  663 |   // Clear active shift from vehicle {
+  digest: '3443767284'
+}
+ POST /dashboard 500 in 664ms (compile: 9ms, proxy.ts: 21ms, render: 634ms)
+Forced EOS insert error: invalid input value for enum fuel_level: "unknown"
+⨯ Error: invalid input value for enum fuel_level: "unknown"
+    at adminForceEndShift (src/app/actions.ts:660:11)
+  658 |   if (eosError) {
+  659 |     console.error('Forced EOS insert error:', eosError.message)
+> 660 |     throw new Error(eosError.message)
+      |           ^
+  661 |   }
+  662 |
+  663 |   // Clear active shift from vehicle {
+  digest: '3443767284'
+}
+ POST /dashboard 500 in 513ms (compile: 11ms, proxy.ts: 10ms, render: 492ms)
+ GET /rig-check 200 in 230ms (compile: 36ms, proxy.ts: 15ms, render: 178ms)
+ POST /rig-check 200 in 554ms (compile: 18ms, proxy.ts: 12ms, render: 523ms)
+ POST /rig-check 200 in 150ms (compile: 5ms, proxy.ts: 4ms, render: 141ms)
+ POST /rig-check 200 in 344ms (compile: 6ms, proxy.ts: 7ms, render: 330ms)
+ POST /rig-check 200 in 1819ms (compile: 1335ms, proxy.ts: 16ms, render: 468ms)
+ POST /rig-check 200 in 451ms (compile: 156ms, proxy.ts: 42ms, render: 252ms)
+ POST /rig-check 200 in 587ms (compile: 147ms, proxy.ts: 43ms, render: 398ms)
+Forced EOS insert error: invalid input value for enum fuel_level: "unknown"
+⨯ Error: invalid input value for enum fuel_level: "unknown"
+    at adminForceEndShift (src/app/actions.ts:660:11)
+  658 |   if (eosError) {
+  659 |     console.error('Forced EOS insert error:', eosError.message)
+> 660 |     throw new Error(eosError.message)
+      |           ^
+  661 |   }
+  662 |
+  663 |   // Clear active shift from vehicle {
+  digest: '3443767284'
+}
+ POST /dashboard 500 in 915ms (compile: 42ms, proxy.ts: 28ms, render: 845ms)
+ GET /dashboard 200 in 1292ms (compile: 18ms, proxy.ts: 33ms, render: 1241ms)
+ GET /uploaded-via-mvp.jpg 404 in 95ms (compile: 45ms, proxy.ts: 4ms, render: 46ms)
+Forced EOS insert error: invalid input value for enum fuel_level: "unknown"
+⨯ Error: invalid input value for enum fuel_level: "unknown"
+    at adminForceEndShift (src/app/actions.ts:660:11)
+  658 |   if (eosError) {
+  659 |     console.error('Forced EOS insert error:', eosError.message)
+> 660 |     throw new Error(eosError.message)
+      |           ^
+  661 |   }
+  662 |
+  663 |   // Clear active shift from vehicle {
+  digest: '3443767284'
+}
+ POST /dashboard 500 in 526ms (compile: 10ms, proxy.ts: 9ms, render: 507ms)
+Forced EOS insert error: invalid input value for enum fuel_level: "unknown"
+⨯ Error: invalid input value for enum fuel_level: "unknown"
+    at adminForceEndShift (src/app/actions.ts:660:11)
+  658 |   if (eosError) {
+  659 |     console.error('Forced EOS insert error:', eosError.message)
+> 660 |     throw new Error(eosError.message)
+      |           ^
+  661 |   }
+  662 |
+  663 |   // Clear active shift from vehicle {
+  digest: '3443767284'
+}
+ POST /dashboard 500 in 561ms (compile: 5ms, proxy.ts: 6ms, render: 550ms)
+Forced EOS insert error: invalid input value for enum fuel_level: "unknown"
+⨯ Error: invalid input value for enum fuel_level: "unknown"
+    at adminForceEndShift (src/app/actions.ts:660:11)
+  658 |   if (eosError) {
+  659 |     console.error('Forced EOS insert error:', eosError.message)
+> 660 |     throw new Error(eosError.message)
+      |           ^
+  661 |   }
+  662 |
+  663 |   // Clear active shift from vehicle {
+  digest: '3443767284'
+}
+ POST /dashboard 500 in 499ms (compile: 8ms, proxy.ts: 8ms, render: 482ms)
+Forced EOS insert error: invalid input value for enum fuel_level: "unknown"
+⨯ Error: invalid input value for enum fuel_level: "unknown"
+    at adminForceEndShift (src/app/actions.ts:660:11)
+  658 |   if (eosError) {
+  659 |     console.error('Forced EOS insert error:', eosError.message)
+> 660 |     throw new Error(eosError.message)
+      |           ^
+  661 |   }
+  662 |
+  663 |   // Clear active shift from vehicle {
+  digest: '3443767284'
+}
+ POST /dashboard 500 in 1033ms (compile: 21ms, proxy.ts: 22ms, render: 990ms)
+✓ Compiled in 1413ms
+✓ Compiled in 12ms
+ GET /rig-check 200 in 5.2s (compile: 2.4s, proxy.ts: 741ms, render: 2.1s)
+ GET /rig-check/end-of-shift 200 in 4.5s (compile: 2.9s, proxy.ts: 19ms, render: 1567ms)
+ GET /rig-check 200 in 403ms (compile: 31ms, proxy.ts: 31ms, render: 341ms)
+ GET /rig-check/end-of-shift 200 in 386ms (compile: 100ms, proxy.ts: 22ms, render: 264ms)
+ GET /rig-check 200 in 275ms (compile: 16ms, proxy.ts: 35ms, render: 224ms)
+ GET /rig-check/end-of-shift 200 in 271ms (compile: 34ms, proxy.ts: 12ms, render: 224ms)
+ GET /rig-check 200 in 315ms (compile: 51ms, proxy.ts: 4ms, render: 259ms)
+ GET /rig-check/end-of-shift 200 in 344ms (compile: 27ms, proxy.ts: 42ms, render: 275ms)
+ GET /rig-check 200 in 373ms (compile: 17ms, proxy.ts: 54ms, render: 302ms)
+ GET /rig-check/end-of-shift 200 in 322ms (compile: 30ms, proxy.ts: 10ms, render: 282ms)
+ GET /dashboard 200 in 745ms (compile: 131ms, proxy.ts: 8ms, render: 606ms)
+ GET /dashboard 200 in 5.1s (compile: 3.6s, proxy.ts: 25ms, render: 1448ms)
+ GET /rig-check 200 in 270ms (compile: 68ms, proxy.ts: 57ms, render: 144ms)
+ GET /rig-check/end-of-shift 200 in 124ms (compile: 67ms, proxy.ts: 40ms, render: 18ms)
+ GET /rig-check 200 in 185ms (compile: 16ms, proxy.ts: 6ms, render: 163ms)
+ GET /rig-check/end-of-shift 200 in 185ms (compile: 33ms, proxy.ts: 5ms, render: 147ms)
+ GET /dashboard 200 in 638ms (compile: 9ms, proxy.ts: 65ms, render: 563ms)
+ GET /dashboard 200 in 746ms (compile: 58ms, proxy.ts: 4ms, render: 684ms)
+ GET /dashboard 200 in 518ms (compile: 44ms, proxy.ts: 6ms, render: 468ms)
+ GET /dashboard 200 in 389ms (compile: 59ms, proxy.ts: 63ms, render: 267ms)
+ GET /dashboard 200 in 308ms (compile: 82ms, proxy.ts: 5ms, render: 221ms)
+ POST /dashboard 200 in 1181ms (compile: 26ms, proxy.ts: 20ms, render: 1135ms)
+ GET /rig-check 200 in 63ms (compile: 17ms, proxy.ts: 19ms, render: 27ms)
+ POST /rig-check 200 in 448ms (compile: 7ms, proxy.ts: 5ms, render: 437ms)
+ POST /rig-check 200 in 178ms (compile: 5ms, proxy.ts: 5ms, render: 167ms)
+ POST /rig-check 200 in 323ms (compile: 4ms, proxy.ts: 4ms, render: 315ms)
+ POST /rig-check 200 in 288ms (compile: 6ms, proxy.ts: 10ms, render: 273ms)
+ POST /rig-check 200 in 143ms (compile: 4ms, proxy.ts: 5ms, render: 134ms)
+ POST /rig-check 200 in 377ms (compile: 4ms, proxy.ts: 4ms, render: 369ms)
+✓ Compiled in 1310ms
+○ Compiling /rig-check ...
+ GET /rig-check 200 in 10.7s (compile: 1424ms, proxy.ts: 505ms, render: 8.7s)
+ GET /rig-check 200 in 4.1s (compile: 193ms, proxy.ts: 75ms, render: 3.8s)
+ GET /rig-check 200 in 2.1s (compile: 167ms, proxy.ts: 43ms, render: 1887ms)
+ GET /dashboard 200 in 12.7s (compile: 5.3s, proxy.ts: 665ms, render: 6.7s)
+ GET /dashboard 200 in 4.9s (compile: 596ms, proxy.ts: 58ms, render: 4.2s)
+ GET /rig-check 200 in 1782ms (compile: 219ms, proxy.ts: 830ms, render: 732ms)
+ GET /rig-check 200 in 982ms (compile: 83ms, proxy.ts: 97ms, render: 803ms)
+ GET /dashboard 200 in 2.8s (compile: 399ms, proxy.ts: 34ms, render: 2.4s)
+ GET /rig-check 200 in 841ms (compile: 66ms, proxy.ts: 234ms, render: 541ms)
+ GET /dashboard 200 in 1470ms (compile: 216ms, proxy.ts: 71ms, render: 1183ms)
+ GET /rig-check 200 in 490ms (compile: 251ms, proxy.ts: 42ms, render: 197ms)
+ GET /dashboard 200 in 1060ms (compile: 157ms, proxy.ts: 49ms, render: 854ms)
+ GET /rig-check 200 in 239ms (compile: 75ms, proxy.ts: 8ms, render: 157ms)
+ GET /dashboard 200 in 743ms (compile: 189ms, proxy.ts: 28ms, render: 526ms)
+ GET /rig-check 200 in 146ms (compile: 13ms, proxy.ts: 15ms, render: 119ms)
+ GET /rig-check 200 in 102ms (compile: 15ms, proxy.ts: 10ms, render: 77ms)
+ GET /dashboard 200 in 339ms (compile: 46ms, proxy.ts: 10ms, render: 283ms)
+ GET /rig-check 200 in 98ms (compile: 19ms, proxy.ts: 15ms, render: 64ms)
+ GET /rig-check 200 in 153ms (compile: 7ms, proxy.ts: 5ms, render: 141ms)
+ GET /rig-check 200 in 121ms (compile: 10ms, proxy.ts: 6ms, render: 105ms)
+ GET /rig-check 200 in 80ms (compile: 10ms, proxy.ts: 5ms, render: 64ms)
+✓ Compiled in 870ms
+ GET /rig-check 200 in 1352ms (compile: 937ms, proxy.ts: 51ms, render: 364ms)
+ GET /rig-check 200 in 166ms (compile: 26ms, proxy.ts: 12ms, render: 128ms)
+ GET /dashboard 200 in 1493ms (compile: 50ms, proxy.ts: 77ms, render: 1367ms)
+ POST /rig-check 200 in 509ms (compile: 115ms, proxy.ts: 8ms, render: 386ms)
+ POST /rig-check 200 in 528ms (compile: 62ms, proxy.ts: 9ms, render: 457ms)
+ POST /rig-check 200 in 135ms (compile: 7ms, proxy.ts: 5ms, render: 123ms)
+ POST /rig-check 200 in 232ms (compile: 3ms, proxy.ts: 4ms, render: 226ms)
+ POST /rig-check 200 in 354ms (compile: 5ms, proxy.ts: 3ms, render: 346ms)
+ POST /rig-check 200 in 276ms (compile: 3ms, proxy.ts: 3ms, render: 271ms)
+[AI] Greeting failed: 429
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 382ms (compile: 6ms, proxy.ts: 5ms, render: 372ms)
+ POST /rig-check 200 in 439ms (compile: 10ms, proxy.ts: 3ms, render: 426ms)
+ GET /rig-check 200 in 722ms (compile: 136ms, proxy.ts: 29ms, render: 556ms)
+ POST /rig-check 200 in 578ms (compile: 6ms, proxy.ts: 6ms, render: 566ms)
+ POST /rig-check 200 in 160ms (compile: 8ms, proxy.ts: 8ms, render: 144ms)
+ POST /rig-check 200 in 378ms (compile: 7ms, proxy.ts: 7ms, render: 364ms)
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 344ms (compile: 5ms, proxy.ts: 5ms, render: 334ms)
+✓ Compiled in 559ms
+○ Compiling /rig-check ...
+ GET /rig-check 200 in 3.9s (compile: 2.8s, proxy.ts: 57ms, render: 989ms)
+ GET /rig-check 200 in 247ms (compile: 13ms, proxy.ts: 16ms, render: 217ms)
+ GET /rig-check 200 in 284ms (compile: 7ms, proxy.ts: 44ms, render: 233ms)
+ GET /rig-check 200 in 245ms (compile: 12ms, proxy.ts: 28ms, render: 205ms)
+ GET /rig-check 200 in 332ms (compile: 10ms, proxy.ts: 80ms, render: 243ms)
+ GET /rig-check 200 in 270ms (compile: 16ms, proxy.ts: 41ms, render: 213ms)
+ GET /dashboard 200 in 574ms (compile: 29ms, proxy.ts: 3ms, render: 542ms)
+ GET /rig-check 200 in 231ms (compile: 101ms, proxy.ts: 45ms, render: 86ms)
+ GET /dashboard 200 in 678ms (compile: 34ms, proxy.ts: 5ms, render: 639ms)
+ GET /dashboard 200 in 4.5s (compile: 3.6s, proxy.ts: 19ms, render: 877ms)
+ GET /dashboard 200 in 480ms (compile: 28ms, proxy.ts: 3ms, render: 448ms)
+ GET /rig-check 200 in 236ms (compile: 8ms, proxy.ts: 10ms, render: 218ms)
+ GET /rig-check 200 in 199ms (compile: 12ms, proxy.ts: 4ms, render: 183ms)
+ GET /rig-check 200 in 189ms (compile: 135ms, proxy.ts: 5ms, render: 49ms)
+ GET /rig-check 200 in 51ms (compile: 6ms, proxy.ts: 7ms, render: 38ms)
+ GET /rig-check 200 in 71ms (compile: 4ms, proxy.ts: 3ms, render: 64ms)
+ GET /rig-check 200 in 52ms (compile: 4ms, proxy.ts: 2ms, render: 46ms)
+ GET /rig-check 200 in 26ms (compile: 3ms, proxy.ts: 2ms, render: 20ms)
+ GET /dashboard 200 in 668ms (compile: 9ms, proxy.ts: 28ms, render: 631ms)
+ GET /dashboard 200 in 385ms (compile: 16ms, proxy.ts: 5ms, render: 364ms)
+ GET /dashboard 200 in 751ms (compile: 32ms, proxy.ts: 5ms, render: 714ms)
+ GET /rig-check 200 in 434ms (compile: 22ms, proxy.ts: 24ms, render: 388ms)
+ POST /rig-check 200 in 729ms (compile: 11ms, proxy.ts: 9ms, render: 709ms)
+ POST /rig-check 200 in 173ms (compile: 6ms, proxy.ts: 5ms, render: 162ms)
+ POST /rig-check 200 in 462ms (compile: 7ms, proxy.ts: 4ms, render: 451ms)
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 348ms (compile: 13ms, proxy.ts: 9ms, render: 326ms)
+ POST /rig-check 200 in 523ms (compile: 18ms, proxy.ts: 23ms, render: 482ms)
+Push trigger check: aiSeverity= null missing= 0 hasDamageNotes=  disputed= false
+Push: Condition not met, no push sent
+[AI] Greeting failed: 429
+ POST /rig-check 200 in 726ms (compile: 8ms, proxy.ts: 6ms, render: 712ms)
+✓ Compiled in 221ms
+ GET /rig-check 200 in 1301ms (compile: 1231ms, proxy.ts: 13ms, render: 57ms)
+ GET /rig-check 200 in 182ms (compile: 32ms, proxy.ts: 5ms, render: 146ms)
+ GET /rig-check 200 in 194ms (compile: 6ms, proxy.ts: 4ms, render: 185ms)
+ GET /rig-check 200 in 252ms (compile: 4ms, proxy.ts: 7ms, render: 241ms)
+ GET /rig-check 200 in 265ms (compile: 6ms, proxy.ts: 5ms, render: 254ms)
+ GET /rig-check 200 in 228ms (compile: 10ms, proxy.ts: 50ms, render: 168ms)
+ GET /dashboard 200 in 564ms (compile: 12ms, proxy.ts: 6ms, render: 546ms)
+ GET /dashboard 200 in 1893ms (compile: 768ms, proxy.ts: 40ms, render: 1084ms)
+ GET /dashboard 200 in 465ms (compile: 20ms, proxy.ts: 3ms, render: 442ms)
+ GET /rig-check 200 in 146ms (compile: 51ms, proxy.ts: 39ms, render: 56ms)
+ GET /rig-check 200 in 185ms (compile: 5ms, proxy.ts: 5ms, render: 175ms)
+ GET /rig-check 200 in 235ms (compile: 11ms, proxy.ts: 3ms, render: 221ms)
+ GET /rig-check 200 in 256ms (compile: 53ms, proxy.ts: 7ms, render: 196ms)
+ GET /dashboard 200 in 462ms (compile: 76ms, proxy.ts: 5ms, render: 382ms)
+ GET /dashboard 200 in 670ms (compile: 41ms, proxy.ts: 4ms, render: 625ms)
+ GET /dashboard 200 in 576ms (compile: 29ms, proxy.ts: 4ms, render: 543ms)
+ GET /rig-check 200 in 137ms (compile: 13ms, proxy.ts: 11ms, render: 113ms)
+ GET /dashboard 200 in 327ms (compile: 7ms, proxy.ts: 23ms, render: 297ms)
+⚠ Server is approaching the used memory threshold, restarting...
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/alexandr/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/alexandr/Desktop/SOS/smart-rig-check/package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.129:3000
+- Environments: .env.local
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 1192ms
+ GET /rig-check 200 in 1514ms (compile: 1248ms, proxy.ts: 7ms, render: 258ms)
+ POST /rig-check 200 in 309ms (compile: 7ms, proxy.ts: 18ms, render: 284ms)
+ GET /dashboard 200 in 2.5s (compile: 1095ms, proxy.ts: 6ms, render: 1434ms)
+ POST /rig-check 200 in 653ms (compile: 403ms, proxy.ts: 15ms, render: 234ms)
+ GET /uploaded-via-mvp.jpg 404 in 254ms (compile: 98ms, proxy.ts: 4ms, render: 152ms)
+ POST /rig-check 200 in 280ms (compile: 10ms, proxy.ts: 7ms, render: 264ms)
+ POST /rig-check 200 in 4.0s (compile: 9ms, proxy.ts: 4ms, render: 4.0s)
+ POST /rig-check 200 in 613ms (compile: 25ms, proxy.ts: 22ms, render: 567ms)
+Push trigger check: aiSeverity= null missing= 0 hasDamageNotes=  disputed= false
+Push: Condition not met, no push sent
+ POST /rig-check 200 in 5.5s (compile: 9ms, proxy.ts: 7ms, render: 5.5s)
+✓ Compiled in 400ms
+ GET /rig-check 200 in 392ms (compile: 185ms, proxy.ts: 29ms, render: 179ms)
+ POST /rig-check 200 in 578ms (compile: 8ms, proxy.ts: 7ms, render: 562ms)
+ POST /rig-check 200 in 135ms (compile: 8ms, proxy.ts: 3ms, render: 124ms)
+ POST /rig-check 200 in 302ms (compile: 4ms, proxy.ts: 4ms, render: 294ms)
+ POST /rig-check 200 in 6.7s (compile: 3ms, proxy.ts: 3ms, render: 6.7s)
+✓ Compiled in 666ms
+ GET /rig-check 200 in 597ms (compile: 187ms, proxy.ts: 32ms, render: 378ms)
+ GET /rig-check 200 in 74ms (compile: 5ms, proxy.ts: 5ms, render: 64ms)
+ GET /dashboard 200 in 563ms (compile: 25ms, proxy.ts: 5ms, render: 533ms)
+ GET /dashboard 200 in 1083ms (compile: 351ms, proxy.ts: 27ms, render: 705ms)
+ GET /rig-check 200 in 164ms (compile: 35ms, proxy.ts: 19ms, render: 110ms)
+ POST /rig-check 200 in 822ms (compile: 6ms, proxy.ts: 3ms, render: 812ms)
+ POST /rig-check 200 in 161ms (compile: 4ms, proxy.ts: 5ms, render: 152ms)
+ POST /rig-check 200 in 401ms (compile: 5ms, proxy.ts: 6ms, render: 390ms)
+ POST /rig-check 200 in 5.9s (compile: 3ms, proxy.ts: 3ms, render: 5.9s)
+ POST /rig-check 200 in 652ms (compile: 14ms, proxy.ts: 26ms, render: 612ms)
+Push trigger check: aiSeverity= null missing= 0 hasDamageNotes=  disputed= false
+Push: Condition not met, no push sent
+ POST /rig-check 200 in 4.7s (compile: 8ms, proxy.ts: 6ms, render: 4.7s)
+ GET /rig-check/end-of-shift 200 in 233ms (compile: 207ms, proxy.ts: 8ms, render: 18ms)
+ POST /rig-check/end-of-shift 200 in 329ms (compile: 8ms, proxy.ts: 14ms, render: 308ms)
+ POST /rig-check/end-of-shift 200 in 144ms (compile: 4ms, proxy.ts: 4ms, render: 135ms)
+ POST /rig-check/end-of-shift 200 in 123ms (compile: 3ms, proxy.ts: 2ms, render: 118ms)
+ POST /rig-check/end-of-shift 200 in 263ms (compile: 3ms, proxy.ts: 3ms, render: 258ms)
+ POST /rig-check/end-of-shift 200 in 140ms (compile: 3ms, proxy.ts: 3ms, render: 134ms)
+ POST /rig-check/end-of-shift 200 in 118ms (compile: 3ms, proxy.ts: 3ms, render: 113ms)
+ POST /rig-check/end-of-shift 200 in 128ms (compile: 4ms, proxy.ts: 2ms, render: 121ms)
+ POST /rig-check/end-of-shift 200 in 126ms (compile: 4ms, proxy.ts: 4ms, render: 119ms)
+ POST /rig-check/end-of-shift 200 in 124ms (compile: 5ms, proxy.ts: 3ms, render: 116ms)
+ POST /rig-check/end-of-shift 200 in 138ms (compile: 6ms, proxy.ts: 6ms, render: 126ms)
+ POST /rig-check/end-of-shift 200 in 543ms (compile: 6ms, proxy.ts: 5ms, render: 532ms)
+ POST /dashboard 200 in 1065ms (compile: 18ms, proxy.ts: 6ms, render: 1041ms)
+ GET /dashboard/audit-log 200 in 447ms (compile: 97ms, proxy.ts: 8ms, render: 342ms)
+ GET /uploaded-via-mvp.jpg 404 in 56ms (compile: 19ms, proxy.ts: 7ms, render: 30ms)
+ GET /dashboard/audit-log 200 in 576ms (compile: 13ms, proxy.ts: 15ms, render: 548ms)
+ GET /uploaded-via-mvp.jpg 404 in 47ms (compile: 10ms, proxy.ts: 7ms, render: 29ms)
+ GET /api/export-pdf 200 in 658ms (compile: 134ms, proxy.ts: 2ms, render: 521ms)
+Unsubscribe: Removed subscription for user 8dc8f380-38ff-48c5-84d8-1c6a2e312b72
+ POST /api/push/unsubscribe 200 in 306ms (compile: 62ms, proxy.ts: 7ms, render: 237ms)
+Subscribe: Raw cookie header: session=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI4ZGM4ZjM4MC0zOGZmLTQ4YzUtODRkOC0xYzZhMmUzMTJiNzIiLCJ1c2V
+Subscribe: Saved subscription for user 8dc8f380-38ff-48c5-84d8-1c6a2e312b72
+ POST /api/push/subscribe 200 in 183ms (compile: 44ms, proxy.ts: 3ms, render: 136ms)
+ GET /dashboard/checklists 200 in 220ms (compile: 188ms, proxy.ts: 5ms, render: 27ms)
+ GET /uploaded-via-mvp.jpg 404 in 62ms (compile: 8ms, proxy.ts: 12ms, render: 42ms)
+ GET /dashboard/users 200 in 581ms (compile: 74ms, proxy.ts: 9ms, render: 499ms)
+ GET /dashboard 200 in 686ms (compile: 12ms, proxy.ts: 8ms, render: 666ms)
+ GET /uploaded-via-mvp.jpg 404 in 57ms (compile: 8ms, proxy.ts: 3ms, render: 46ms)
+ GET /dashboard/audit-log 200 in 496ms (compile: 10ms, proxy.ts: 16ms, render: 470ms)
+ GET /uploaded-via-mvp.jpg 404 in 47ms (compile: 6ms, proxy.ts: 4ms, render: 36ms)
+ GET /api/export-pdf 200 in 548ms (compile: 5ms, proxy.ts: 10ms, render: 532ms)
+✓ Compiled in 1590ms
+✓ Compiled in 1ms
+ GET /rig-check/end-of-shift 200 in 1557ms (compile: 1161ms, proxy.ts: 51ms, render: 345ms)
+ GET /rig-check/end-of-shift 200 in 337ms (compile: 167ms, proxy.ts: 12ms, render: 159ms)
+ GET /rig-check/end-of-shift 200 in 239ms (compile: 10ms, proxy.ts: 8ms, render: 221ms)
+ GET /rig-check/end-of-shift 200 in 143ms (compile: 6ms, proxy.ts: 4ms, render: 134ms)
+ GET /rig-check/end-of-shift 200 in 74ms (compile: 6ms, proxy.ts: 7ms, render: 61ms)
+ GET /dashboard 200 in 1927ms (compile: 530ms, proxy.ts: 78ms, render: 1319ms)
+ GET /dashboard 200 in 560ms (compile: 25ms, proxy.ts: 11ms, render: 523ms)
+ GET /dashboard 200 in 350ms (compile: 37ms, proxy.ts: 8ms, render: 306ms)
+ GET /dashboard 200 in 317ms (compile: 23ms, proxy.ts: 3ms, render: 291ms)
+ GET /dashboard 200 in 275ms (compile: 23ms, proxy.ts: 4ms, render: 247ms)
+ GET /rig-check/end-of-shift 200 in 732ms (compile: 231ms, proxy.ts: 117ms, render: 384ms)
+ GET /rig-check/end-of-shift 200 in 237ms (compile: 12ms, proxy.ts: 10ms, render: 216ms)
+ GET /rig-check/end-of-shift 200 in 182ms (compile: 6ms, proxy.ts: 4ms, render: 171ms)
+ GET /rig-check/end-of-shift 200 in 262ms (compile: 6ms, proxy.ts: 24ms, render: 232ms)
+ GET /rig-check/end-of-shift 200 in 356ms (compile: 11ms, proxy.ts: 52ms, render: 294ms)
+ GET /dashboard 200 in 1215ms (compile: 306ms, proxy.ts: 119ms, render: 789ms)
+ GET /dashboard 200 in 629ms (compile: 38ms, proxy.ts: 8ms, render: 583ms)
+ GET /rig-check/end-of-shift 200 in 314ms (compile: 50ms, proxy.ts: 48ms, render: 216ms)
+ GET /dashboard 200 in 504ms (compile: 24ms, proxy.ts: 4ms, render: 476ms)
+ GET /rig-check/end-of-shift 200 in 290ms (compile: 99ms, proxy.ts: 10ms, render: 181ms)
+ GET /dashboard 200 in 547ms (compile: 26ms, proxy.ts: 3ms, render: 518ms)
+ GET /rig-check/end-of-shift 200 in 248ms (compile: 11ms, proxy.ts: 8ms, render: 229ms)
+ GET /rig-check/end-of-shift 200 in 244ms (compile: 10ms, proxy.ts: 8ms, render: 227ms)
+ GET /dashboard 200 in 603ms (compile: 35ms, proxy.ts: 6ms, render: 563ms)
+ GET /dashboard 200 in 510ms (compile: 16ms, proxy.ts: 65ms, render: 430ms)
+ GET /rig-check/end-of-shift 200 in 199ms (compile: 9ms, proxy.ts: 50ms, render: 140ms)
+ GET /dashboard 200 in 273ms (compile: 34ms, proxy.ts: 4ms, render: 235ms)
+ GET /dashboard 200 in 208ms (compile: 35ms, proxy.ts: 18ms, render: 155ms)
+✓ Compiled in 262ms
+ GET /rig-check/end-of-shift 200 in 997ms (compile: 266ms, proxy.ts: 31ms, render: 700ms)
+ GET /dashboard 404 in 992ms (compile: 362ms, proxy.ts: 14ms, render: 615ms)
+ GET /rig-check/end-of-shift 200 in 599ms (compile: 14ms, proxy.ts: 10ms, render: 574ms)
+ GET /rig-check/end-of-shift 200 in 622ms (compile: 63ms, proxy.ts: 29ms, render: 530ms)
+ GET /rig-check/end-of-shift 200 in 316ms (compile: 25ms, proxy.ts: 29ms, render: 262ms)
+ GET /dashboard 200 in 869ms (compile: 46ms, proxy.ts: 10ms, render: 812ms)
+ GET /rig-check/end-of-shift 200 in 259ms (compile: 7ms, proxy.ts: 25ms, render: 226ms)
+ GET /dashboard 200 in 869ms (compile: 423ms, proxy.ts: 5ms, render: 441ms)
+ GET /rig-check/end-of-shift 200 in 249ms (compile: 28ms, proxy.ts: 28ms, render: 193ms)
+ GET /dashboard 200 in 412ms (compile: 35ms, proxy.ts: 12ms, render: 364ms)
+ GET /rig-check/end-of-shift 200 in 203ms (compile: 10ms, proxy.ts: 26ms, render: 167ms)
+ GET /dashboard 200 in 384ms (compile: 35ms, proxy.ts: 4ms, render: 345ms)
+ GET /rig-check/end-of-shift 200 in 225ms (compile: 52ms, proxy.ts: 7ms, render: 166ms)
+ GET /dashboard 200 in 430ms (compile: 40ms, proxy.ts: 15ms, render: 376ms)
+ GET /rig-check/end-of-shift 200 in 214ms (compile: 14ms, proxy.ts: 10ms, render: 190ms)
+ GET /rig-check/end-of-shift 200 in 241ms (compile: 6ms, proxy.ts: 23ms, render: 212ms)
+ GET /dashboard 200 in 418ms (compile: 9ms, proxy.ts: 26ms, render: 382ms)
+ GET /rig-check/end-of-shift 200 in 335ms (compile: 8ms, proxy.ts: 27ms, render: 299ms)
+ GET /dashboard 200 in 503ms (compile: 29ms, proxy.ts: 12ms, render: 462ms)
+ GET /dashboard 200 in 395ms (compile: 40ms, proxy.ts: 3ms, render: 352ms)
+ GET /dashboard 200 in 459ms (compile: 20ms, proxy.ts: 10ms, render: 430ms)
+ GET /dashboard 200 in 537ms (compile: 22ms, proxy.ts: 4ms, render: 511ms)
+ GET /dashboard 200 in 199ms (compile: 18ms, proxy.ts: 77ms, render: 104ms)
+ GET /rig-check/end-of-shift 200 in 423ms (compile: 5ms, proxy.ts: 22ms, render: 396ms)
+ GET /rig-check/end-of-shift 200 in 400ms (compile: 27ms, proxy.ts: 48ms, render: 326ms)
+ GET /rig-check/end-of-shift 200 in 341ms (compile: 64ms, proxy.ts: 73ms, render: 204ms)
+ GET /uploaded-via-mvp.jpg 404 in 150ms (compile: 35ms, proxy.ts: 5ms, render: 110ms)
+ GET /rig-check/end-of-shift 200 in 182ms (compile: 8ms, proxy.ts: 9ms, render: 165ms)
+ GET /rig-check/end-of-shift 200 in 172ms (compile: 76ms, proxy.ts: 7ms, render: 89ms)
+ GET /rig-check/end-of-shift 200 in 103ms (compile: 13ms, proxy.ts: 14ms, render: 77ms)
+ GET /rig-check/end-of-shift 200 in 94ms (compile: 7ms, proxy.ts: 4ms, render: 84ms)
+ GET /dashboard 200 in 1786ms (compile: 14ms, proxy.ts: 30ms, render: 1741ms)
+ GET /rig-check/end-of-shift 200 in 102ms (compile: 5ms, proxy.ts: 5ms, render: 92ms)
+ GET /rig-check/end-of-shift 200 in 106ms (compile: 9ms, proxy.ts: 6ms, render: 91ms)
+ GET /rig-check/end-of-shift 200 in 86ms (compile: 8ms, proxy.ts: 5ms, render: 73ms)
+ GET /rig-check/end-of-shift 200 in 56ms (compile: 12ms, proxy.ts: 15ms, render: 28ms)
+✓ Compiled in 162ms
+✓ Compiled in 376ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /uploaded-via-mvp.jpg 404 in 627ms (compile: 535ms, proxy.ts: 31ms, render: 61ms)
+ GET /dashboard 200 in 1512ms (compile: 319ms, proxy.ts: 103ms, render: 1090ms)
+ GET /uploaded-via-mvp.jpg 404 in 107ms (compile: 21ms, proxy.ts: 6ms, render: 79ms)
+ GET /uploaded-via-mvp.jpg 404 in 304ms (compile: 78ms, proxy.ts: 43ms, render: 183ms)
+ GET /dashboard 200 in 1350ms (compile: 46ms, proxy.ts: 35ms, render: 1269ms)
+ GET /uploaded-via-mvp.jpg 404 in 77ms (compile: 12ms, proxy.ts: 3ms, render: 62ms)
+ GET /api/export-pdf 200 in 1041ms (compile: 297ms, proxy.ts: 11ms, render: 734ms)
+ GET /dashboard/vehicles 200 in 2.2s (compile: 1943ms, proxy.ts: 9ms, render: 245ms)
+ POST /dashboard/vehicles 200 in 547ms (compile: 14ms, proxy.ts: 23ms, render: 509ms)
+ GET /dashboard 200 in 722ms (compile: 10ms, proxy.ts: 8ms, render: 704ms)
+ GET /uploaded-via-mvp.jpg 404 in 56ms (compile: 27ms, proxy.ts: 4ms, render: 26ms)
+ GET /api/export-pdf 200 in 554ms (compile: 5ms, proxy.ts: 6ms, render: 542ms)
+ GET /rig-check 200 in 239ms (compile: 191ms, proxy.ts: 8ms, render: 40ms)
+ POST /rig-check 200 in 379ms (compile: 5ms, proxy.ts: 4ms, render: 370ms)
+ POST /rig-check 200 in 175ms (compile: 6ms, proxy.ts: 4ms, render: 165ms)
+ POST /rig-check 200 in 704ms (compile: 5ms, proxy.ts: 4ms, render: 695ms)
+ POST /rig-check 200 in 300ms (compile: 5ms, proxy.ts: 4ms, render: 291ms)
+ POST /rig-check 200 in 142ms (compile: 4ms, proxy.ts: 4ms, render: 135ms)
+ POST /rig-check 200 in 299ms (compile: 6ms, proxy.ts: 4ms, render: 289ms)
+ POST /rig-check 200 in 7.9s (compile: 4ms, proxy.ts: 5ms, render: 7.9s)
+ POST /rig-check 200 in 6.2s (compile: 5ms, proxy.ts: 5ms, render: 6.2s)
+ POST /rig-check 200 in 336ms (compile: 5ms, proxy.ts: 5ms, render: 326ms)
+Push trigger check: aiSeverity= null missing= 0 hasDamageNotes=  disputed= false
+Push: Condition not met, no push sent
+ POST /rig-check 200 in 6.1s (compile: 9ms, proxy.ts: 6ms, render: 6.1s)
+ GET /rig-check/end-of-shift 200 in 72ms (compile: 20ms, proxy.ts: 14ms, render: 38ms)
+ POST /rig-check/end-of-shift 200 in 529ms (compile: 10ms, proxy.ts: 5ms, render: 514ms)
+ POST /rig-check/end-of-shift 200 in 151ms (compile: 5ms, proxy.ts: 3ms, render: 143ms)
+ POST /rig-check/end-of-shift 200 in 139ms (compile: 5ms, proxy.ts: 5ms, render: 129ms)
+ POST /rig-check/end-of-shift 200 in 246ms (compile: 9ms, proxy.ts: 5ms, render: 232ms)
+ POST /rig-check/end-of-shift 200 in 129ms (compile: 5ms, proxy.ts: 6ms, render: 118ms)
+ POST /rig-check/end-of-shift 200 in 129ms (compile: 3ms, proxy.ts: 3ms, render: 123ms)
+ POST /rig-check/end-of-shift 200 in 181ms (compile: 48ms, proxy.ts: 5ms, render: 127ms)
+ POST /rig-check/end-of-shift 200 in 129ms (compile: 5ms, proxy.ts: 4ms, render: 121ms)
+ POST /rig-check/end-of-shift 200 in 121ms (compile: 4ms, proxy.ts: 3ms, render: 115ms)
+ POST /rig-check/end-of-shift 200 in 125ms (compile: 4ms, proxy.ts: 3ms, render: 118ms)
+ POST /rig-check/end-of-shift 200 in 564ms (compile: 6ms, proxy.ts: 6ms, render: 552ms)
+ GET /api/export-pdf 200 in 543ms (compile: 6ms, proxy.ts: 5ms, render: 532ms)
+ GET /api/export-pdf 200 in 563ms (compile: 27ms, proxy.ts: 22ms, render: 515ms)
+[PDF Export] Session: 8dc8f380-38ff-48c5-84d8-1c6a2e312b72 Role: director
+[PDF Export] Checks Error: {
+  code: 'PGRST201',
+  details: [
+    {
+      cardinality: 'one-to-many',
+      embedding: 'rig_checks with vehicles',
+      relationship: 'vehicles_on_shift_rig_check_id_fkey using rig_checks(id) and vehicles(on_shift_rig_check_id)'
+    },
+    {
+      cardinality: 'many-to-one',
+      embedding: 'rig_checks with vehicles',
+      relationship: 'rig_checks_vehicle_id_fkey using rig_checks(vehicle_id) and vehicles(id)'
+    }
+  ],
+  hint: "Try changing 'vehicles' to one of the following: 'vehicles!vehicles_on_shift_rig_check_id_fkey', 'vehicles!rig_checks_vehicle_id_fkey'. Find the desired relationship in the 'details' key.",
+  message: "Could not embed because more than one relationship was found for 'rig_checks' and 'vehicles'"
+}
+[PDF Export] Checks found: 0
+[PDF Export] EOS Error: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column end_of_shift_reports.cleanliness_notes does not exist'
+}
+[PDF Export] EOS found: 0
+ GET /api/export-pdf 200 in 964ms (compile: 208ms, proxy.ts: 21ms, render: 735ms)
+[PDF Export] Session: 8dc8f380-38ff-48c5-84d8-1c6a2e312b72 Role: director
+[PDF Export] Checks Error: {
+  code: 'PGRST201',
+  details: [
+    {
+      cardinality: 'one-to-many',
+      embedding: 'rig_checks with vehicles',
+      relationship: 'vehicles_on_shift_rig_check_id_fkey using rig_checks(id) and vehicles(on_shift_rig_check_id)'
+    },
+    {
+      cardinality: 'many-to-one',
+      embedding: 'rig_checks with vehicles',
+      relationship: 'rig_checks_vehicle_id_fkey using rig_checks(vehicle_id) and vehicles(id)'
+    }
+  ],
+  hint: "Try changing 'vehicles' to one of the following: 'vehicles!vehicles_on_shift_rig_check_id_fkey', 'vehicles!rig_checks_vehicle_id_fkey'. Find the desired relationship in the 'details' key.",
+  message: "Could not embed because more than one relationship was found for 'rig_checks' and 'vehicles'"
+}
+[PDF Export] Checks found: 0
+[PDF Export] EOS Error: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column end_of_shift_reports.cleanliness_notes does not exist'
+}
+[PDF Export] EOS found: 0
+ GET /api/export-pdf 200 in 504ms (compile: 7ms, proxy.ts: 6ms, render: 491ms)
+[PDF Export] Session: 8dc8f380-38ff-48c5-84d8-1c6a2e312b72 Role: director
+[PDF Export] Checks Error: {
+  code: 'PGRST201',
+  details: [
+    {
+      cardinality: 'one-to-many',
+      embedding: 'rig_checks with vehicles',
+      relationship: 'vehicles_on_shift_rig_check_id_fkey using rig_checks(id) and vehicles(on_shift_rig_check_id)'
+    },
+    {
+      cardinality: 'many-to-one',
+      embedding: 'rig_checks with vehicles',
+      relationship: 'rig_checks_vehicle_id_fkey using rig_checks(vehicle_id) and vehicles(id)'
+    }
+  ],
+  hint: "Try changing 'vehicles' to one of the following: 'vehicles!vehicles_on_shift_rig_check_id_fkey', 'vehicles!rig_checks_vehicle_id_fkey'. Find the desired relationship in the 'details' key.",
+  message: "Could not embed because more than one relationship was found for 'rig_checks' and 'vehicles'"
+}
+[PDF Export] Checks found: 0
+[PDF Export] EOS Error: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column end_of_shift_reports.cleanliness_notes does not exist'
+}
+[PDF Export] EOS found: 0
+ GET /api/export-pdf 200 in 1900ms (compile: 913ms, proxy.ts: 51ms, render: 937ms)
+[PDF Export] Session: 8dc8f380-38ff-48c5-84d8-1c6a2e312b72 Role: director
+[PDF Export] Checks Error: {
+  code: 'PGRST201',
+  details: [
+    {
+      cardinality: 'one-to-many',
+      embedding: 'rig_checks with vehicles',
+      relationship: 'vehicles_on_shift_rig_check_id_fkey using rig_checks(id) and vehicles(on_shift_rig_check_id)'
+    },
+    {
+      cardinality: 'many-to-one',
+      embedding: 'rig_checks with vehicles',
+      relationship: 'rig_checks_vehicle_id_fkey using rig_checks(vehicle_id) and vehicles(id)'
+    }
+  ],
+  hint: "Try changing 'vehicles' to one of the following: 'vehicles!vehicles_on_shift_rig_check_id_fkey', 'vehicles!rig_checks_vehicle_id_fkey'. Find the desired relationship in the 'details' key.",
+  message: "Could not embed because more than one relationship was found for 'rig_checks' and 'vehicles'"
+}
+[PDF Export] Checks found: 0
+[PDF Export] EOS Error: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column end_of_shift_reports.cleanliness_notes does not exist'
+}
+[PDF Export] EOS found: 0
+ GET /api/export-pdf 200 in 555ms (compile: 13ms, proxy.ts: 8ms, render: 534ms)
+[PDF Export] Session: 8dc8f380-38ff-48c5-84d8-1c6a2e312b72 Role: director
+[PDF Export] Checks Error: {
+  code: 'PGRST201',
+  details: [
+    {
+      cardinality: 'one-to-many',
+      embedding: 'rig_checks with vehicles',
+      relationship: 'vehicles_on_shift_rig_check_id_fkey using rig_checks(id) and vehicles(on_shift_rig_check_id)'
+    },
+    {
+      cardinality: 'many-to-one',
+      embedding: 'rig_checks with vehicles',
+      relationship: 'rig_checks_vehicle_id_fkey using rig_checks(vehicle_id) and vehicles(id)'
+    }
+  ],
+  hint: "Try changing 'vehicles' to one of the following: 'vehicles!vehicles_on_shift_rig_check_id_fkey', 'vehicles!rig_checks_vehicle_id_fkey'. Find the desired relationship in the 'details' key.",
+  message: "Could not embed because more than one relationship was found for 'rig_checks' and 'vehicles'"
+}
+[PDF Export] Checks found: 0
+[PDF Export] EOS Error: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column end_of_shift_reports.cleanliness_notes does not exist'
+}
+[PDF Export] EOS found: 0
+ GET /api/export-pdf 200 in 643ms (compile: 13ms, proxy.ts: 26ms, render: 605ms)
+[PDF Export] Session: 8dc8f380-38ff-48c5-84d8-1c6a2e312b72 Role: director
+[PDF Export] Checks found: 62
+[PDF Export] EOS found: 13
+ GET /api/export-pdf 200 in 934ms (compile: 197ms, proxy.ts: 13ms, render: 725ms)
+ GET /dashboard/audit-log 200 in 2.4s (compile: 221ms, proxy.ts: 83ms, render: 2.1s)
+ GET /dashboard 200 in 662ms (compile: 13ms, proxy.ts: 12ms, render: 637ms)
+ GET /uploaded-via-mvp.jpg 404 in 59ms (compile: 10ms, proxy.ts: 5ms, render: 44ms)
+ GET /rig-check 200 in 153ms (compile: 46ms, proxy.ts: 57ms, render: 50ms)
+ POST /rig-check 200 in 1256ms (compile: 7ms, proxy.ts: 4ms, render: 1245ms)
+ POST /rig-check 200 in 173ms (compile: 6ms, proxy.ts: 3ms, render: 165ms)
+ POST /rig-check 200 in 629ms (compile: 5ms, proxy.ts: 16ms, render: 608ms)
+ POST /rig-check 200 in 371ms (compile: 7ms, proxy.ts: 8ms, render: 356ms)
+ POST /rig-check 200 in 179ms (compile: 4ms, proxy.ts: 4ms, render: 171ms)
+ POST /rig-check 200 in 343ms (compile: 5ms, proxy.ts: 6ms, render: 331ms)
+ POST /rig-check 200 in 6.1s (compile: 5ms, proxy.ts: 5ms, render: 6.1s)
+ GET /login 200 in 279ms (compile: 136ms, proxy.ts: 2ms, render: 141ms)
+ POST /rig-check 200 in 5.8s (compile: 6ms, proxy.ts: 6ms, render: 5.8s)
+ GET /rig-check 200 in 40ms (compile: 11ms, proxy.ts: 2ms, render: 26ms)
+ POST /login 303 in 577ms (compile: 12ms, proxy.ts: 14ms, render: 551ms)
+ GET /rig-check 200 in 24ms (compile: 5ms, proxy.ts: 4ms, render: 14ms)
+ POST /rig-check 200 in 255ms (compile: 6ms, proxy.ts: 6ms, render: 244ms)
+ POST /rig-check 200 in 144ms (compile: 5ms, proxy.ts: 6ms, render: 134ms)
+ POST /rig-check 200 in 317ms (compile: 5ms, proxy.ts: 17ms, render: 295ms)
+ POST /rig-check 200 in 273ms (compile: 4ms, proxy.ts: 3ms, render: 266ms)
+ POST /rig-check 200 in 162ms (compile: 4ms, proxy.ts: 4ms, render: 154ms)
+ POST /rig-check 200 in 239ms (compile: 3ms, proxy.ts: 5ms, render: 231ms)
+ POST /rig-check 200 in 5.3s (compile: 4ms, proxy.ts: 5ms, render: 5.3s)
+ POST /rig-check 200 in 4.1s (compile: 5ms, proxy.ts: 4ms, render: 4.1s)
+ POST /rig-check 200 in 510ms (compile: 15ms, proxy.ts: 16ms, render: 479ms)
+ POST /rig-check 200 in 333ms (compile: 10ms, proxy.ts: 6ms, render: 317ms)
+Push: uploadedPhotoUrl: https://livsjfliyroivhevmylw.supabase.co/storage/v1/object/public/damage_photos/1772271880008_2fe1xp.jpg
+[AI] Fetching image for analysis: https://livsjfliyroivhevmylw.supabase.co/storage/v1/object/public/damage_photos/1772271880008_2fe1xp.jpg
+[AI] Sending request to Gemini...
+[AI] Result: red - This vehicle has sustained severe collision damage, including a completely shatt
+Push trigger check: aiSeverity= red missing= 0 hasDamageNotes=  disputed= false
+Push: Calling sendPushNotificationToManagers NOW
+Push: sendPushNotificationToManagers called with: {"title":"🚨 CRITICAL: FleetGuard Alert","body":"Charlie Volkov & Viktoria Volkova: This vehicle has sustained severe collision damage, including a completely shattered and caved-in windshield, and si
+Push: Found managers: 2 error: none
+Push: Found subscriptions: 2 error: none
+Push: Sending to 2 endpoints...
+Push: Sending to endpoint #0: https://fcm.googleapis.com/fcm/send/eKUOAZUd-1g:APA91bHghVKB
+Push: Sending to endpoint #1: https://fcm.googleapis.com/fcm/send/eNHF9bMe2CU:APA91bEa7Xpo
+(node:61454) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Push: FAILED endpoint #0: 410 push subscription has unsubscribed or expired.
+
+Push: SUCCESS sent to endpoint #1
+Push: Deleted expired subscription #0
+Push: All sends completed
+Push: sendPushNotificationToManagers returned
+ GET /images/icons/icon-192x192.png 404 in 99ms (compile: 12ms, proxy.ts: 3ms, render: 84ms)
+ GET /images/icons/icon-72x72.png 404 in 96ms (compile: 55ms, proxy.ts: 3ms, render: 39ms)
+ POST /rig-check 200 in 12.9s (compile: 12ms, proxy.ts: 21ms, render: 12.9s)
+ GET /rig-check/end-of-shift 200 in 76ms (compile: 12ms, proxy.ts: 15ms, render: 49ms)
+ POST /rig-check/end-of-shift 200 in 520ms (compile: 7ms, proxy.ts: 13ms, render: 500ms)
+ POST /rig-check/end-of-shift 200 in 145ms (compile: 6ms, proxy.ts: 4ms, render: 135ms)
+ POST /rig-check/end-of-shift 200 in 144ms (compile: 4ms, proxy.ts: 5ms, render: 135ms)
+ POST /rig-check/end-of-shift 200 in 280ms (compile: 6ms, proxy.ts: 7ms, render: 267ms)
+ POST /rig-check/end-of-shift 200 in 145ms (compile: 5ms, proxy.ts: 5ms, render: 134ms)
+ POST /rig-check/end-of-shift 200 in 137ms (compile: 3ms, proxy.ts: 3ms, render: 131ms)
+ POST /rig-check/end-of-shift 200 in 137ms (compile: 6ms, proxy.ts: 4ms, render: 127ms)
+ POST /rig-check/end-of-shift 200 in 139ms (compile: 5ms, proxy.ts: 6ms, render: 128ms)
+ POST /rig-check/end-of-shift 200 in 168ms (compile: 5ms, proxy.ts: 5ms, render: 158ms)
+ POST /rig-check/end-of-shift 200 in 139ms (compile: 4ms, proxy.ts: 6ms, render: 129ms)
+ POST /rig-check/end-of-shift 200 in 929ms (compile: 5ms, proxy.ts: 5ms, render: 920ms)
+ GET /dashboard/checklists 200 in 549ms (compile: 485ms, proxy.ts: 16ms, render: 48ms)
+ GET /uploaded-via-mvp.jpg 404 in 50ms (compile: 9ms, proxy.ts: 4ms, render: 37ms)
+[PDF Export] Session: 8dc8f380-38ff-48c5-84d8-1c6a2e312b72 Role: director
+[PDF Export] Checks found: 63
+[PDF Export] EOS found: 14
+ GET /api/export-pdf 200 in 654ms (compile: 91ms, proxy.ts: 3ms, render: 560ms)
+ GET /dashboard/audit-log 200 in 450ms (compile: 8ms, proxy.ts: 10ms, render: 431ms)

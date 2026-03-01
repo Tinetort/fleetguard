@@ -5,13 +5,17 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Enum types
 CREATE TYPE vehicle_status AS ENUM ('green', 'yellow', 'red');
-CREATE TYPE user_role AS ENUM ('emt', 'manager');
+CREATE TYPE user_role AS ENUM ('emt', 'paramedic', 'nurse', 'manager', 'director');
 CREATE TYPE checklist_type AS ENUM ('pdf', 'manual');
 
 -- Users table (Extends Supabase auth.users)
 CREATE TABLE public.users (
-  id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   username TEXT UNIQUE NOT NULL, -- Login username
+  first_name TEXT,
+  last_name TEXT,
+  hashed_password TEXT,          -- Bcrypt hashed password
+  temp_password BOOLEAN DEFAULT true, -- TRUE if user must change password on next login
   recovery_email TEXT,           -- Optional for "Forgot Password"
   role user_role DEFAULT 'emt'::user_role NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
@@ -99,27 +103,31 @@ ALTER TABLE public.rig_checks ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Everyone can view users"
   ON public.users FOR SELECT TO authenticated USING (true);
 
-CREATE POLICY "Managers can update users"
+CREATE POLICY "Managers and Directors can update users"
   ON public.users FOR UPDATE TO authenticated
-  USING (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'manager'));
+  USING (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('manager', 'director')));
+
+CREATE POLICY "Directors can insert users"
+  ON public.users FOR INSERT TO authenticated
+  WITH CHECK (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'director'));
 
 -- == Vehicles ==
 CREATE POLICY "Everyone can view vehicles"
   ON public.vehicles FOR SELECT TO authenticated USING (true);
 
-CREATE POLICY "Managers can manage vehicles"
-  ON public.vehicles FOR ALL USING (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'manager'));
+CREATE POLICY "Managers and Directors can manage vehicles"
+  ON public.vehicles FOR ALL USING (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('manager', 'director')));
 
 -- == Checklists ==
 CREATE POLICY "Everyone can view active checklists"
   ON public.checklists FOR SELECT TO authenticated USING (is_active = true);
   
-CREATE POLICY "Managers can manage checklists"
-  ON public.checklists FOR ALL USING (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'manager'));
+CREATE POLICY "Managers and Directors can manage checklists"
+  ON public.checklists FOR ALL USING (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('manager', 'director')));
 
 -- == Rig Checks ==
-CREATE POLICY "Managers can view all rig checks"
-  ON public.rig_checks FOR SELECT USING (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'manager'));
+CREATE POLICY "Managers and Directors can view all rig checks"
+  ON public.rig_checks FOR SELECT USING (EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('manager', 'director')));
 
 CREATE POLICY "EMTs can view own checks"
   ON public.rig_checks FOR SELECT USING (auth.uid() = emt_id);

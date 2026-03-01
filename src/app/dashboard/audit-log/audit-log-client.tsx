@@ -19,6 +19,8 @@ interface AuditEntry {
   ai_notes: string | null
   has_signature: boolean
   missing_items: string[]
+  handoff_disputed?: boolean
+  handoff_dispute_notes?: string | null
 }
 
 function SeverityBadge({ severity }: { severity: string | null }) {
@@ -52,7 +54,8 @@ export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
         e.rig_number.toLowerCase().includes(q) ||
         e.username.toLowerCase().includes(q) ||
         (e.crew_last_name && e.crew_last_name.toLowerCase().includes(q)) ||
-        (e.damage_notes && e.damage_notes.toLowerCase().includes(q))
+        (e.damage_notes && e.damage_notes.toLowerCase().includes(q)) ||
+        (e.handoff_dispute_notes && e.handoff_dispute_notes.toLowerCase().includes(q))
       )
     }
     return true
@@ -159,6 +162,12 @@ export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
 
                   {isExpanded && (
                     <div className="mt-4 pt-4 border-t border-slate-100 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                      {entry.handoff_disputed && (
+                        <div>
+                          <p className="text-xs font-bold text-rose-500 uppercase tracking-wide mb-1 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> Previous Shift Dispute</p>
+                          <p className="text-sm font-medium text-rose-900 bg-rose-50 p-3 rounded-lg border border-rose-200">{entry.handoff_dispute_notes}</p>
+                        </div>
+                      )}
                       {entry.damage_notes && (
                         <div>
                           <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Damage Notes</p>
@@ -181,7 +190,7 @@ export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
                           </div>
                         </div>
                       )}
-                      {!entry.damage_notes && !entry.ai_notes && entry.missing_items.length === 0 && (
+                      {!entry.damage_notes && !entry.ai_notes && entry.missing_items.length === 0 && !entry.handoff_disputed && (
                         <p className="text-sm text-slate-400 italic">No issues reported</p>
                       )}
                       <p className="text-xs text-slate-300 font-mono">ID: {entry.id}</p>

@@ -3,6 +3,7 @@ import { createClient } from '@/../utils/supabase/server'
 import { getLabels, DEFAULT_LABELS } from '@/lib/labels'
 import type { OrgType } from '@/lib/presets'
 import { getSession } from '@/lib/auth'
+import fs from 'fs'
 
 export async function GET() {
   const supabase = await createClient()
@@ -19,32 +20,58 @@ export async function GET() {
     labels = getLabels((user?.org_type as OrgType) ?? 'ems')
   }
 
-  // Fetch last 30 days of rig checks
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-  const { data: checks } = await supabase
-    .from('rig_checks')
-    .select('id, created_at, damage_notes, ai_damage_severity, ai_analysis_notes, answers, vehicles(rig_number), users(username)')
-    .gte('created_at', thirtyDaysAgo.toISOString())
-    .order('created_at', { ascending: false })
-    .limit(100)
+  console.log('[PDF Export] Session:', session?.userId, 'Role:', (session as any)?.role)
 
-  const { data: eosReports } = await supabase
-    .from('end_of_shift_reports')
-    .select('id, created_at, fuel_level, cleanliness_rating, restock_needed, vehicle_condition, notes, vehicles(rig_number), users(username)')
-    .gte('created_at', thirtyDaysAgo.toISOString())
-    .order('created_at', { ascending: false })
-    .limit(50)
+  let normalizedChecks: any[] = []
+  let normalizedEos: any[] = []
 
-  const normalize = (row: any) => ({
-    ...row,
-    vehicles: Array.isArray(row.vehicles) ? row.vehicles[0] : row.vehicles,
-    users: Array.isArray(row.users) ? row.users[0] : row.users,
-  })
+  try {
+    const { data: checks, error: checksError } = await supabase
+      .from('rig_checks')
+      .select('id, created_at, damage_notes, ai_damage_severity, ai_analysis_notes, answers, vehicles!rig_checks_vehicle_id_fkey(rig_number), users(username, first_name, last_name)')
+      .gte('created_at', thirtyDaysAgo.toISOString())
+      .order('created_at', { ascending: false })
+      .limit(100)
 
-  const normalizedChecks = (checks || []).map(normalize)
-  const normalizedEos = (eosReports || []).map(normalize)
+    if (checksError) console.error('[PDF Export] Checks Error:', checksError)
+    console.log('[PDF Export] Checks found:', checks?.length || 0)
+
+    const { data: eosReports, error: eosError } = await supabase
+      .from('end_of_shift_reports')
+      .select('id, created_at, fuel_level, vehicle_condition, restock_needed, notes, crew_last_name, vehicles(rig_number), users(username, first_name, last_name)')
+      .gte('created_at', thirtyDaysAgo.toISOString())
+      .order('created_at', { ascending: false })
+      .limit(50)
+
+    if (eosError) console.error('[PDF Export] EOS Error:', eosError)
+    console.log('[PDF Export] EOS found:', eosReports?.length || 0)
+
+    const normalize = (row: any) => ({
+      ...row,
+      vehicles: Array.isArray(row.vehicles) ? row.vehicles[0] : row.vehicles,
+      users: Array.isArray(row.users) ? row.users[0] : row.users,
+    })
+
+    normalizedChecks = (checks || []).map(normalize)
+    normalizedEos = (eosReports || []).map(normalize)
+
+    // DEBUG: Write to file so agent can see it
+    fs.writeFileSync('/tmp/pdf_debug.json', JSON.stringify({
+      sessionUserId: session?.userId,
+      sessionRole: (session as any)?.role,
+      checksCount: checks?.length,
+      checksError: checksError,
+      eosCount: eosReports?.length,
+      eosError: eosError,
+      timestamp: new Date().toISOString()
+    }, null, 2))
+  } catch (err: any) {
+    console.error('[PDF Export] Critical Fetch Error:', err.message)
+    fs.writeFileSync('/tmp/pdf_debug.json', JSON.stringify({ error: err.message, stack: err.stack }))
+  }
 
   const now = new Date().toLocaleString()
 
@@ -109,7 +136,7 @@ export async function GET() {
       ${normalizedChecks.map(c => `<tr>
         <td>${new Date(c.created_at).toLocaleString()}</td>
         <td><strong>${c.vehicles?.rig_number ?? '—'}</strong></td>
-        <td>${c.users?.username ?? '—'}</td>
+        <td>${c.users?.first_name || c.users?.last_name ? `${c.users?.first_name || ''} ${c.users?.last_name || ''}`.trim() : (c.users?.username ?? '—')}</td>
         <td>${severityBadge(c.ai_damage_severity)}</td>
         <td class="notes">${c.ai_analysis_notes ? c.ai_analysis_notes.substring(0, 120) + (c.ai_analysis_notes.length > 120 ? '…' : '') : '—'}</td>
         <td class="notes">${c.damage_notes ? c.damage_notes.substring(0, 80) + (c.damage_notes.length > 80 ? '…' : '') : '—'}</td>
@@ -133,9 +160,9 @@ export async function GET() {
       ${normalizedEos.map(e => `<tr>
         <td>${new Date(e.created_at).toLocaleString()}</td>
         <td><strong>${e.vehicles?.rig_number ?? '—'}</strong></td>
-        <td>${e.users?.username ?? '—'}</td>
+        <td>${e.crew_last_name || (e.users?.first_name || e.users?.last_name ? `${e.users?.first_name || ''} ${e.users?.last_name || ''}`.trim() : (e.users?.username ?? '—'))}</td>
         <td>${fuelBar(e.fuel_level)}</td>
-        <td>${'⭐'.repeat(e.cleanliness_rating ?? 0)}${'☆'.repeat(5 - (e.cleanliness_rating ?? 0))}</td>
+        <td class="notes">${e.vehicle_condition ? e.vehicle_condition.substring(0, 40) + (e.vehicle_condition.length > 40 ? '…' : '') : '—'}</td>
         <td class="notes">${(e.restock_needed?.length > 0) ? e.restock_needed.join(', ') : '—'}</td>
         <td class="notes">${e.notes ? e.notes.substring(0, 100) + (e.notes.length > 100 ? '…' : '') : '—'}</td>
       </tr>`).join('')}
