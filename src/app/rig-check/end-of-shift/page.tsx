@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { CheckCircle2, Fuel, Star, ShieldAlert, Package, ArrowRight } from 'lucide-react'
-import { getVehicles, getActiveChecklist, submitEndOfShiftReport, checkActiveShift, getInitialEndOfShiftData, getShiftMissingItems } from '../../actions'
+import { CheckCircle2, Fuel, Star, ShieldAlert, Package, LogOut } from 'lucide-react'
+import { getChecklistForVehicle, submitEndOfShiftReport, checkActiveShift, getInitialEndOfShiftData, getShiftMissingItems, logoutAction, getAllVehiclesForEOS, getInventoryEnabled, getInventoryItems, takeInventoryItems } from '../../actions'
 import Link from 'next/link'
 import SignaturePad, { type SignaturePadRef } from '@/components/signature-pad'
 
@@ -26,7 +26,7 @@ export default function EndOfShiftPage() {
   const [cleanlinessDetails, setCleanlinessDetails] = useState({ cab: true, patient: true, trash: true })
   const [restockNeeded, setRestockNeeded] = useState<string[]>([])
   const [vehicleCondition, setVehicleCondition] = useState('')
-  const [notes, setNotes] = useState('')
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -34,14 +34,26 @@ export default function EndOfShiftPage() {
   const [shiftChecking, setShiftChecking] = useState(false)
   const signatureRef = useRef<SignaturePadRef>(null)
 
+  // Inventory
+  const [inventoryEnabled, setInventoryEnabled] = useState(false)
+  const [inventoryItems, setInventoryItems] = useState<any[]>([])
+  const [takenItems, setTakenItems] = useState<Record<string, number>>({})
+  const [inventoryConfirmed, setInventoryConfirmed] = useState(false)
+
   useEffect(() => {
     async function load() {
-      const [v, cl, initData] = await Promise.all([getVehicles(), getActiveChecklist(), getInitialEndOfShiftData()])
+      const [v, initData, invEnabled, invItems] = await Promise.all([
+        getAllVehiclesForEOS(), 
+        getInitialEndOfShiftData(),
+        getInventoryEnabled(),
+        getInventoryItems()
+      ])
       setVehicles(v)
-      setChecklist(cl)
       if (initData.vehicleId) {
         setVehicleId(initData.vehicleId)
       }
+      setInventoryEnabled(invEnabled)
+      setInventoryItems(invItems)
     }
     load()
   }, [])
@@ -53,21 +65,24 @@ export default function EndOfShiftPage() {
     
     Promise.all([
       checkActiveShift(vehicleId),
-      getShiftMissingItems(vehicleId)
-    ]).then(([shiftResult, missingResult]) => {
+      getShiftMissingItems(vehicleId),
+      getChecklistForVehicle(vehicleId)
+    ]).then(([shiftResult, missingResult, cl]) => {
       setActiveShift(shiftResult)
+      setChecklist(cl)
       if (missingResult.missingItems && missingResult.missingItems.length > 0) {
         setRestockNeeded(missingResult.missingItems)
       } else {
-        setRestockNeeded([]) 
+        setRestockNeeded([])
       }
       setShiftChecking(false)
     }).catch(() => setShiftChecking(false))
   }, [vehicleId])
 
-  const restockItems = checklist?.type === 'ems' || !checklist
-    ? ['IV Supplies', 'Gauze / Bandages', 'Gloves', 'Oxygen (main)', 'Oxygen (portable)', 'Medications', 'Saline', 'Tape / Wraps']
-    : (checklist?.questions ?? [])
+  const DEFAULT_RESTOCK = ['IV Supplies', 'Gauze / Bandages', 'Gloves', 'Oxygen (main)', 'Oxygen (portable)', 'Medications', 'Saline', 'Tape / Wraps']
+  const restockItems: string[] = Array.isArray(checklist?.restock_items) && checklist.restock_items.length > 0
+    ? checklist.restock_items
+    : DEFAULT_RESTOCK
 
   const toggleRestock = (item: string) => {
     setRestockNeeded(prev =>
@@ -79,6 +94,7 @@ export default function EndOfShiftPage() {
     e.preventDefault()
     if (!vehicleId) { setSubmitError('Please select a vehicle.'); return }
     if (signatureRef.current?.isEmpty()) { setSubmitError('Please sign the form before submitting.'); return }
+    if (inventoryEnabled && !inventoryConfirmed) { setSubmitError('Please confirm the warehouse supplies you took, or tap "I didn\'t take anything".'); return }
     setIsSubmitting(true)
     setSubmitError(null)
     const formData = new FormData()
@@ -87,10 +103,25 @@ export default function EndOfShiftPage() {
     formData.append('cleanliness_details', JSON.stringify(cleanlinessDetails))
     formData.append('restock_needed', JSON.stringify(restockNeeded))
     formData.append('vehicle_condition', vehicleCondition)
-    formData.append('notes', notes)
+    formData.append('notes', vehicleCondition)
     formData.append('signature_data_url', signatureRef.current?.toDataURL() || '')
     if (checklist?.id) formData.append('checklist_id', checklist.id)
     try {
+      // Submit inventory first if taking items
+      if (inventoryEnabled && Object.keys(takenItems).length > 0) {
+        const itemsToTake = Object.entries(takenItems)
+          .map(([itemId, quantity]) => ({ itemId, quantity }))
+          .filter(i => i.quantity > 0)
+        
+        if (itemsToTake.length > 0) {
+          try {
+            await takeInventoryItems(itemsToTake, 'end_of_shift', vehicleId)
+          } catch (invErr) {
+            console.error('Inventory error:', invErr) // don't block main shift submission
+          }
+        }
+      }
+
       await submitEndOfShiftReport(formData)
       setSuccess(true)
     } catch (err: any) {
@@ -113,11 +144,11 @@ export default function EndOfShiftPage() {
             </div>
             <h2 className="text-2xl font-extrabold text-slate-900">Shift Complete!</h2>
             <p className="text-slate-500 font-medium">Your end-of-shift report has been submitted and the dispatcher has been notified.</p>
-            <Link href="/rig-check">
-              <Button className="w-full h-12 bg-blue-600 hover:bg-blue-700 font-bold mt-4">
-                Start New Shift <ArrowRight className="w-4 h-4 ml-2" />
+            <form action={logoutAction}>
+              <Button type="submit" className="w-full h-12 bg-slate-700 hover:bg-slate-800 font-bold mt-4">
+                <LogOut className="w-4 h-4 mr-2" /> Log Out
               </Button>
-            </Link>
+            </form>
           </CardContent>
         </Card>
       </div>
@@ -249,25 +280,119 @@ export default function EndOfShiftPage() {
               </div>
             </div>
 
-            {/* Condition */}
+            {/* Inventory / Items Taken */}
+            {inventoryEnabled && inventoryItems.length > 0 && (
+              <div className="space-y-3 pt-6 border-t border-slate-200">
+                {/* Section header */}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-fuchsia-100 rounded-xl text-base">📦</span>
+                    <div className="min-w-0">
+                      <h3 className="text-sm font-bold text-slate-800 leading-tight">Warehouse Supplies</h3>
+                      <p className="text-xs text-slate-400 leading-tight">Did you take any supplies during your shift?</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTakenItems({})
+                      setInventoryConfirmed(true)
+                    }}
+                    className={`flex-shrink-0 rounded-full text-xs font-bold px-3 h-8 border transition-all ${
+                      inventoryConfirmed && Object.values(takenItems).every(v => v === 0)
+                        ? 'bg-fuchsia-600 text-white border-fuchsia-600 shadow-sm'
+                        : 'bg-white text-fuchsia-700 border-fuchsia-300 hover:bg-fuchsia-50'
+                    }`}
+                  >
+                    {inventoryConfirmed && Object.values(takenItems).every(v => v === 0) ? '✓ Confirmed' : "I didn't take anything"}
+                  </button>
+                </div>
+
+                {/* Items list grouped by category */}
+                <div className={`rounded-2xl border overflow-hidden transition-all ${
+                  inventoryConfirmed && Object.keys(takenItems).filter(k => (takenItems[k] || 0) > 0).length > 0
+                    ? 'border-fuchsia-300 ring-2 ring-fuchsia-100'
+                    : 'border-slate-200'
+                }`}>
+                  {(() => {
+                    const grouped = inventoryItems.reduce<Record<string, any[]>>((acc, item) => {
+                      const key = item.category || 'General'
+                      if (!acc[key]) acc[key] = []
+                      acc[key].push(item)
+                      return acc
+                    }, {})
+
+                    return Object.entries(grouped).map(([category, items], gi) => (
+                      <div key={category}>
+                        {/* Category header */}
+                        <div className={`flex items-center gap-2 px-4 py-2 bg-slate-50 ${gi > 0 ? 'border-t border-slate-100' : ''}`}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 flex-shrink-0" />
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{category}</span>
+                        </div>
+                        {/* Item rows */}
+                        <div className="divide-y divide-slate-100">
+                          {items.map(item => {
+                            const qty = takenItems[item.id] || 0
+                            const isTaken = qty > 0
+                            return (
+                              <div
+                                key={item.id}
+                                className={`flex items-center justify-between gap-3 px-4 py-3 transition-colors ${
+                                  isTaken ? 'bg-fuchsia-50/60' : 'bg-white'
+                                }`}
+                              >
+                                {/* Item name */}
+                                <span className={`text-sm font-semibold flex-1 min-w-0 truncate ${
+                                  isTaken ? 'text-fuchsia-900' : 'text-slate-700'
+                                }`}>
+                                  {item.name}
+                                </span>
+
+                                {/* Stepper */}
+                                <div className={`flex items-center gap-1 flex-shrink-0 rounded-xl p-1 border ${
+                                  isTaken ? 'border-fuchsia-200 bg-white' : 'border-slate-100 bg-slate-50'
+                                }`}>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setTakenItems(prev => ({ ...prev, [item.id]: Math.max(0, qty - 1) }))
+                                      setInventoryConfirmed(true)
+                                    }}
+                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-rose-600 hover:border-rose-300 hover:bg-rose-50 active:scale-95 transition-all shadow-sm text-base font-bold"
+                                  >−</button>
+                                  <div className={`w-8 text-center text-sm font-black tabular-nums select-none ${
+                                    isTaken ? 'text-fuchsia-700' : 'text-slate-300'
+                                  }`}>
+                                    {qty > 0 ? qty : '–'}
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setTakenItems(prev => ({ ...prev, [item.id]: qty + 1 }))
+                                      setInventoryConfirmed(true)
+                                    }}
+                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-emerald-600 hover:border-emerald-300 hover:bg-emerald-50 active:scale-95 transition-all shadow-sm text-base font-bold">+</button>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    ))
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* Shift Notes & Issues (merged field) */}
             <div className="space-y-3">
-              <Label className="text-slate-700 font-bold text-sm uppercase tracking-wide">New Damage / Issues</Label>
+              <Label className="text-slate-700 font-bold text-sm uppercase tracking-wide">Shift Notes & Issues</Label>
+              <p className="text-xs text-slate-400 -mt-1">Damage, maintenance needs, notes for next crew — all in one place</p>
               <textarea
                 value={vehicleCondition}
                 onChange={e => setVehicleCondition(e.target.value)}
-                className="flex w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base shadow-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-[80px] resize-y"
-                placeholder="Any new damage or issues discovered during this shift..."
-              />
-            </div>
-
-            {/* Notes */}
-            <div className="space-y-3">
-              <Label className="text-slate-700 font-bold text-sm uppercase tracking-wide">Handoff Notes</Label>
-              <textarea
-                value={notes}
-                onChange={e => setNotes(e.target.value)}
-                className="flex w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base shadow-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-[80px] resize-y"
-                placeholder="Notes for the next crew (upcoming maintenance, issues to watch, etc.)"
+                className="flex w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base shadow-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 min-h-[100px] resize-y"
+                placeholder="Any damage, issues, or notes for the next crew..."
               />
             </div>
 

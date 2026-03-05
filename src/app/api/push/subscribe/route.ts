@@ -1,25 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/../utils/supabase/server'
-import { decrypt } from '@/lib/auth'
-
-function getSessionCookie(request: Request): string | null {
-  const cookieHeader = request.headers.get('cookie') || ''
-  console.log('Subscribe: Raw cookie header:', cookieHeader ? cookieHeader.substring(0, 100) : '(empty)')
-  const match = cookieHeader.match(/session=([^;]+)/)
-  return match ? match[1] : null
-}
+import { getSession } from '@/lib/auth'
 
 export async function POST(request: Request) {
   try {
-    const token = getSessionCookie(request)
-    if (!token) {
-      console.log('Subscribe: No session cookie found in header')
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const session = await decrypt(token)
+    const session = await getSession()
     if (!session?.userId) {
-      console.log('Subscribe: Session decryption failed')
+      console.log('Subscribe: Session check failed')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -35,6 +22,7 @@ export async function POST(request: Request) {
       .from('push_subscriptions')
       .upsert({
         user_id: session.userId,
+        org_id: session.orgId,
         endpoint: subscription.endpoint,
         p256dh: subscription.keys?.p256dh,
         auth: subscription.keys?.auth,
@@ -52,4 +40,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
-

@@ -3,7 +3,6 @@ import { createClient } from '@/../utils/supabase/server'
 import { getLabels, DEFAULT_LABELS } from '@/lib/labels'
 import type { OrgType } from '@/lib/presets'
 import { getSession } from '@/lib/auth'
-import fs from 'fs'
 
 export async function GET() {
   const supabase = await createClient()
@@ -27,11 +26,14 @@ export async function GET() {
 
   let normalizedChecks: any[] = []
   let normalizedEos: any[] = []
+  let normalizedInventory: any[] = []
+  let inventoryEnabled = false
 
   try {
     const { data: checks, error: checksError } = await supabase
       .from('rig_checks')
       .select('id, created_at, damage_notes, ai_damage_severity, ai_analysis_notes, answers, vehicles!rig_checks_vehicle_id_fkey(rig_number), users(username, first_name, last_name)')
+      .eq('org_id', session?.orgId)
       .gte('created_at', thirtyDaysAgo.toISOString())
       .order('created_at', { ascending: false })
       .limit(100)
@@ -42,12 +44,43 @@ export async function GET() {
     const { data: eosReports, error: eosError } = await supabase
       .from('end_of_shift_reports')
       .select('id, created_at, fuel_level, vehicle_condition, restock_needed, notes, crew_last_name, vehicles(rig_number), users(username, first_name, last_name)')
+      .eq('org_id', session?.orgId)
       .gte('created_at', thirtyDaysAgo.toISOString())
       .order('created_at', { ascending: false })
       .limit(50)
 
     if (eosError) console.error('[PDF Export] EOS Error:', eosError)
     console.log('[PDF Export] EOS found:', eosReports?.length || 0)
+
+    // Check feature flag
+    const { data: org } = await supabase
+      .from('organizations')
+      .select('inventory_enabled')
+      .eq('id', session?.orgId)
+      .single()
+    
+    inventoryEnabled = org?.inventory_enabled || false
+
+    if (inventoryEnabled) {
+      const { data: invTxns, error: invError } = await supabase
+        .from('inventory_transactions')
+        .select(`
+          id, created_at, shift_type, change, quantity_after, user_name, notes,
+          inventory_items (name, category, unit),
+          vehicles (rig_number)
+        `)
+        .eq('org_id', session?.orgId)
+        .gte('created_at', thirtyDaysAgo.toISOString())
+        .order('created_at', { ascending: false })
+        .limit(100)
+
+      if (invError) console.error('[PDF Export] Inventory Error:', invError)
+      normalizedInventory = (invTxns || []).map(row => ({
+        ...row,
+        inventory_items: Array.isArray(row.inventory_items) ? row.inventory_items[0] : row.inventory_items,
+        vehicles: Array.isArray(row.vehicles) ? row.vehicles[0] : row.vehicles,
+      }))
+    }
 
     const normalize = (row: any) => ({
       ...row,
@@ -58,19 +91,8 @@ export async function GET() {
     normalizedChecks = (checks || []).map(normalize)
     normalizedEos = (eosReports || []).map(normalize)
 
-    // DEBUG: Write to file so agent can see it
-    fs.writeFileSync('/tmp/pdf_debug.json', JSON.stringify({
-      sessionUserId: session?.userId,
-      sessionRole: (session as any)?.role,
-      checksCount: checks?.length,
-      checksError: checksError,
-      eosCount: eosReports?.length,
-      eosError: eosError,
-      timestamp: new Date().toISOString()
-    }, null, 2))
   } catch (err: any) {
     console.error('[PDF Export] Critical Fetch Error:', err.message)
-    fs.writeFileSync('/tmp/pdf_debug.json', JSON.stringify({ error: err.message, stack: err.stack }))
   }
 
   const now = new Date().toLocaleString()
@@ -168,6 +190,33 @@ export async function GET() {
       </tr>`).join('')}
     </tbody>
   </table>`}
+
+  ${inventoryEnabled ? `
+  <h2>📦 Warehouse Items Usage (${normalizedInventory.length} records)</h2>
+  ${normalizedInventory.length === 0 ? '<p style="color:#94a3b8">No records found.</p>' : `
+  <table>
+    <thead><tr>
+      <th>Date / Time</th>
+      <th>Item</th>
+      <th>Change</th>
+      <th>Balance</th>
+      <th>Worker</th>
+      <th>${labels.vehicle}</th>
+      <th>Context</th>
+    </tr></thead>
+    <tbody>
+      ${normalizedInventory.map(t => `<tr style="color: ${t.change < 0 ? '#b91c1c' : '#065f46'}">
+        <td>${new Date(t.created_at).toLocaleString()}</td>
+        <td><strong>${t.inventory_items?.name ?? '—'}</strong></td>
+        <td>${t.change > 0 ? '+' : ''}${t.change} ${t.inventory_items?.unit ?? ''}</td>
+        <td>${t.quantity_after}</td>
+        <td>${t.user_name}</td>
+        <td>${t.vehicles?.rig_number ?? '—'}</td>
+        <td class="notes">${t.shift_type ? t.shift_type.replace(/_/g, ' ') : (t.notes || '—')}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`}
+  ` : ''}
 
   <div class="footer">FleetGuard — ${labels.dashboard} &nbsp;|&nbsp; Smart Rig Check &nbsp;|&nbsp; ${now}</div>
 </body>

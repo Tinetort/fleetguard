@@ -1,24 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/../utils/supabase/server'
-import { decrypt } from '@/lib/auth'
-
-function getSessionCookie(request: Request): string | null {
-  const cookieHeader = request.headers.get('cookie') || ''
-  const match = cookieHeader.match(/session=([^;]+)/)
-  return match ? match[1] : null
-}
+import { getSession } from '@/lib/auth'
 
 export async function POST(request: Request) {
   try {
-    const token = getSessionCookie(request)
-    if (!token) {
-      console.log('Unsubscribe: No session cookie found')
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const session = await decrypt(token)
+    const session = await getSession()
     if (!session?.userId) {
-      console.log('Unsubscribe: Session decryption failed')
+      console.log('Unsubscribe: Session check failed')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

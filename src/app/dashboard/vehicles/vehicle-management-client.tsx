@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Truck, ArrowLeft, Plus, Trash2, Pencil, Check, X, Wrench } from 'lucide-react'
 import Link from 'next/link'
-import { addVehicle, removeVehicle, renameVehicle, toggleVehicleService } from '@/app/actions'
+import { addVehicle, removeVehicle, renameVehicle, toggleVehicleService, updateVehicleStatus } from '@/app/actions'
 
 interface Vehicle {
   id: string
@@ -32,6 +32,7 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
 
   // Service toggle loading
   const [serviceLoading, setServiceLoading] = useState<Record<string, boolean>>({})
+  const [statusLoading, setStatusLoading] = useState<Record<string, boolean>>({})
 
   async function handleAddVehicle(e: React.FormEvent) {
     e.preventDefault()
@@ -103,6 +104,19 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
       alert(err.message || 'Failed to update service status')
     } finally {
       setServiceLoading(prev => ({ ...prev, [v.id]: false }))
+    }
+  }
+
+  async function handleStatusChange(v: Vehicle, newStatus: 'green' | 'yellow' | 'red') {
+    if (v.status === newStatus) return
+    setStatusLoading(prev => ({ ...prev, [v.id]: true }))
+    try {
+      await updateVehicleStatus(v.id, newStatus)
+      setVehicles(prev => prev.map(veh => veh.id === v.id ? { ...veh, status: newStatus } : veh))
+    } catch (err: any) {
+      alert(err.message || 'Failed to update vehicle status')
+    } finally {
+      setStatusLoading(prev => ({ ...prev, [v.id]: false }))
     }
   }
 
@@ -218,12 +232,21 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
                           </div>
                         ) : (
                           <div className="flex items-center gap-2 text-sm font-medium">
-                            <span className={`w-2.5 h-2.5 rounded-full shadow-sm ${
+                            <span className={`w-2.5 h-2.5 rounded-full shadow-sm flex-shrink-0 ${
                               v.status === 'green' ? 'bg-emerald-500' :
                               v.status === 'yellow' ? 'bg-amber-400' :
                               'bg-rose-500'
                             }`} />
-                            <span className="text-slate-600 capitalize">{v.status}</span>
+                            <select
+                              value={v.status}
+                              onChange={(e) => handleStatusChange(v, e.target.value as 'green' | 'yellow' | 'red')}
+                              disabled={statusLoading[v.id]}
+                              className="bg-transparent border-none text-slate-600 capitalize cursor-pointer focus:outline-none focus:ring-0 font-medium py-1 disabled:opacity-50"
+                            >
+                              <option className="text-emerald-700 font-medium" value="green">Ready (Green)</option>
+                              <option className="text-amber-700 font-medium" value="yellow">Needs Attention (Yellow)</option>
+                              <option className="text-rose-700 font-medium" value="red">Out of Service (Red)</option>
+                            </select>
                           </div>
                         )}
                       </td>

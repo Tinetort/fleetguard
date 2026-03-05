@@ -1,5 +1,9 @@
 // Smart keyword-based categorizer for checklist items
 // Automatically groups inspection items into logical categories
+// Also handles conversion from legacy flat format to hierarchical format
+
+import type { ChecklistCategory, ChecklistItem, ChecklistSubItem } from './presets'
+import { genId } from './presets'
 
 export interface CategorizedChecklist {
   [category: string]: string[]
@@ -82,4 +86,65 @@ export function categorizeItems(items: string[]): CategorizedChecklist {
   }
 
   return result
+}
+
+/**
+ * Normalize any checklist `questions` value into the new ChecklistCategory[] format.
+ * Handles:
+ *  - Already-hierarchical data (ChecklistCategory[]) → pass through
+ *  - Legacy flat string[] → auto-categorize using keyword rules
+ *  - null/undefined → empty array
+ */
+export function normalizeChecklist(questions: any): ChecklistCategory[] {
+  if (!questions || !Array.isArray(questions) || questions.length === 0) {
+    return []
+  }
+
+  // Check if already in new format (first element has 'category' and 'items')
+  if (typeof questions[0] === 'object' && questions[0] !== null && 'category' in questions[0] && 'items' in questions[0]) {
+    return questions as ChecklistCategory[]
+  }
+
+  // Legacy flat format: string[]
+  if (typeof questions[0] === 'string') {
+    const categorized = categorizeItems(questions as string[])
+    return Object.entries(categorized).map(([category, items]) => ({
+      id: genId('cat'),
+      category,
+      items: items.map(label => ({
+        id: genId('item'),
+        label,
+        subItems: [] as ChecklistSubItem[],
+      })),
+    }))
+  }
+
+  return []
+}
+
+/**
+ * Collect ALL missing item labels from nested statuses.
+ * Returns labels with parent context for sub-items (e.g., "Jump Bag → Stethoscope").
+ */
+export function collectMissingLabels(
+  categories: ChecklistCategory[],
+  statuses: Record<string, 'present' | 'missing' | null>
+): string[] {
+  const missing: string[] = []
+  for (const cat of categories) {
+    for (const item of cat.items) {
+      if (item.subItems.length > 0) {
+        for (const sub of item.subItems) {
+          if (statuses[sub.id] === 'missing') {
+            missing.push(`${item.label} → ${sub.label}`)
+          }
+        }
+      } else {
+        if (statuses[item.id] === 'missing') {
+          missing.push(item.label)
+        }
+      }
+    }
+  }
+  return missing
 }

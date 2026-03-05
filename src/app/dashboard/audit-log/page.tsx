@@ -1,10 +1,27 @@
-import { createClient } from '@/../utils/supabase/server'
+import { createClient as createAdminClientFn } from '@supabase/supabase-js'
+import { getSession } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 import AuditLogClient from './audit-log-client'
 
+// Use admin client so RLS doesn't block managers from reading rig_checks
+function getAdminSupabase() {
+  return createAdminClientFn(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
+
 export default async function AuditLogPage() {
-  const supabase = await createClient()
+  // Bug #2 fix: enforce role check
+  const session = await getSession()
+  if (!session || (session.role !== 'manager' && session.role !== 'director')) {
+    redirect('/dashboard')
+  }
+
+  const supabase = getAdminSupabase()
 
   // Fetch all rig checks with vehicle and user info
+  // Bug #1 fix: use explicit FK hint for vehicles join
   const { data: rigChecks } = await supabase
     .from('rig_checks')
     .select(`
@@ -16,9 +33,10 @@ export default async function AuditLogPage() {
       crew_last_name,
       signature_data_url,
       answers,
-      vehicles (rig_number),
+      vehicles!rig_checks_vehicle_id_fkey (rig_number),
       users (username, first_name, last_name)
     `)
+    .eq('org_id', session.orgId)
     .order('created_at', { ascending: false })
     .limit(100)
 
@@ -37,8 +55,17 @@ export default async function AuditLogPage() {
       vehicles (rig_number),
       users (username, first_name, last_name)
     `)
+    .eq('org_id', session.orgId)
     .order('created_at', { ascending: false })
     .limit(100)
+
+  // Fetch admin audit log entries
+  const { data: auditEntries } = await supabase
+    .from('audit_log')
+    .select('*')
+    .eq('org_id', session.orgId)
+    .order('created_at', { ascending: false })
+    .limit(200)
 
   // Normalize Supabase join results
   const rigCheckEntries = (rigChecks || []).map((r: any) => ({
@@ -75,7 +102,24 @@ export default async function AuditLogPage() {
     missing_items: e.restock_needed || [],
   }))
 
-  const entries = [...rigCheckEntries, ...eosEntries].sort((a, b) => 
+  // Convert admin audit entries into the same combined timeline
+  const adminEntries = (auditEntries || []).map((a: any) => ({
+    id: a.id,
+    created_at: a.created_at,
+    type: 'admin' as const,
+    rig_number: a.target_label || '—',
+    username: a.actor_name,
+    crew_last_name: null,
+    severity: null,
+    damage_notes: null,
+    ai_notes: null,
+    has_signature: false,
+    missing_items: [],
+    admin_action: a.action,
+    admin_details: a.details,
+  }))
+
+  const entries = [...rigCheckEntries, ...eosEntries, ...adminEntries].sort((a, b) => 
     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   )
 

@@ -193,3 +193,65 @@ export async function analyzeDispute(rawDispute: string): Promise<string> {
     return `Dispute: ${truncated}`
   }
 }
+
+/**
+ * Analyzes a photo of a shift issue (e.g. expired meds, dirty cab, dead battery)
+ * reported by incoming crew against the previous shift.
+ */
+export async function analyzeShiftIssue(
+  photoUrl: string | null,
+  category: string,
+  description: string | null
+): Promise<{ analysis: string; severity: 'minor' | 'moderate' | 'severe' }> {
+  const prompt = `
+  You are an expert EMS fleet inspector. An incoming crew reported an issue left by the previous shift.
+  
+  Category: ${category}
+  ${description ? `Crew description: "${description}"` : 'No text description provided.'}
+  ${photoUrl ? 'A photo of the issue is attached.' : 'No photo provided.'}
+
+  Analyze the issue and respond with valid JSON:
+  {
+    "analysis": "2-3 sentence professional description of what you observe and its impact on operations",
+    "severity": "minor" | "moderate" | "severe"
+  }
+
+  Severity guide:
+  - "minor": Cosmetic or trivial (e.g. slightly messy cab)
+  - "moderate": Affects readiness but not dangerous (e.g. missing non-critical supply, low battery)
+  - "severe": Safety risk or regulatory violation (e.g. expired medications, critically low O2)
+  `
+
+  try {
+    const contents: any[] = [{ role: 'user', parts: [{ text: prompt }] }]
+
+    if (photoUrl) {
+      const res = await fetch(photoUrl)
+      if (res.ok) {
+        const arrayBuffer = await res.arrayBuffer()
+        const base64 = Buffer.from(arrayBuffer).toString('base64')
+        const mimeType = res.headers.get('content-type') || 'image/jpeg'
+        contents[0].parts.push({ inlineData: { data: base64, mimeType } })
+      }
+    }
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents,
+      config: { responseMimeType: 'application/json' }
+    })
+
+    const text = response.text
+    if (!text) throw new Error('Empty response')
+
+    const result = JSON.parse(text)
+    if (!['minor', 'moderate', 'severe'].includes(result.severity)) result.severity = 'moderate'
+    return result
+  } catch (error: any) {
+    console.error('[AI] Shift issue analysis failed:', error?.message)
+    return {
+      analysis: description || `${category} reported by incoming crew.`,
+      severity: 'moderate'
+    }
+  }
+}

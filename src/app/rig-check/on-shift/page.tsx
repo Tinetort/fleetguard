@@ -29,11 +29,14 @@ export default async function OnShiftPage() {
     : user?.username ?? ''
 
   // Look for an active shift where this user appears in on_shift_by
-  const { data: vehicles, error } = await supabase
+  const { data: vehicles } = await supabase
     .from('vehicles')
     .select('id, rig_number, on_shift_since, on_shift_by')
+    .eq('org_id', session.orgId)
     .not('on_shift_since', 'is', null)
     .ilike('on_shift_by', `%${currentUserFullName}%`)
+    .order('on_shift_since', { ascending: false })
+    .limit(1)
 
   const activeVehicle = vehicles?.[0] ?? null
 

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ArrowLeft, Users, UserPlus, KeyRound, Copy, Check, ShieldAlert } from 'lucide-react'
 import Link from 'next/link'
-import { createEmployee, resetEmployeePassword } from '@/app/actions'
+import { createEmployee, resetEmployeePassword, updateUserRecoveryEmail } from '@/app/actions'
 
 interface User {
   id: string
@@ -15,6 +15,7 @@ interface User {
   org_type: string
   created_at: string
   temp_password: boolean
+  recovery_email?: string | null
 }
 
 export default function UserManagementClient({ initialUsers }: { initialUsers: User[] }) {
@@ -29,6 +30,12 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
   const [resettingUser, setResettingUser] = useState<User | null>(null)
   const [resetError, setResetError] = useState<string | null>(null)
 
+  // Set recovery email modal
+  const [emailUser, setEmailUser] = useState<User | null>(null)
+  const [emailInput, setEmailInput] = useState('')
+  const [emailSaving, setEmailSaving] = useState(false)
+  const [emailError, setEmailError] = useState<string | null>(null)
+
   async function handleAddUser(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsSubmitting(true)
@@ -38,9 +45,10 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
     const firstName = formData.get('firstName') as string
     const lastName = formData.get('lastName') as string
     const role = formData.get('role') as string
+    const recoveryEmail = formData.get('recoveryEmail') as string | null
 
     try {
-      const result = await createEmployee(firstName, lastName, role)
+      const result = await createEmployee(firstName, lastName, role, recoveryEmail || undefined)
       if (result.error) {
         alert(result.error)
       } else if (result.username && result.tempPassword) {
@@ -93,6 +101,24 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
     setGeneratedPassword(null)
     setGeneratedUsername(null)
     setResettingUser(null)
+    setEmailUser(null)
+    setEmailInput('')
+    setEmailError(null)
+  }
+
+  async function handleSetEmail(e: React.FormEvent) {
+    e.preventDefault()
+    if (!emailUser) return
+    setEmailSaving(true)
+    setEmailError(null)
+    const result = await updateUserRecoveryEmail(emailUser.id, emailInput)
+    setEmailSaving(false)
+    if (result.error) {
+      setEmailError(result.error)
+    } else {
+      setUsers(users.map(u => u.id === emailUser.id ? { ...u, recovery_email: emailInput || null } : u))
+      closeModals()
+    }
   }
 
   return (
@@ -128,9 +154,10 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-100/50 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
                 <tr>
-                  <th className="px-6 py-4">Username</th>
+                                <th className="px-6 py-4">Username</th>
                   <th className="px-6 py-4">Role</th>
                   <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Recovery Email</th>
                   <th className="px-6 py-4">Joined</th>
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
@@ -162,17 +189,36 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
                       )}
                     </td>
                     <td className="px-6 py-4 text-slate-500 font-medium">
+                      {user.recovery_email ? (
+                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-1 max-w-[180px] truncate">
+                          ✉️ {user.recovery_email}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-slate-400 italic">Not set</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-slate-500 font-medium">
                       {new Date(user.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-slate-500 hover:text-blue-600 bg-white border border-slate-200 shadow-sm"
-                        onClick={() => setResettingUser(user)}
-                      >
-                        <KeyRound className="w-4 h-4 mr-2 text-slate-400" /> Reset Password
-                      </Button>
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className={`bg-white border shadow-sm text-xs ${user.recovery_email ? 'border-emerald-200 text-emerald-700 hover:bg-emerald-50' : 'border-slate-200 text-slate-500 hover:text-blue-600'}`}
+                          onClick={() => { setEmailUser(user); setEmailInput(user.recovery_email || '') }}
+                        >
+                          ✉️ {user.recovery_email ? 'Edit Email' : 'Set Email'}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-slate-500 hover:text-blue-600 bg-white border border-slate-200 shadow-sm"
+                          onClick={() => setResettingUser(user)}
+                        >
+                          <KeyRound className="w-4 h-4 mr-2 text-slate-400" /> Reset Password
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -241,6 +287,13 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
                       </select>
                     </div>
 
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">
+                        Recovery Email <span className="text-slate-400 font-normal normal-case tracking-normal">(optional — for password reset)</span>
+                      </label>
+                      <Input name="recoveryEmail" type="email" className="h-12 bg-slate-50 border-slate-200" placeholder="employee@email.com" />
+                    </div>
+
                     <div className="pt-4 flex gap-3">
                       <Button type="button" variant="outline" className="flex-1 h-12 rounded-xl" onClick={closeModals}>Cancel</Button>
                       <Button type="submit" className="flex-1 h-12 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-md" disabled={isSubmitting}>
@@ -303,6 +356,40 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
                   <Button onClick={closeModals} className="w-full h-12 rounded-xl text-md font-bold">Done</Button>
                 </>
               )}
+            </div>
+          </div>
+        )}
+        {/* Set Recovery Email Modal */}
+        {emailUser && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+            <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden p-8 animate-in zoom-in-95 duration-200">
+              <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-5">
+                <span className="text-2xl">✉️</span>
+              </div>
+              <h2 className="text-xl font-black text-slate-900 text-center mb-1">
+                {emailUser.recovery_email ? 'Update Recovery Email' : 'Set Recovery Email'}
+              </h2>
+              <p className="text-slate-500 text-sm text-center mb-6">
+                For <strong>{emailUser.username}</strong>. Used for the "Forgot Password?" reset flow.
+              </p>
+
+              {emailError && <p className="text-rose-500 text-sm mb-4 font-bold text-center">{emailError}</p>}
+
+              <form onSubmit={handleSetEmail} className="space-y-4">
+                <input
+                  type="email"
+                  value={emailInput}
+                  onChange={e => setEmailInput(e.target.value)}
+                  placeholder="employee@email.com"
+                  className="w-full h-12 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                <div className="flex gap-3 pt-2">
+                  <Button type="button" variant="outline" className="flex-1 h-12 rounded-xl" onClick={closeModals}>Cancel</Button>
+                  <Button type="submit" className="flex-1 h-12 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-md" disabled={emailSaving}>
+                    {emailSaving ? 'Saving...' : 'Save Email'}
+                  </Button>
+                </div>
+              </form>
             </div>
           </div>
         )}

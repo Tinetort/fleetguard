@@ -13,10 +13,11 @@ export default async function UsersPage() {
 
   const supabase = await createClient()
 
-  // Fetch all users
+  // Fetch all users in the same organization
   const { data: users, error } = await supabase
     .from('users')
-    .select('id, username, role, org_type, created_at, temp_password')
+    .select('id, username, role, org_type, created_at, temp_password, recovery_email')
+    .eq('org_id', session.orgId)
     .order('created_at', { ascending: false })
 
   if (error) {

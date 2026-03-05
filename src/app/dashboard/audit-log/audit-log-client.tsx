@@ -4,13 +4,13 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { ArrowLeft, Shield, FileText, Pen, Search, ChevronDown, ChevronUp, AlertTriangle, CheckCircle2, XCircle } from 'lucide-react'
+import { ArrowLeft, Shield, FileText, Pen, Search, ChevronDown, ChevronUp, AlertTriangle, CheckCircle2, XCircle, Settings, UserCog } from 'lucide-react'
 import Link from 'next/link'
 
 interface AuditEntry {
   id: string
   created_at: string
-  type: 'rig_check' | 'eos'
+  type: 'rig_check' | 'eos' | 'admin'
   rig_number: string
   username: string
   crew_last_name: string | null
@@ -21,6 +21,20 @@ interface AuditEntry {
   missing_items: string[]
   handoff_disputed?: boolean
   handoff_dispute_notes?: string | null
+  admin_action?: string
+  admin_details?: Record<string, any>
+}
+
+const ACTION_LABELS: Record<string, { label: string; emoji: string; color: string }> = {
+  'shift.force_ended': { label: 'Force Ended Shift', emoji: '⏹️', color: 'text-rose-700 bg-rose-50 border-rose-200' },
+  'shift.approved': { label: 'Approved Shift', emoji: '✅', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
+  'shift.rejected': { label: 'Rejected Shift', emoji: '🚫', color: 'text-rose-700 bg-rose-50 border-rose-200' },
+  'vehicle.added': { label: 'Added Vehicle', emoji: '➕', color: 'text-blue-700 bg-blue-50 border-blue-200' },
+  'vehicle.removed': { label: 'Removed Vehicle', emoji: '🗑️', color: 'text-rose-700 bg-rose-50 border-rose-200' },
+  'vehicle.renamed': { label: 'Renamed Vehicle', emoji: '✏️', color: 'text-purple-700 bg-purple-50 border-purple-200' },
+  'vehicle.sent_to_service': { label: 'Sent to Service', emoji: '🔧', color: 'text-amber-700 bg-amber-50 border-amber-200' },
+  'vehicle.returned_from_service': { label: 'Returned from Service', emoji: '🔧', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
+  'vehicle.status_changed': { label: 'Changed Status', emoji: '🔄', color: 'text-indigo-700 bg-indigo-50 border-indigo-200' },
 }
 
 function SeverityBadge({ severity }: { severity: string | null }) {
@@ -41,13 +55,22 @@ function SeverityBadge({ severity }: { severity: string | null }) {
   )
 }
 
+function AdminActionBadge({ action }: { action: string }) {
+  const info = ACTION_LABELS[action] || { label: action, emoji: '⚙️', color: 'text-slate-700 bg-slate-50 border-slate-200' }
+  return (
+    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border ${info.color}`}>
+      {info.emoji} {info.label}
+    </span>
+  )
+}
+
 export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
   const [search, setSearch] = useState('')
-  const [severityFilter, setSeverityFilter] = useState<string>('all')
+  const [typeFilter, setTypeFilter] = useState<string>('all')
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const filtered = entries.filter(e => {
-    if (severityFilter !== 'all' && e.severity !== severityFilter) return false
+    if (typeFilter !== 'all' && e.type !== typeFilter) return false
     if (search) {
       const q = search.toLowerCase()
       return (
@@ -55,7 +78,8 @@ export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
         e.username.toLowerCase().includes(q) ||
         (e.crew_last_name && e.crew_last_name.toLowerCase().includes(q)) ||
         (e.damage_notes && e.damage_notes.toLowerCase().includes(q)) ||
-        (e.handoff_dispute_notes && e.handoff_dispute_notes.toLowerCase().includes(q))
+        (e.handoff_dispute_notes && e.handoff_dispute_notes.toLowerCase().includes(q)) ||
+        (e.admin_action && e.admin_action.toLowerCase().includes(q))
       )
     }
     return true
@@ -88,24 +112,29 @@ export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
-                placeholder="Search by vehicle, user, or notes..."
+                placeholder="Search by vehicle, user, or action..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 className="pl-10 h-12 bg-white border-slate-200"
               />
             </div>
             <div className="flex gap-2 flex-wrap">
-              {['all', 'green', 'yellow', 'red'].map(s => (
+              {[
+                { key: 'all', label: 'All' },
+                { key: 'rig_check', label: '🛡️ Rig Checks' },
+                { key: 'eos', label: '📋 End of Shift' },
+                { key: 'admin', label: '⚙️ Admin Actions' },
+              ].map(f => (
                 <button
-                  key={s}
-                  onClick={() => setSeverityFilter(s)}
+                  key={f.key}
+                  onClick={() => setTypeFilter(f.key)}
                   className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${
-                    severityFilter === s
+                    typeFilter === f.key
                       ? 'bg-blue-600 text-white border-blue-600'
                       : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
                   }`}
                 >
-                  {s === 'all' ? 'All' : s === 'green' ? '✅ Good' : s === 'yellow' ? '⚠️ Needs TLC' : '🚨 Critical'}
+                  {f.label}
                 </button>
               ))}
             </div>
@@ -124,10 +153,13 @@ export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
           {filtered.map(entry => {
             const isExpanded = expandedId === entry.id
             const dt = new Date(entry.created_at)
+            const isAdmin = entry.type === 'admin'
+
             return (
               <Card
                 key={entry.id}
                 className={`border-0 shadow-md overflow-hidden transition-all cursor-pointer hover:shadow-lg ${
+                  isAdmin ? 'border-l-4 border-l-indigo-400' :
                   entry.severity === 'red' ? 'border-l-4 border-l-rose-500' :
                   entry.severity === 'yellow' ? 'border-l-4 border-l-amber-400' :
                   'border-l-4 border-l-emerald-400'
@@ -138,9 +170,11 @@ export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 min-w-0">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        isAdmin ? 'bg-indigo-100 text-indigo-600' :
                         entry.type === 'eos' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600'
                       }`}>
-                        {entry.type === 'eos' ? <FileText className="w-5 h-5" /> : <Shield className="w-5 h-5" />}
+                        {isAdmin ? <Settings className="w-5 h-5" /> :
+                         entry.type === 'eos' ? <FileText className="w-5 h-5" /> : <Shield className="w-5 h-5" />}
                       </div>
                       <div className="min-w-0">
                         <p className="font-bold text-slate-900 text-sm truncate">
@@ -150,11 +184,16 @@ export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
                         <p className="text-xs text-slate-400">
                           {dt.toLocaleDateString()} {dt.toLocaleTimeString()} · {entry.username}
                           {entry.type === 'eos' && ' · End of Shift'}
+                          {isAdmin && ' · Admin'}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <SeverityBadge severity={entry.severity} />
+                      {isAdmin ? (
+                        <AdminActionBadge action={entry.admin_action || ''} />
+                      ) : (
+                        <SeverityBadge severity={entry.severity} />
+                      )}
                       {entry.has_signature && <span title="Signed"><Pen className="w-3.5 h-3.5 text-blue-500" /></span>}
                       {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
                     </div>
@@ -162,6 +201,22 @@ export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
 
                   {isExpanded && (
                     <div className="mt-4 pt-4 border-t border-slate-100 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                      {/* Admin action details */}
+                      {isAdmin && entry.admin_details && Object.keys(entry.admin_details).length > 0 && (
+                        <div>
+                          <p className="text-xs font-bold text-indigo-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+                            <Settings className="w-3.5 h-3.5" /> Action Details
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {Object.entries(entry.admin_details).map(([key, value]) => (
+                              <span key={key} className="text-xs bg-indigo-50 text-indigo-800 font-semibold px-2.5 py-1 rounded-full border border-indigo-100">
+                                {key.replace(/_/g, ' ')}: {String(value)}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {/* Rig check / EOS details */}
                       {entry.handoff_disputed && (
                         <div>
                           <p className="text-xs font-bold text-rose-500 uppercase tracking-wide mb-1 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> Previous Shift Dispute</p>
@@ -190,7 +245,7 @@ export default function AuditLogClient({ entries }: { entries: AuditEntry[] }) {
                           </div>
                         </div>
                       )}
-                      {!entry.damage_notes && !entry.ai_notes && entry.missing_items.length === 0 && !entry.handoff_disputed && (
+                      {!isAdmin && !entry.damage_notes && !entry.ai_notes && entry.missing_items.length === 0 && !entry.handoff_disputed && (
                         <p className="text-sm text-slate-400 italic">No issues reported</p>
                       )}
                       <p className="text-xs text-slate-300 font-mono">ID: {entry.id}</p>
