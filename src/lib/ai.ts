@@ -119,7 +119,6 @@ export async function analyzeDamage(notes: string | null, photoUrl?: string | nu
 
     if (photoUrl) {
       // Fetch the image to send as base64 to Gemini
-      console.log('[AI] Fetching image for analysis:', photoUrl)
       const res = await fetch(photoUrl)
       if (res.ok) {
         const arrayBuffer = await res.arrayBuffer()
@@ -137,7 +136,6 @@ export async function analyzeDamage(notes: string | null, photoUrl?: string | nu
       }
     }
 
-    console.log('[AI] Sending request to Gemini...')
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: contents,
@@ -149,7 +147,6 @@ export async function analyzeDamage(notes: string | null, photoUrl?: string | nu
 
     const result = JSON.parse(text) as AnalysisResult
     if (!['green', 'yellow', 'red'].includes(result.severity)) result.severity = 'yellow'
-    console.log('[AI] Result:', result.severity, '-', result.notes?.substring(0, 80))
     return result
   } catch (error: any) {
     console.error('[AI] Analysis failed:', error?.status || error?.message)

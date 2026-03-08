@@ -22,6 +22,8 @@ export default function EndOfShiftPage() {
   const [vehicles, setVehicles] = useState<any[]>([])
   const [checklist, setChecklist] = useState<any>(null)
   const [vehicleId, setVehicleId] = useState('')
+  const [vehicleLocked, setVehicleLocked] = useState(false)
+  const [lockedRigNumber, setLockedRigNumber] = useState<string | null>(null)
   const [fuelLevel, setFuelLevel] = useState('half')
   const [cleanlinessDetails, setCleanlinessDetails] = useState({ cab: true, patient: true, trash: true })
   const [restockNeeded, setRestockNeeded] = useState<string[]>([])
@@ -43,7 +45,7 @@ export default function EndOfShiftPage() {
   useEffect(() => {
     async function load() {
       const [v, initData, invEnabled, invItems] = await Promise.all([
-        getAllVehiclesForEOS(), 
+        getAllVehiclesForEOS(),
         getInitialEndOfShiftData(),
         getInventoryEnabled(),
         getInventoryItems()
@@ -51,6 +53,10 @@ export default function EndOfShiftPage() {
       setVehicles(v)
       if (initData.vehicleId) {
         setVehicleId(initData.vehicleId)
+      }
+      if (initData.locked) {
+        setVehicleLocked(true)
+        setLockedRigNumber(initData.rigNumber ?? null)
       }
       setInventoryEnabled(invEnabled)
       setInventoryItems(invItems)
@@ -145,7 +151,7 @@ export default function EndOfShiftPage() {
             <h2 className="text-2xl font-extrabold text-slate-900">Shift Complete!</h2>
             <p className="text-slate-500 font-medium">Your end-of-shift report has been submitted and the dispatcher has been notified.</p>
             <form action={logoutAction}>
-              <Button type="submit" className="w-full h-12 bg-slate-700 hover:bg-slate-800 font-bold mt-4">
+              <Button type="submit" className="w-full h-12 bg-brand-primary hover:bg-brand-accent font-bold mt-4">
                 <LogOut className="w-4 h-4 mr-2" /> Log Out
               </Button>
             </form>
@@ -178,17 +184,25 @@ export default function EndOfShiftPage() {
 
             {/* Vehicle */}
             <div className="space-y-3">
-              <Label className="text-slate-700 font-bold text-sm uppercase tracking-wide">Select Vehicle</Label>
-              <Select name="vehicle_id" onValueChange={setVehicleId} value={vehicleId} required>
-                <SelectTrigger className="w-full h-14 text-lg bg-white border-slate-300 shadow-sm">
-                  <SelectValue placeholder="Tap to select rig" />
-                </SelectTrigger>
-                <SelectContent>
-                  {vehicles.map((v: any) => (
-                    <SelectItem key={v.id} value={v.id} className="text-lg py-3">{v.rig_number}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label className="text-slate-700 font-bold text-sm uppercase tracking-wide">Vehicle</Label>
+              {vehicleLocked ? (
+                <div className="flex items-center gap-3 h-14 px-4 rounded-xl border-2 border-emerald-300 bg-emerald-50 shadow-sm">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <span className="text-lg font-bold text-emerald-900">{lockedRigNumber}</span>
+                  <span className="text-sm text-emerald-600 font-medium ml-1">— your active shift</span>
+                </div>
+              ) : (
+                <Select name="vehicle_id" onValueChange={setVehicleId} value={vehicleId} required>
+                  <SelectTrigger className="w-full h-14 text-lg bg-white border-slate-300 shadow-sm">
+                    <SelectValue placeholder="Tap to select rig" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {vehicles.map((v: any) => (
+                      <SelectItem key={v.id} value={v.id} className="text-lg py-3">{v.rig_number}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
 
             {/* EOS Gate — shift status */}
@@ -199,7 +213,7 @@ export default function EndOfShiftPage() {
               <div className="p-4 bg-rose-50 border-2 border-rose-300 rounded-xl space-y-2">
                 <p className="font-bold text-rose-700 text-sm">⛔ No active shift for this vehicle</p>
                 <p className="text-rose-600 text-xs">You must complete a Start of Shift before submitting an End of Shift report.</p>
-                <Link href="/rig-check" className="block text-xs font-bold text-blue-600 underline mt-1">→ Go to Start of Shift</Link>
+                <Link href="/rig-check" className="block text-xs font-bold text-brand-primary underline mt-1">→ Go to Start of Shift</Link>
               </div>
             )}
             {vehicleId && !shiftChecking && activeShift?.active && (
@@ -225,12 +239,12 @@ export default function EndOfShiftPage() {
                     onClick={() => setFuelLevel(f.value)}
                     className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left font-medium ${
                       fuelLevel === f.value
-                        ? 'border-blue-500 bg-blue-50'
+                        ? 'border-brand-primary bg-brand-primary/5'
                         : 'border-slate-200 bg-white hover:border-slate-300'
                     }`}
                   >
                     <span className="text-lg font-mono">{f.icon}</span>
-                    <span className={`font-semibold ${fuelLevel === f.value ? 'text-blue-700' : 'text-slate-700'}`}>{f.label}</span>
+                    <span className={`font-semibold ${fuelLevel === f.value ? 'text-brand-accent' : 'text-slate-700'}`}>{f.label}</span>
                   </button>
                 ))}
               </div>
@@ -408,7 +422,7 @@ export default function EndOfShiftPage() {
             </Button>
 
             <p className="text-center text-xs text-slate-400 font-medium uppercase tracking-widest">
-              FleetGuard — Powered by Smart Rig Check
+              Powered by Smart Rig Check
             </p>
           </form>
         </CardContent>

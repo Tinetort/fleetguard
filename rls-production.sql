@@ -74,6 +74,7 @@ DROP POLICY IF EXISTS "Anyone can insert rig checks" ON public.rig_checks;
 DROP POLICY IF EXISTS "Anyone can update rig checks" ON public.rig_checks;
 DROP POLICY IF EXISTS "Rig checks scoped to org" ON public.rig_checks;
 DROP POLICY IF EXISTS "Insert own rig checks" ON public.rig_checks;
+DROP POLICY IF EXISTS "Update rig checks" ON public.rig_checks;
 
 -- Read: Managers/directors/dispatchers/mechanics see all in org. Field staff see all in org (for vehicle history).
 CREATE POLICY "Rig checks scoped to org" ON public.rig_checks
@@ -114,6 +115,7 @@ DROP POLICY IF EXISTS "Anyone can update notifications" ON public.notifications;
 DROP POLICY IF EXISTS "Anyone can insert notifications" ON public.notifications;
 DROP POLICY IF EXISTS "Notifications scoped to org" ON public.notifications;
 DROP POLICY IF EXISTS "Insert notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Update notifications" ON public.notifications;
 
 CREATE POLICY "Notifications scoped to org" ON public.notifications
   FOR SELECT USING (org_id = public.get_current_user_org());
@@ -135,3 +137,19 @@ CREATE POLICY "Push subscriptions scoped to user" ON public.push_subscriptions
     user_id = (SELECT id FROM public.users WHERE auth_id = auth.uid()) 
     AND org_id = public.get_current_user_org()
   );
+-- Phase 2.2: Make push_subscriptions.org_id NOT NULL
+-- First, update any existing NULL org_id rows by matching the user's org_id
+UPDATE push_subscriptions ps
+SET org_id = u.org_id
+FROM public.users u
+WHERE ps.user_id = u.auth_id AND ps.org_id IS NULL;
+
+-- If there are still any orphaned subscriptions (users deleted but subscription remains?), we might either delete them or set a default.
+-- Deleting them is safer if they don't belong to a user.
+DELETE FROM push_subscriptions WHERE org_id IS NULL;
+
+-- Now enforce NOT NULL
+ALTER TABLE push_subscriptions ALTER COLUMN org_id SET NOT NULL;
+
+-- Phase 2.6: Drop unused password reset tokens table (Supabase Auth handles this natively)
+DROP TABLE IF EXISTS password_reset_tokens;

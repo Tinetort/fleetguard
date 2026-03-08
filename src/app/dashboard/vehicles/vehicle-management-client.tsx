@@ -7,11 +7,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Truck, ArrowLeft, Plus, Trash2, Pencil, Check, X, Wrench } from 'lucide-react'
 import Link from 'next/link'
-import { addVehicle, removeVehicle, renameVehicle, toggleVehicleService, updateVehicleStatus } from '@/app/actions'
+import { addVehicle, removeVehicle, renameVehicle, toggleVehicleService, updateVehicleStatus, updateVehicleUnitNumber } from '@/app/actions'
+import { toast } from 'sonner'
 
 interface Vehicle {
   id: string
   rig_number: string
+  unit_number: string | null
   status: 'green' | 'yellow' | 'red'
   in_service: boolean
   created_at: string
@@ -21,8 +23,11 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
   const [vehicles, setVehicles] = useState<Vehicle[]>(initialVehicles)
   const [isAdding, setIsAdding] = useState(false)
   const [newRigNumber, setNewRigNumber] = useState('')
+  const [newUnitNumber, setNewUnitNumber] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [editingUnitId, setEditingUnitId] = useState<string | null>(null)
+  const [editingUnitValue, setEditingUnitValue] = useState('')
 
   // Rename state
   const [renamingId, setRenamingId] = useState<string | null>(null)
@@ -39,15 +44,17 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
     setIsAdding(true)
     setError(null)
     try {
-      await addVehicle(newRigNumber)
+      await addVehicle(newRigNumber, newUnitNumber)
       setVehicles([...vehicles, {
         id: crypto.randomUUID(),
         rig_number: newRigNumber,
+        unit_number: newUnitNumber.trim() || null,
         status: 'green' as const,
         in_service: false,
         created_at: new Date().toISOString()
       }].sort((a, b) => a.rig_number.localeCompare(b.rig_number)))
       setNewRigNumber('')
+      setNewUnitNumber('')
       setShowAddModal(false)
     } catch (err: any) {
       setError(err.message || 'Failed to add vehicle')
@@ -62,7 +69,7 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
       await removeVehicle(id)
       setVehicles(prev => prev.filter(v => v.id !== id))
     } catch (err: any) {
-      alert(err.message || 'Failed to remove vehicle')
+      toast.error(err.message || 'Failed to remove vehicle')
     }
   }
 
@@ -101,9 +108,20 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
       await toggleVehicleService(v.id, !v.in_service)
       setVehicles(prev => prev.map(veh => veh.id === v.id ? { ...veh, in_service: !veh.in_service } : veh))
     } catch (err: any) {
-      alert(err.message || 'Failed to update service status')
+      toast.error(err.message || 'Failed to update service status')
     } finally {
       setServiceLoading(prev => ({ ...prev, [v.id]: false }))
+    }
+  }
+
+  async function handleSaveUnitNumber(v: Vehicle) {
+    try {
+      await updateVehicleUnitNumber(v.id, editingUnitValue)
+      setVehicles(prev => prev.map(veh => veh.id === v.id ? { ...veh, unit_number: editingUnitValue.trim() || null } : veh))
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to update unit number')
+    } finally {
+      setEditingUnitId(null)
     }
   }
 
@@ -114,7 +132,7 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
       await updateVehicleStatus(v.id, newStatus)
       setVehicles(prev => prev.map(veh => veh.id === v.id ? { ...veh, status: newStatus } : veh))
     } catch (err: any) {
-      alert(err.message || 'Failed to update vehicle status')
+      toast.error(err.message || 'Failed to update vehicle status')
     } finally {
       setStatusLoading(prev => ({ ...prev, [v.id]: false }))
     }
@@ -160,6 +178,7 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/50">
                   <th className="py-4 px-6 font-bold text-xs uppercase tracking-wider text-slate-500">Rig Number</th>
+                  <th className="py-4 px-6 font-bold text-xs uppercase tracking-wider text-slate-500">Unit #</th>
                   <th className="py-4 px-6 font-bold text-xs uppercase tracking-wider text-slate-500">Status</th>
                   <th className="py-4 px-6 font-bold text-xs uppercase tracking-wider text-slate-500 text-right">Actions</th>
                 </tr>
@@ -167,7 +186,7 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
               <tbody className="divide-y divide-slate-100">
                 {vehicles.length === 0 ? (
                   <tr>
-                    <td colSpan={3} className="py-8 px-6 text-center text-slate-500 font-medium">
+                    <td colSpan={4} className="py-8 px-6 text-center text-slate-500 font-medium">
                       No vehicles found. Click "Add Vehicle" to create one.
                     </td>
                   </tr>
@@ -175,7 +194,7 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
                   vehicles.map((v) => (
                     <tr key={v.id} className={`hover:bg-slate-50/50 transition-colors ${v.in_service ? 'bg-amber-50/40' : ''}`}>
                       {/* Rig Number / Rename */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-6 w-48">
                         {renamingId === v.id ? (
                           <div className="flex items-center gap-2">
                             <input
@@ -216,6 +235,44 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
                               onClick={() => startRename(v)}
                               className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 transition-all"
                               title="Rename vehicle"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
+                      </td>
+
+                      {/* Unit Number */}
+                      <td className="py-4 px-6">
+                        {editingUnitId === v.id ? (
+                          <div className="flex items-center gap-2">
+                            <input
+                              autoFocus
+                              value={editingUnitValue}
+                              onChange={e => setEditingUnitValue(e.target.value)}
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') handleSaveUnitNumber(v)
+                                if (e.key === 'Escape') setEditingUnitId(null)
+                              }}
+                              placeholder="e.g. 41"
+                              className="border border-blue-300 rounded-lg px-2.5 py-1 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-400 w-20"
+                            />
+                            <button onClick={() => handleSaveUnitNumber(v)} className="p-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg">
+                              <Check className="w-3.5 h-3.5" />
+                            </button>
+                            <button onClick={() => setEditingUnitId(null)} className="p-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg">
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 group">
+                            <span className={`text-sm font-bold px-2 py-0.5 rounded ${v.unit_number ? 'bg-indigo-100 text-indigo-700' : 'text-slate-400 italic'}`}>
+                              {v.unit_number || 'none'}
+                            </span>
+                            <button
+                              onClick={() => { setEditingUnitId(v.id); setEditingUnitValue(v.unit_number || '') }}
+                              className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 transition-all"
+                              title="Set unit number"
                             >
                               <Pencil className="w-3.5 h-3.5" />
                             </button>
@@ -320,6 +377,16 @@ export default function VehicleManagementClient({ initialVehicles }: { initialVe
                   className="h-12 bg-slate-50 border-slate-200 font-medium text-slate-900 placeholder:text-slate-400"
                   required
                   autoFocus
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="unitNumber" className="text-slate-700 font-bold text-xs uppercase tracking-wider">Unit Number <span className="text-slate-400 font-normal normal-case">(for dispatchers)</span></Label>
+                <Input
+                  id="unitNumber"
+                  value={newUnitNumber}
+                  onChange={(e) => setNewUnitNumber(e.target.value)}
+                  placeholder="e.g. 41, M-12"
+                  className="h-12 bg-slate-50 border-slate-200 font-medium text-slate-900 placeholder:text-slate-400"
                 />
               </div>
 

@@ -8,6 +8,10 @@ export async function GET() {
   const supabase = await createClient()
   const session = await getSession()
 
+  if (!session?.userId || !session?.orgId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   // Get org labels for this user
   let labels = DEFAULT_LABELS
   if (session?.userId) {
@@ -21,8 +25,6 @@ export async function GET() {
 
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-
-  console.log('[PDF Export] Session:', session?.userId, 'Role:', (session as any)?.role)
 
   let normalizedChecks: any[] = []
   let normalizedEos: any[] = []
@@ -39,7 +41,6 @@ export async function GET() {
       .limit(100)
 
     if (checksError) console.error('[PDF Export] Checks Error:', checksError)
-    console.log('[PDF Export] Checks found:', checks?.length || 0)
 
     const { data: eosReports, error: eosError } = await supabase
       .from('end_of_shift_reports')
@@ -50,7 +51,6 @@ export async function GET() {
       .limit(50)
 
     if (eosError) console.error('[PDF Export] EOS Error:', eosError)
-    console.log('[PDF Export] EOS found:', eosReports?.length || 0)
 
     // Check feature flag
     const { data: org } = await supabase
@@ -218,14 +218,14 @@ export async function GET() {
   </table>`}
   ` : ''}
 
-  <div class="footer">FleetGuard — ${labels.dashboard} &nbsp;|&nbsp; Smart Rig Check &nbsp;|&nbsp; ${now}</div>
+  <div class="footer">${labels.dashboard} &nbsp;|&nbsp; Smart Rig Check &nbsp;|&nbsp; ${now}</div>
 </body>
 </html>`
 
   return new NextResponse(html, {
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
-      'Content-Disposition': `inline; filename="fleetguard-report-${new Date().toISOString().split('T')[0]}.html"`,
+      'Content-Disposition': `inline; filename="rig-check-report-${new Date().toISOString().split('T')[0]}.html"`,
     },
   })
 }

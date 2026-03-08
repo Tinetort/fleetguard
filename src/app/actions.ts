@@ -1403,11 +1403,11 @@ export async function getVehicleHandoff(vehicleId: string): Promise<{
 export async function getInitialEndOfShiftData() {
   const supabase = await createClient()
   const session = await getSession()
-  if (!session?.userId) return { vehicleId: null }
+  if (!session?.userId) return { vehicleId: null, locked: false, rigNumber: null }
 
   // Get the most recent rig check for this user from the last 16 hours
   const sixteenHoursAgo = new Date(Date.now() - 16 * 60 * 60 * 1000).toISOString()
-  
+
   const { data: latestCheck } = await supabase
     .from('rig_checks')
     .select('vehicle_id')
@@ -1417,8 +1417,27 @@ export async function getInitialEndOfShiftData() {
     .limit(1)
     .single()
 
+  const vehicleId = latestCheck?.vehicle_id || null
+  let locked = false
+  let rigNumber = null
+
+  if (vehicleId) {
+    const { data: vehicle } = await supabase
+      .from('vehicles')
+      .select('on_shift_since, rig_number')
+      .eq('id', vehicleId)
+      .single()
+
+    if (vehicle?.on_shift_since) {
+      locked = true
+      rigNumber = vehicle.rig_number
+    }
+  }
+
   return {
-    vehicleId: latestCheck?.vehicle_id || null
+    vehicleId,
+    locked,
+    rigNumber
   }
 }
 
@@ -1519,7 +1538,7 @@ export async function fetchWelcomeGreeting(): Promise<string | null> {
 /**
  * Adds a new vehicle to the organization.
  */
-export async function addVehicle(rigNumber: string) {
+export async function addVehicle(rigNumber: string, unitNumber?: string) {
   const session = await getSession()
   if (!session?.userId || session.role !== 'director') {
     throw new Error('Unauthorized: Only directors can add vehicles')
@@ -1535,6 +1554,7 @@ export async function addVehicle(rigNumber: string) {
     .insert({
       org_id: session.orgId,
       rig_number: rigNumber.trim(),
+      unit_number: unitNumber ? unitNumber.trim() : null,
       status: 'green'
     })
 
@@ -2512,4 +2532,122 @@ export async function seedEMSInventoryItems() {
 
   revalidatePath('/dashboard/inventory')
   return { success: true }
+}
+
+/**
+ * Create a new map point (location marker) for the organization
+ */
+export async function createMapPoint({
+  name,
+  type,
+  lat,
+  lng,
+  description,
+}: {
+  name: string
+  type: string
+  lat: number
+  lng: number
+  description?: string
+}) {
+  const session = await getSession()
+  if (!session?.orgId) throw new Error('Unauthorized')
+
+  const supabase = await createClient()
+
+  const { error } = await supabase.from('map_points').insert({
+    org_id: session.orgId,
+    name,
+    type,
+    lat,
+    lng,
+    description: description || null,
+  })
+
+  if (error) {
+    console.error('createMapPoint error:', error)
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/dashboard/map')
+}
+
+/**
+ * Delete a map point by ID
+ */
+export async function deleteMapPoint(id: string) {
+  const session = await getSession()
+  if (!session?.orgId) throw new Error('Unauthorized')
+
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('map_points')
+    .delete()
+    .eq('id', id)
+    .eq('org_id', session.orgId)
+
+  if (error) {
+    console.error('deleteMapPoint error:', error)
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/dashboard/map')
+}
+
+/**
+ * Update organization's base location
+ */
+export async function updateOrgBaseLocation({
+  base_lat,
+  base_lng,
+  base_address,
+}: {
+  base_lat: number
+  base_lng: number
+  base_address: string
+}) {
+  const session = await getSession()
+  if (!session?.orgId) throw new Error('Unauthorized')
+
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('organizations')
+    .update({
+      base_lat,
+      base_lng,
+      base_address,
+    })
+    .eq('id', session.orgId)
+
+  if (error) {
+    console.error('updateOrgBaseLocation error:', error)
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/dashboard/map')
+}
+
+/**
+ * Update vehicle's unit number
+ */
+export async function updateVehicleUnitNumber(vehicleId: string, unitNumber: string) {
+  const session = await getSession()
+  if (!session?.orgId) throw new Error('Unauthorized')
+
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('vehicles')
+    .update({ unit_number: unitNumber })
+    .eq('id', vehicleId)
+    .eq('org_id', session.orgId)
+
+  if (error) {
+    console.error('updateVehicleUnitNumber error:', error)
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/dashboard/vehicles')
 }

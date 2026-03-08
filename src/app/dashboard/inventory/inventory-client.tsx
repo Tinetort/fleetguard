@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ArrowLeft, Package, Plus, Pencil, Trash2, RefreshCw, RotateCcw, X, ChevronDown, ChevronUp, TrendingDown, TrendingUp, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 import {
   toggleInventory,
   addInventoryItem,
@@ -130,7 +131,7 @@ export default function InventoryClient({ initialItems, initialTransactions, inv
       await toggleInventory(!enabled)
       setEnabled(!enabled)
     } catch (err: any) {
-      alert(err.message)
+      toast.error(err.message)
     }
     setToggleLoading(false)
   }
@@ -142,7 +143,7 @@ export default function InventoryClient({ initialItems, initialTransactions, inv
       await refreshData()
       setShowSeedConfirm(false)
     } catch (err: any) {
-      alert(err.message)
+      toast.error(err.message)
     }
     setSeedLoading(false)
   }
@@ -194,7 +195,7 @@ export default function InventoryClient({ initialItems, initialTransactions, inv
       setEditingId(null)
       await refreshData()
     } catch (err: any) {
-      alert(err.message)
+      toast.error(err.message)
     }
     setEditLoading(false)
   }
@@ -206,7 +207,7 @@ export default function InventoryClient({ initialItems, initialTransactions, inv
       setDeleteConfirmId(null)
       await refreshData()
     } catch (err: any) {
-      alert(err.message)
+      toast.error(err.message)
     }
     setDeleteLoading(false)
   }
@@ -221,7 +222,7 @@ export default function InventoryClient({ initialItems, initialTransactions, inv
       setRestockQty('')
       await refreshData()
     } catch (err: any) {
-      alert(err.message)
+      toast.error(err.message)
     }
     setRestockLoading(false)
   }

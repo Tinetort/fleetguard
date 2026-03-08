@@ -46,21 +46,9 @@ export async function GET(request: Request) {
           
           profile = existingProfile
         } else {
-          // Create a default profile with Google names
-          const { data: newProfile } = await supabase
-            .from('users')
-            .insert({
-              auth_id: user.id,
-              email: user.email,
-              username: user.email?.split('@')[0] || 'user',
-              first_name: firstName,
-              last_name: lastName,
-              role: 'emt',
-              org_id: '00000000-0000-0000-0000-000000000001'
-            })
-            .select('id, role, first_name')
-            .single()
-          profile = newProfile
+          // No profile found — user must be pre-created by a manager before they can sign in
+          await supabase.auth.signOut()
+          return NextResponse.redirect(new URL('/login?error=Account not found. Contact your manager.', requestUrl.origin))
         }
       } else if (!profile.first_name && firstName) {
         // If the profile already existed but had no name (from earlier sign-ins), update it now
@@ -73,7 +61,8 @@ export async function GET(request: Request) {
       // Determine redirect destination based on role
       const role = profile?.role || 'emt'
       const defaultDest = (role === 'manager' || role === 'director') ? '/dashboard' : '/rig-check'
-      const destination = next || defaultDest
+      const safeNext = next && next.startsWith('/') && !next.startsWith('//') ? next : null
+      const destination = safeNext || defaultDest
 
       return NextResponse.redirect(new URL(destination, requestUrl.origin))
     } else {

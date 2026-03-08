@@ -47,6 +47,7 @@ export default async function OnShiftPage() {
 
   return (
     <OnShiftClient
+      vehicleId={activeVehicle.id}
       rigNumber={activeVehicle.rig_number}
       onShiftSince={activeVehicle.on_shift_since}
       crewDisplay={activeVehicle.on_shift_by}

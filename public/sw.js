@@ -4,7 +4,7 @@ self.addEventListener('push', function(event) {
       const data = event.data.json()
       
       const options = {
-        body: data.body || 'New notification from FleetGuard',
+        body: data.body || 'New notification from Smart Rig Check',
         icon: '/images/icons/icon-192x192.png',
         badge: '/images/icons/icon-72x72.png',
         vibrate: [100, 50, 100],
@@ -14,13 +14,13 @@ self.addEventListener('push', function(event) {
       }
       
       event.waitUntil(
-        self.registration.showNotification(data.title || 'FleetGuard', options)
+        self.registration.showNotification(data.title || 'Smart Rig Check', options)
       )
     } catch (e) {
       console.error('Error parsing push data', e)
       // Fallback for plain text push
       event.waitUntil(
-        self.registration.showNotification('FleetGuard', {
+        self.registration.showNotification('Smart Rig Check', {
           body: event.data.text(),
           data: { url: '/dashboard' }
         })

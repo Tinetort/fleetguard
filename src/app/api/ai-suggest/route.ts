@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenAI } from '@google/genai'
+import { getSession } from '@/lib/auth'
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
 
@@ -104,6 +105,11 @@ function getDictionarySuggestion(text: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  const session = await getSession()
+  if (!session?.userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   const { text } = await req.json().catch(() => ({ text: '' }))
 
   if (!text || text.trim().length === 0) {

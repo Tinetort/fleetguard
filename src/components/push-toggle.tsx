@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Bell, BellOff, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 // Helper to convert VAPID public key
 function urlBase64ToUint8Array(base64String: string) {
@@ -78,7 +79,7 @@ export default function PushToggle() {
       }
     } catch (error) {
       console.error('Push toggle error:', error)
-      alert('Failed to toggle push notifications. Ensure permissions are granted.')
+      toast.error('Failed to toggle push notifications. Ensure permissions are granted.')
     } finally {
       setIsLoading(false)
     }

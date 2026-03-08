@@ -1,4 +1,4 @@
-// Configurable UI labels per org type for FleetGuard
+// Configurable UI labels per org type
 // Allows the same app to feel native for different industries
 
 import type { OrgType } from './presets'

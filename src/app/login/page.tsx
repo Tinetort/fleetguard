@@ -39,22 +39,22 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-          <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[120px]" />
+          <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-brand-primary/10 blur-[120px]" />
       </div>
 
       <Card className="z-10 w-full max-w-md shadow-2xl border-slate-800 bg-slate-900 overflow-hidden relative">
-        <div className="bg-blue-600 h-2 w-full" />
+        <div className="bg-brand-primary h-2 w-full" />
         <CardHeader className="space-y-2 pb-6 pt-8">
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-slate-800 rounded-2xl border border-slate-700">
-              <LogIn className="w-8 h-8 text-blue-400" />
+              <LogIn className="w-8 h-8 text-brand-primary" />
             </div>
           </div>
           <CardTitle className="text-3xl font-extrabold text-center text-slate-100">
             Welcome Back
           </CardTitle>
           <CardDescription className="text-center text-slate-400 font-medium text-base">
-            Sign in to Smart Rig Check
+            Sign in to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -75,14 +75,14 @@ export default function LoginPage() {
                 autoComplete="username"
                 required 
                 placeholder="e.g. ivan.emt"
-                className="h-12 bg-slate-800 border-slate-700 text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500/50" 
+                className="h-12 bg-slate-800 border-slate-700 text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-brand-primary/50" 
               />
             </div>
 
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <Label htmlFor="password" className="text-slate-300 font-bold text-xs uppercase tracking-wider">Password</Label>
-                <Link href="/forgot-password" className="text-blue-400 text-xs font-semibold hover:text-blue-300">Forgot password?</Link>
+                <Link href="/forgot-password" className="text-brand-primary text-xs font-semibold hover:text-brand-accent">Forgot password?</Link>
               </div>
               <Input 
                 id="password" 
@@ -91,14 +91,14 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 required 
                 placeholder="••••••••"
-                className="h-12 bg-slate-800 border-slate-700 text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500/50" 
+                className="h-12 bg-slate-800 border-slate-700 text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-brand-primary/50" 
               />
             </div>
 
             <Button 
               type="submit" 
               disabled={isSubmitting} 
-              className="w-full h-14 text-lg font-bold rounded-xl shadow-md transition-all active:scale-[0.98] bg-blue-600 hover:bg-blue-500 text-white border border-blue-500"
+              className="w-full h-14 text-lg font-bold rounded-xl shadow-md transition-all active:scale-[0.98] bg-brand-primary hover:bg-brand-accent text-white border border-brand-primary"
             >
               {isSubmitting ? 'Signing in...' : 'Sign In'}
             </Button>

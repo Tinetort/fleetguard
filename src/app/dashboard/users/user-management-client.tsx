@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { ArrowLeft, Users, UserPlus, KeyRound, Copy, Check, ShieldAlert } from 'lucide-react'
 import Link from 'next/link'
 import { createEmployee, resetEmployeePassword, updateUserRecoveryEmail } from '@/app/actions'
+import { toast } from 'sonner'
 
 interface User {
   id: string
@@ -50,7 +51,7 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
     try {
       const result = await createEmployee(firstName, lastName, role, recoveryEmail || undefined)
       if (result.error) {
-        alert(result.error)
+        toast.error(result.error)
       } else if (result.username && result.tempPassword) {
         setGeneratedUsername(result.username)
         setGeneratedPassword(result.tempPassword)
@@ -65,7 +66,7 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
         }, ...users])
       }
     } catch (err) {
-      alert('Failed to create user')
+      toast.error('Failed to create user')
     } finally {
       setIsSubmitting(false)
     }

@@ -3,7 +3,8 @@ import type { NextRequest } from 'next/server'
 import { createServerClient} from '@supabase/ssr'
 
 // Routes that don't require authentication
-const publicRoutes = ['/login', '/_next', '/api', '/favicon.ico', '/images', '/forgot-password', '/reset-password', '/auth/callback']
+// API routes handle their own auth (return 401 JSON instead of redirect)
+const publicRoutes = ['/login', '/_next', '/api', '/favicon.ico', '/images', '/forgot-password', '/reset-password', '/auth/callback', '/manifest.json', '/icon-192x192.png', '/icon-512x512.png']
 const managerOnlyRoutes = ['/dashboard']
 const emtOnlyRoutes = ['/rig-check', '/end-of-shift']
 

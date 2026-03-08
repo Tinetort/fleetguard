@@ -85,7 +85,7 @@ export default function ShiftGreetingModal({ greeting, onClose }: ShiftGreetingM
               textTransform: 'uppercase',
               color: 'rgba(148,163,184,0.7)',
             }}>
-              FleetGuard · Daily Brief
+              Smart Rig Check · Daily Brief
             </p>
 
             {/* Main greeting */}

@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CheckCircle2, Clock, ArrowRightCircle, X } from 'lucide-react'
+import { CheckCircle2, Clock, ArrowRightCircle, X, MapPin } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { ShieldAlert } from 'lucide-react'
 import Link from 'next/link'
 import type { OrgLabels } from '@/lib/labels'
 
 interface Props {
+  vehicleId: string
   rigNumber: string
   onShiftSince: string   // ISO string from DB
   crewDisplay: string    // e.g. "Alexandr & Viktoria Volkova"
@@ -15,7 +16,7 @@ interface Props {
   labels: OrgLabels
 }
 
-export default function OnShiftClient({ rigNumber, onShiftSince, crewDisplay, currentUserName, labels }: Props) {
+export default function OnShiftClient({ vehicleId, rigNumber, onShiftSince, crewDisplay, currentUserName, labels }: Props) {
   const startTime = new Date(onShiftSince)
   const [elapsedTime, setElapsedTime] = useState('')
   const [greeting, setGreeting] = useState<string | null>(null)
@@ -41,6 +42,37 @@ export default function OnShiftClient({ rigNumber, onShiftSince, crewDisplay, cu
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
   }, [onShiftSince])
+
+  // Periodic GPS location updates
+  useEffect(() => {
+    if (!vehicleId || !navigator.geolocation) return
+
+    const sendLocation = () => {
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          try {
+            await fetch('/api/location/update', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                vehicleId,
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+              })
+            })
+          } catch (e) {
+            console.warn('GPS location update failed:', e)
+          }
+        },
+        (err) => console.warn('GPS unavailable:', err.message),
+        { enableHighAccuracy: false, timeout: 10000 }
+      )
+    }
+
+    sendLocation() // Call immediately upon mount
+    const interval = setInterval(sendLocation, 30000) // Update every 30 seconds
+    return () => clearInterval(interval)
+  }, [vehicleId])
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
@@ -89,7 +121,12 @@ export default function OnShiftClient({ rigNumber, onShiftSince, crewDisplay, cu
                   {rigNumber}
                 </div>
 
-                <p className="text-xs font-bold text-blue-200 uppercase tracking-widest mb-1">YOU ARE ON SHIFT</p>
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="text-xs font-bold text-blue-200 uppercase tracking-widest">YOU ARE ON SHIFT</p>
+                  <span className="flex items-center gap-1 text-[10px] uppercase font-bold text-white bg-blue-500/50 px-2 py-0.5 rounded-full shadow-sm" title="GPS Active">
+                    <MapPin className="w-3 h-3" /> GPS
+                  </span>
+                </div>
                 <div className="flex items-center gap-3">
                   <Clock className="w-6 h-6 text-blue-300" />
                   <span className="text-4xl font-extrabold text-white font-mono tracking-widest">

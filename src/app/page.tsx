@@ -59,7 +59,7 @@ export default function Home() {
         </div>
 
         <div className="pt-16 text-slate-500 text-sm font-medium">
-          Built for Care Ambulance Systems. Requires authorized access.
+          Built for high-accountability inspections. Requires authorized access.
         </div>
       </div>
     </div>

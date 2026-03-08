@@ -4,7 +4,7 @@ import { createClient } from '@/../utils/supabase/server'
 import VehicleManagementClient from './vehicle-management-client'
 
 export const metadata = {
-  title: 'Manage Vehicles | Smart Rig Check',
+  title: 'Manage Vehicles | Dashboard',
 }
 
 export default async function VehiclesPage() {

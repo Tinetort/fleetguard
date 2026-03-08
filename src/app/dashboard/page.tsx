@@ -13,7 +13,7 @@ async function getInitialData() {
 
   const { data: vehicles } = await supabase
     .from('vehicles')
-    .select('id, rig_number, status, last_checked_at, in_service, on_shift_since, on_shift_by, pending_approval, pending_approval_data')
+    .select('id, rig_number, unit_number, lat, lng, location_updated_at, status, last_checked_at, in_service, on_shift_since, on_shift_by, pending_approval, pending_approval_data')
     .eq('org_id', session?.orgId)
     .order('rig_number')
 

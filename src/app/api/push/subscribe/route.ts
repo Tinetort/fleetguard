@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   try {
     const session = await getSession()
     if (!session?.userId) {
-      console.log('Subscribe: Session check failed')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -33,7 +32,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to save subscription' }, { status: 500 })
     }
 
-    console.log('Subscribe: Saved subscription for user', session.userId)
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Subscribe POST error:', error)

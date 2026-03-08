@@ -1,4 +1,4 @@
-// Industry-specific checklist presets for FleetGuard
+// Industry-specific checklist presets
 // Each preset auto-populates the checklist builder with hierarchical items
 
 export type OrgType = 'ems' | 'fire' | 'police' | 'fleet' | 'custom'
