@@ -674,12 +674,12 @@ export async function authenticate(formData: FormData) {
 
   const supabase = await createClient()
 
-  // 1. Look up user's email by username
-  const { data: profile, error: lookupError } = await supabase
-    .from('users')
-    .select('email, role, temp_password')
-    .eq('username', username.trim())
-    .single()
+  // 1. Look up user's email by username via SECURITY DEFINER function
+  // (bypasses RLS safely — needed since user is not yet authenticated at this point)
+  const { data: profileRows, error: lookupError } = await supabase
+    .rpc('get_user_auth_by_username', { p_username: username.trim() })
+
+  const profile = profileRows?.[0]
 
   if (lookupError || !profile?.email) {
     return { error: 'Invalid username or password' }
