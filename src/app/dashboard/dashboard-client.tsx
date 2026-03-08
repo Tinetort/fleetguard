@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/../utils/supabase/client'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
-import { ListChecks, RefreshCw, Download, Shield, ShieldAlert, X, Users, Truck, Wrench, ArrowUpDown, BarChart3, Package } from 'lucide-react'
+import { ListChecks, RefreshCw, Download, Shield, ShieldAlert, X, Users, Truck, Wrench, ArrowUpDown, BarChart3, Package, Map } from 'lucide-react'
 import type { OrgLabels } from '@/lib/labels'
 import NotificationBell from '@/components/notification-bell'
 import { adminForceEndShift, approveVehicleShift, rejectVehicleShift, reviewShiftIssue } from '../actions'
@@ -324,6 +324,12 @@ const fetchLatestData = useCallback(async () => {
               <ListChecks className="w-4 h-4" /> Checklists
             </Link>
 
+            {/* ── Fleet Map ── */}
+            <Link href="/dashboard/map" className="hidden sm:flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700 bg-white border border-slate-200 hover:border-blue-200 px-3 py-2 rounded-xl shadow-sm hover:shadow-md transition-all duration-200">
+              <Map className="w-4 h-4" />
+              <span>Fleet Map</span>
+            </Link>
+
             {/* ── Reports Dropdown (Audit + Analytics + PDF) ── */}
             <div className="relative group hidden sm:block">
               <button className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700 bg-white border border-slate-200 hover:border-blue-200 px-3 py-2 rounded-xl shadow-sm hover:shadow-md transition-all duration-200">
@@ -444,6 +450,10 @@ const fetchLatestData = useCallback(async () => {
                 <div className="p-2 flex flex-col gap-0.5">
                   <Link href="/dashboard/checklists" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
                     <ListChecks className="w-4 h-4 text-slate-500" /> Checklists
+                  </Link>
+                  <div className="my-1 border-t border-slate-100" />
+                  <Link href="/dashboard/map" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                    <Map className="w-4 h-4 text-blue-500" /> Fleet Map
                   </Link>
                   <div className="my-1 border-t border-slate-100" />
                   <p className="px-3 pt-1 text-[10px] font-black text-slate-400 uppercase tracking-widest">Reports</p>
